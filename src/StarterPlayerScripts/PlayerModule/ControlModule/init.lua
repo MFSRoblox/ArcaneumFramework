@@ -357,6 +357,9 @@ function ControlModule:OnRenderStepped(dt)
 		else
 			self.humanoid.Jump = self.activeController:GetIsJumping() or (self.touchJumpController and self.touchJumpController:GetIsJumping())
 		end
+		if self.activeController:GetIsAttacking() then
+			--insert attack request here lol
+		end
 	end
 end
 
