@@ -1,0 +1,7 @@
+{
+    "Name": "TargetYaw",
+    "ClassName": "NumberValue",
+    "Properties": {
+        "Value": 0
+    }
+}

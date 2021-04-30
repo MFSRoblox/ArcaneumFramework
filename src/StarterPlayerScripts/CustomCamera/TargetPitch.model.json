@@ -1,0 +1,7 @@
+{
+    "Name": "TargetPitch",
+    "ClassName": "NumberValue",
+    "Properties": {
+        "Value": 0
+    }
+}

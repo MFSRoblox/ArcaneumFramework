@@ -1,0 +1,7 @@
+{
+    "Name": "ScaleDampeningPercent",
+    "ClassName": "NumberValue",
+    "Properties": {
+        "Value": 0.4
+    }
+}
