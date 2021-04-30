@@ -13,23 +13,23 @@ local ZERO_VECTOR3 = Vector3.new(0,0,0)
 
 --[[ The Module ]]--
 local BaseCharacterController = require(script.Parent:WaitForChild("BaseCharacterController"))
+local DefaultBindings = require(script:WaitForChild("DefaultControls"))
 local Keyboard = setmetatable({}, BaseCharacterController)
 Keyboard.__index = Keyboard
 
-function Keyboard.new(CONTROL_ACTION_PRIORITY)
-	local self = setmetatable(BaseCharacterController.new(), Keyboard)
+function Keyboard.new(CONTROL_ACTION_PRIORITY, StartingBindings)
+	local self = setmetatable(BaseCharacterController.new(DefaultBindings, StartingBindings), Keyboard)
 
 	self.CONTROL_ACTION_PRIORITY = CONTROL_ACTION_PRIORITY
-
 	self.textFocusReleasedConn = nil
 	self.textFocusGainedConn = nil
 	self.windowFocusReleasedConn = nil
-
 	self.forwardValue = 0
 	self.backwardValue = 0
 	self.leftValue = 0
 	self.rightValue = 0
 
+	self.attackEnabled = true
 	self.jumpEnabled = true
 
 	return self
@@ -46,12 +46,12 @@ function Keyboard:Enable(enable)
 		-- no action was necessary. False indicates failure to be in requested/expected state.
 		return true
 	end
-
 	self.forwardValue  = 0
 	self.backwardValue = 0
 	self.leftValue = 0
 	self.rightValue = 0
 	self.moveVector = ZERO_VECTOR3
+	self.attackRequested = false
 	self.jumpRequested = false
 	self:UpdateJump()
 
@@ -85,51 +85,55 @@ function Keyboard:BindContextActions()
 	-- which fixes them from getting stuck on.
 	-- We return ContextActionResult.Pass here for legacy reasons.
 	-- Many games rely on gameProcessedEvent being false on UserInputService.InputBegan for these control actions.
-	local handleMoveForward = function(actionName, inputState, inputObject)
-		self.forwardValue = (inputState == Enum.UserInputState.Begin) and -1 or 0
-		self:UpdateMovement(inputState)
-		return Enum.ContextActionResult.Pass
-	end
-
-	local handleMoveBackward = function(actionName, inputState, inputObject)
-		self.backwardValue = (inputState == Enum.UserInputState.Begin) and 1 or 0
-		self:UpdateMovement(inputState)
-		return Enum.ContextActionResult.Pass
-	end
-
-	local handleMoveLeft = function(actionName, inputState, inputObject)
-		self.leftValue = (inputState == Enum.UserInputState.Begin) and -1 or 0
-		self:UpdateMovement(inputState)
-		return Enum.ContextActionResult.Pass
-	end
-
-	local handleMoveRight = function(actionName, inputState, inputObject)
-		self.rightValue = (inputState == Enum.UserInputState.Begin) and 1 or 0
-		self:UpdateMovement(inputState)
-		return Enum.ContextActionResult.Pass
-	end
-
-	local handleJumpAction = function(actionName, inputState, inputObject)
-		self.jumpRequested = self.jumpEnabled and (inputState == Enum.UserInputState.Begin)
-		self:UpdateJump()
-		return Enum.ContextActionResult.Pass
-	end
+    local handleAction = {
+        attackAction = function(actionName, inputState, inputObject)
+            self.attackRequested = self.attackEnabled and (inputState == Enum.UserInputState.Begin)
+            self:Attack()
+            return Enum.ContextActionResult.Pass
+        end;
+        moveForwardAction = function(actionName, inputState, inputObject)
+            self.forwardValue = (inputState == Enum.UserInputState.Begin) and -1 or 0
+            self:UpdateMovement(inputState)
+            return Enum.ContextActionResult.Pass
+        end;
+        moveBackwardAction = function(actionName, inputState, inputObject)
+            self.backwardValue = (inputState == Enum.UserInputState.Begin) and 1 or 0
+            self:UpdateMovement(inputState)
+            return Enum.ContextActionResult.Pass
+        end;
+        moveLeftAction = function(actionName, inputState, inputObject)
+            self.leftValue = (inputState == Enum.UserInputState.Begin) and -1 or 0
+            self:UpdateMovement(inputState)
+            return Enum.ContextActionResult.Pass
+        end;
+        moveRightAction = function(actionName, inputState, inputObject)
+            self.rightValue = (inputState == Enum.UserInputState.Begin) and 1 or 0
+            self:UpdateMovement(inputState)
+            return Enum.ContextActionResult.Pass
+        end;
+        jumpAction = function(actionName, inputState, inputObject)
+            self.jumpRequested = self.jumpEnabled and (inputState == Enum.UserInputState.Begin)
+            self:UpdateJump()
+            return Enum.ContextActionResult.Pass
+        end;
+    }
 
 	-- TODO: Revert to KeyCode bindings so that in the future the abstraction layer from actual keys to
 	-- movement direction is done in Lua
-	ContextActionService:BindActionAtPriority("moveForwardAction", handleMoveForward, false,
-		self.CONTROL_ACTION_PRIORITY, Enum.PlayerActions.CharacterForward)
-	ContextActionService:BindActionAtPriority("moveBackwardAction", handleMoveBackward, false,
-		self.CONTROL_ACTION_PRIORITY, Enum.PlayerActions.CharacterBackward)
-	ContextActionService:BindActionAtPriority("moveLeftAction", handleMoveLeft, false,
-		self.CONTROL_ACTION_PRIORITY, Enum.PlayerActions.CharacterLeft)
-	ContextActionService:BindActionAtPriority("moveRightAction", handleMoveRight, false,
-		self.CONTROL_ACTION_PRIORITY, Enum.PlayerActions.CharacterRight)
-	ContextActionService:BindActionAtPriority("jumpAction", handleJumpAction, false,
-		self.CONTROL_ACTION_PRIORITY, Enum.PlayerActions.CharacterJump)
+    for actionName, handleFunction in pairs(handleAction) do
+        local Bindings = self.Bindings[actionName]
+        if type(Bindings) == "table" then
+            ContextActionService:BindActionAtPriority(actionName, handleFunction, false,
+		    self.CONTROL_ACTION_PRIORITY, table.unpack(Bindings))
+        else
+            ContextActionService:BindActionAtPriority(actionName, handleFunction, false,
+		    self.CONTROL_ACTION_PRIORITY, Bindings)
+        end
+    end
 end
 
 function Keyboard:UnbindContextActions()
+	ContextActionService:UnbindAction("attackAction")
 	ContextActionService:UnbindAction("moveForwardAction")
 	ContextActionService:UnbindAction("moveBackwardAction")
 	ContextActionService:UnbindAction("moveLeftAction")

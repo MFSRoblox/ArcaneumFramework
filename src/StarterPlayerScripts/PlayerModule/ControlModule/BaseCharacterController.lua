@@ -11,12 +11,20 @@ local ZERO_VECTOR3 = Vector3.new(0,0,0)
 local BaseCharacterController = {}
 BaseCharacterController.__index = BaseCharacterController
 
-function BaseCharacterController.new()
+function BaseCharacterController.new(DefaultBindings,StartingBindings)
+	DefaultBindings = DefaultBindings or {}
+	StartingBindings = StartingBindings or {}
 	local self = setmetatable({}, BaseCharacterController)
 	self.enabled = false
 	self.moveVector = ZERO_VECTOR3
 	self.moveVectorIsCameraRelative = true
 	self.isJumping = false
+	self.isAttacking = false
+	local Bindings = DefaultBindings
+    for ActionName, BindingData in pairs(StartingBindings) do
+		Bindings[ActionName] = BindingData
+    end
+	self.Bindings = Bindings
 	return self
 end
 
@@ -30,6 +38,10 @@ end
 
 function BaseCharacterController:IsMoveVectorCameraRelative()
 	return self.moveVectorIsCameraRelative
+end
+
+function BaseCharacterController:GetIsAttacking()
+	return self.isAttacking
 end
 
 function BaseCharacterController:GetIsJumping()
