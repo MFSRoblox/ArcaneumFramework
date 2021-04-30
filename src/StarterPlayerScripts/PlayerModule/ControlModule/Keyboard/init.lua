@@ -75,6 +75,10 @@ function Keyboard:UpdateMovement(inputState)
 	end
 end
 
+function Keyboard:UpdateAttack()
+    self.isAttacking = self.attackRequested
+end
+
 function Keyboard:UpdateJump()
 	self.isJumping = self.jumpRequested
 end
@@ -88,7 +92,7 @@ function Keyboard:BindContextActions()
     local handleAction = {
         attackAction = function(actionName, inputState, inputObject)
             self.attackRequested = self.attackEnabled and (inputState == Enum.UserInputState.Begin)
-            self:Attack()
+            self:UpdateAttack()
             return Enum.ContextActionResult.Pass
         end;
         moveForwardAction = function(actionName, inputState, inputObject)

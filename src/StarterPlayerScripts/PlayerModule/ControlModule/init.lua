@@ -358,7 +358,7 @@ function ControlModule:OnRenderStepped(dt)
 			self.humanoid.Jump = self.activeController:GetIsJumping() or (self.touchJumpController and self.touchJumpController:GetIsJumping())
 		end
 		if self.activeController:GetIsAttacking() then
-			--insert attack request here lol
+			game:GetService("ReplicatedStorage").Events.PlayAnimation:Fire("punch")
 		end
 	end
 end

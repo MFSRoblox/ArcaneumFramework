@@ -49,6 +49,9 @@ local PreloadedAnims = {}
 
 local animTable = {}
 local animNames = { 
+	punch = {
+		{id = "http://www.roblox.com/asset/?id=6745003570", weight = 1}
+	},
 	idle = 	{	
 				{ id = "http://www.roblox.com/asset/?id=507766666", weight = 1 },
 				{ id = "http://www.roblox.com/asset/?id=507766951", weight = 1 },
@@ -444,7 +447,7 @@ function keyFrameReachedFunc(frameName)
 end
 
 function rollAnimation(animName)
-	local roll = math.random(1, animTable[animName].totalWeight) 
+	local roll = math.random(1, animTable[animName].totalWeight)
 	local origRoll = roll
 	local idx = 1
 	while (roll > animTable[animName][idx].weight) do
@@ -505,7 +508,7 @@ local function switchToAnim(anim, animName, transitionTime, humanoid)
 	end
 end
 
-function playAnimation(animName, transitionTime, humanoid) 	
+function playAnimation(animName, transitionTime, humanoid)
 	local idx = rollAnimation(animName)
 	local anim = animTable[animName][idx].anim
 
@@ -533,7 +536,7 @@ function toolKeyFrameReachedFunc(frameName)
 end
 
 
-function playToolAnimation(animName, transitionTime, humanoid, priority)	 		
+function playToolAnimation(animName, transitionTime, humanoid, priority)
 		local idx = rollAnimation(animName)
 		local anim = animTable[animName][idx].anim
 
@@ -581,7 +584,12 @@ end
 -------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------
 -- STATE CHANGE HANDLERS
-
+function onPlayAnimation(animationName)
+	local idx = rollAnimation(animationName)
+	local anim = animTable[animationName][idx].anim
+	switchToAnim(anim, animationName, 0, Humanoid)
+	currentlyPlayingEmote = true
+end
 function onRunning(speed)
 	local movedDuringEmote =
 		userEmoteToRunThresholdChange and currentlyPlayingEmote and Humanoid.MoveDirection == Vector3.new(0, 0, 0)
@@ -736,6 +744,7 @@ function stepAnimate(currentTime)
 end
 
 -- connect events
+game:GetService("ReplicatedStorage").Events.PlayAnimation.Event:Connect(onPlayAnimation)
 Humanoid.Died:connect(onDied)
 Humanoid.Running:connect(onRunning)
 Humanoid.Jumping:connect(onJumping)
