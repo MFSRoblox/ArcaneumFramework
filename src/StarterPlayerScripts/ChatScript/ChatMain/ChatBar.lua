@@ -162,7 +162,7 @@ end
 function methods:SetUpTextBoxEvents(TextBox, TextLabel, MessageModeTextButton)
 	-- Clean up events from a previous setup.
 	for name, conn in pairs(self.TextBoxConnections) do
-		conn:disconnect()
+		conn:Disconnect()
 		self.TextBoxConnections[name] = nil
 	end
 

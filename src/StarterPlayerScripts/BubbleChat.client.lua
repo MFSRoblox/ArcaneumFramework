@@ -168,7 +168,7 @@ local function createMap()
 			this.data[key] = createCharacterChats()
 			local emptiedCon = nil
 			emptiedCon = this.data[key].Fifo.Emptied:Connect(function()
-				emptiedCon:disconnect()
+				emptiedCon:Disconnect()
 				this:Erase(key)
 			end)
 		end
@@ -339,7 +339,7 @@ local function createBillboardInstance(adornee)
 	local billboardChildRemovedCon = nil
 	billboardChildRemovedCon = billboardFrame.ChildRemoved:Connect(function()
 		if #billboardFrame:GetChildren() <= 1 then
-			billboardChildRemovedCon:disconnect()
+			billboardChildRemovedCon:Disconnect()
 			billboardGui:Destroy()
 		end
 	end)
@@ -712,7 +712,7 @@ end
 
 game.Workspace.Changed:Connect(function(prop)
 	if prop == "CurrentCamera" then
-		if cameraChangedCon then cameraChangedCon:disconnect() end
+		if cameraChangedCon then cameraChangedCon:Disconnect() end
 		if game.Workspace.CurrentCamera then
 			cameraChangedCon = game.Workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function(prop) this:CameraCFrameChanged() end)
 		end

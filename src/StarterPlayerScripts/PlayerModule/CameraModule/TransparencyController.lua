@@ -61,11 +61,11 @@ function TransparencyController:TeardownTransparency()
 	self.lastTransparency = nil
 
 	if self.descendantAddedConn then
-		self.descendantAddedConn:disconnect()
+		self.descendantAddedConn:Disconnect()
 		self.descendantAddedConn = nil
 	end
 	if self.descendantRemovingConn then
-		self.descendantRemovingConn:disconnect()
+		self.descendantRemovingConn:Disconnect()
 		self.descendantRemovingConn = nil
 	end
 	for object, conn in pairs(self.toolDescendantAddedConns) do
@@ -81,7 +81,7 @@ end
 function TransparencyController:SetupTransparency(character)
 	self:TeardownTransparency()
 
-	if self.descendantAddedConn then self.descendantAddedConn:disconnect() end
+	if self.descendantAddedConn then self.descendantAddedConn:Disconnect() end
 	self.descendantAddedConn = character.DescendantAdded:Connect(function(object)
 		-- This is a part we want to invisify
 		if self:IsValidPartToModify(object) then
@@ -97,7 +97,7 @@ function TransparencyController:SetupTransparency(character)
 					toolChild.LocalTransparencyModifier = 0
 				end
 			end)
-			if self.toolDescendantRemovingConns[object] then self.toolDescendantRemovingConns[object]:disconnect() end
+			if self.toolDescendantRemovingConns[object] then self.toolDescendantRemovingConns[object]:Disconnect() end
 			self.toolDescendantRemovingConns[object] = object.DescendantRemoving:Connect(function(formerToolChild)
 				wait() -- wait for new parent
 				if character and formerToolChild and formerToolChild:IsDescendantOf(character) then
@@ -109,7 +109,7 @@ function TransparencyController:SetupTransparency(character)
 			end)
 		end
 	end)
-	if self.descendantRemovingConn then self.descendantRemovingConn:disconnect() end
+	if self.descendantRemovingConn then self.descendantRemovingConn:Disconnect() end
 	self.descendantRemovingConn = character.DescendantRemoving:Connect(function(object)
 		if self.cachedParts[object] then
 			self.cachedParts[object] = nil

@@ -141,7 +141,7 @@ end
 function configureAnimationSet(name, fileList)
 	if (animTable[name] ~= nil) then
 		for _, connection in pairs(animTable[name].connections) do
-			connection:disconnect()
+			connection:Disconnect()
 		end
 	end
 	animTable[name] = {}
@@ -212,7 +212,7 @@ end
 function configureAnimationSetOld(name, fileList)
 	if (animTable[name] ~= nil) then
 		for _, connection in pairs(animTable[name].connections) do
-			connection:disconnect()
+			connection:Disconnect()
 		end
 	end
 	animTable[name] = {}
@@ -321,7 +321,7 @@ function stopAllAnimations()
 	currentAnim = ""
 	currentAnimInstance = nil
 	if (currentAnimKeyframeHandler ~= nil) then
-		currentAnimKeyframeHandler:disconnect()
+		currentAnimKeyframeHandler:Disconnect()
 	end
 
 	if (currentAnimTrack ~= nil) then
@@ -332,7 +332,7 @@ function stopAllAnimations()
 
 	-- clean up walk if there is one
 	if (runAnimKeyframeHandler ~= nil) then
-		runAnimKeyframeHandler:disconnect()
+		runAnimKeyframeHandler:Disconnect()
 	end
 	
 	if (runAnimTrack ~= nil) then
@@ -487,7 +487,7 @@ local function switchToAnim(anim, animName, transitionTime, humanoid)
 
 		-- set up keyframe name triggers
 		if (currentAnimKeyframeHandler ~= nil) then
-			currentAnimKeyframeHandler:disconnect()
+			currentAnimKeyframeHandler:Disconnect()
 		end
 		currentAnimKeyframeHandler = currentAnimTrack.KeyframeReached:Connect(keyFrameReachedFunc)
 		
@@ -501,7 +501,7 @@ local function switchToAnim(anim, animName, transitionTime, humanoid)
 			runAnimTrack:Play(transitionTime)		
 			
 			if (runAnimKeyframeHandler ~= nil) then
-				runAnimKeyframeHandler:disconnect()
+				runAnimKeyframeHandler:Disconnect()
 			end
 			runAnimKeyframeHandler = runAnimTrack.KeyframeReached:Connect(keyFrameReachedFunc)	
 		end
@@ -567,7 +567,7 @@ function stopToolAnimations()
 	local oldAnim = toolAnimName
 
 	if (currentToolAnimKeyframeHandler ~= nil) then
-		currentToolAnimKeyframeHandler:disconnect()
+		currentToolAnimKeyframeHandler:Disconnect()
 	end
 
 	toolAnimName = ""

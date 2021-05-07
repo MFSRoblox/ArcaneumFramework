@@ -104,7 +104,7 @@ if (numChildrenRemaining > 0) then
 	end)
 
 	FoundAllEventsEvent.Event:wait()
-	con:disconnect()
+	con:Disconnect()
 
 	FoundAllEventsEvent:Destroy()
 end

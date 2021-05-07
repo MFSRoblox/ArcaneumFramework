@@ -515,7 +515,7 @@ function DynamicThumbstick:Create(parentFrame)
 		if (originalScreenOrientationWasLandscape and playerGui.CurrentScreenOrientation == Enum.ScreenOrientation.Portrait) or
 			(not originalScreenOrientationWasLandscape and playerGui.CurrentScreenOrientation ~= Enum.ScreenOrientation.Portrait) then
 
-			playerGuiChangedConn:disconnect()
+			playerGuiChangedConn:Disconnect()
 			longShowBackground()
 
 			if originalScreenOrientationWasLandscape then
