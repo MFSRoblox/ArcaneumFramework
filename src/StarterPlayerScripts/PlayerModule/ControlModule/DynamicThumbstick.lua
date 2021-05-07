@@ -483,13 +483,13 @@ function DynamicThumbstick:Create(parentFrame)
 		end
 	end)
 
-	self.onTouchEndedConn = UserInputService.TouchEnded:connect(function(inputObject)
+	self.onTouchEndedConn = UserInputService.TouchEnded:Connect(function(inputObject)
 		if inputObject == self.moveTouchObject then
 			self:OnInputEnded()
 		end
 	end)
 
-	GuiService.MenuOpened:connect(function()
+	GuiService.MenuOpened:Connect(function()
 		if self.moveTouchObject then
 			self:OnInputEnded()
 		end

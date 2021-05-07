@@ -207,7 +207,7 @@ function methods:CreateGuiObjects(targetParent)
 	end
 
 
-	BaseFrame.Changed:connect(function(prop)
+	BaseFrame.Changed:Connect(function(prop)
 		if (prop == "AbsoluteSize") then
 			doCheckSizeBounds()
 		end
@@ -215,7 +215,7 @@ function methods:CreateGuiObjects(targetParent)
 
 
 
-	ChatResizerFrame.DragBegin:connect(function(startUdim)
+	ChatResizerFrame.DragBegin:Connect(function(startUdim)
 		BaseFrame.Draggable = false
 	end)
 
@@ -232,13 +232,13 @@ function methods:CreateGuiObjects(targetParent)
 		end
 	end
 
-	ChatResizerFrame.DragStopped:connect(function(endX, endY)
+	ChatResizerFrame.DragStopped:Connect(function(endX, endY)
 		BaseFrame.Draggable = ChatSettings.WindowDraggable
 		--UpdatePositionFromDrag(Vector2.new(endX, endY))
 	end)
 
 	local resizeLock = false
-	ChatResizerFrame.Changed:connect(function(prop)
+	ChatResizerFrame.Changed:Connect(function(prop)
 		if (prop == "AbsolutePosition" and not BaseFrame.Draggable) then
 			if (resizeLock) then return end
 			resizeLock = true
@@ -403,7 +403,7 @@ function methods:CreateGuiObjects(targetParent)
 	UpdateResizable(ChatSettings.WindowResizable)
 	UpdateShowChannelsBar(ChatSettings.ShowChannelsBar)
 
-	ChatSettings.SettingsChanged:connect(function(setting, value)
+	ChatSettings.SettingsChanged:Connect(function(setting, value)
 		if (setting == "WindowDraggable") then
 			UpdateDraggable(value)
 
@@ -464,7 +464,7 @@ function methods:AddChannel(channelName)
 	channel:SetActive(false)
 
 	local tab = self.ChannelsBar:AddChannelTab(channelName)
-	tab.NameTag.MouseButton1Click:connect(function()
+	tab.NameTag.MouseButton1Click:Connect(function()
 		self:SwitchCurrentChannel(channelName)
 	end)
 

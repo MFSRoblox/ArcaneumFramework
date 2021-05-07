@@ -96,7 +96,7 @@ for i, child in pairs(EventFolder:GetChildren()) do
 end
 
 if (numChildrenRemaining > 0) then
-	local con = EventFolder.ChildAdded:connect(function(child)
+	local con = EventFolder.ChildAdded:Connect(function(child)
 		TryRemoveChildWithVerifyingIsCorrectType(child)
 		if (numChildrenRemaining < 1) then
 			FoundAllEventsEvent:Fire()
@@ -369,24 +369,24 @@ function UpdateMousePosition(mousePos, ignoreForFadeIn)
 	end
 end
 
-UserInputService.InputChanged:connect(function(inputObject, gameProcessedEvent)
+UserInputService.InputChanged:Connect(function(inputObject, gameProcessedEvent)
 	if (inputObject.UserInputType == Enum.UserInputType.MouseMovement) then
 		local mousePos = Vector2.new(inputObject.Position.X, inputObject.Position.Y)
 		UpdateMousePosition(mousePos, --[[ ignoreForFadeIn = ]] gameProcessedEvent)
 	end
 end)
 
-UserInputService.TouchTap:connect(function(tapPos, gameProcessedEvent)
+UserInputService.TouchTap:Connect(function(tapPos, gameProcessedEvent)
 	UpdateMousePosition(tapPos[1], --[[ ignoreForFadeIn = ]] false)
 end)
 
-UserInputService.TouchMoved:connect(function(inputObject, gameProcessedEvent)
+UserInputService.TouchMoved:Connect(function(inputObject, gameProcessedEvent)
 	local tapPos = Vector2.new(inputObject.Position.X, inputObject.Position.Y)
 	UpdateMousePosition(tapPos, --[[ ignoreForFadeIn = ]] false)
 end)
 
 if not FFlagFixMouseCapture then
-	UserInputService.Changed:connect(function(prop)
+	UserInputService.Changed:Connect(function(prop)
 		if prop == "MouseBehavior" then
 			if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then
 				local windowPos = ChatWindow.GuiObject.AbsolutePosition
@@ -426,9 +426,9 @@ do
 			mSignaler:Fire()
 		end
 
-		function sig:connect(f)
-			if not f then error("connect(nil)", 2) end
-			return mSignaler.Event:connect(function()
+		function sig:Connect(f)
+			if not f then error("Connect(nil)", 2) end
+			return mSignaler.Event:Connect(function()
 				f(unpack(mArgData, 1, mArgDataCount))
 			end)
 		end
@@ -546,7 +546,7 @@ do
     end
 end
 
-moduleApiTable.CoreGuiEnabled:connect(function(enabled)
+moduleApiTable.CoreGuiEnabled:Connect(function(enabled)
 	moduleApiTable.IsCoreGuiEnabled = enabled
 
 	enabled = enabled and (moduleApiTable.TopbarEnabled or ChatSettings.ChatOnWithTopBarOff)
@@ -574,7 +574,7 @@ function trimTrailingSpaces(str)
 	return str:sub(1, lastSpace)
 end
 
-moduleApiTable.ChatMakeSystemMessageEvent:connect(function(valueTable)
+moduleApiTable.ChatMakeSystemMessageEvent:Connect(function(valueTable)
 	if (valueTable["Text"] and type(valueTable["Text"]) == "string") then
 		while (not DidFirstChannelsLoads) do wait() end
 
@@ -603,7 +603,7 @@ moduleApiTable.ChatMakeSystemMessageEvent:connect(function(valueTable)
 	end
 end)
 
-moduleApiTable.ChatBarDisabledEvent:connect(function(disabled)
+moduleApiTable.ChatBarDisabledEvent:Connect(function(disabled)
 	if canChat then
 		ChatBar:SetEnabled(not disabled)
 		if (disabled) then
@@ -612,11 +612,11 @@ moduleApiTable.ChatBarDisabledEvent:connect(function(disabled)
 	end
 end)
 
-moduleApiTable.ChatWindowSizeEvent:connect(function(size)
+moduleApiTable.ChatWindowSizeEvent:Connect(function(size)
 	ChatWindow.GuiObject.Size = size
 end)
 
-moduleApiTable.ChatWindowPositionEvent:connect(function(position)
+moduleApiTable.ChatWindowPositionEvent:Connect(function(position)
 	ChatWindow.GuiObject.Position = position
 end)
 
@@ -636,7 +636,7 @@ function DoChatBarFocus()
 	end
 end
 
-chatBarFocusChanged.Event:connect(function(focused)
+chatBarFocusChanged.Event:Connect(function(focused)
 	moduleApiTable.ChatBarFocusChanged:fire(focused)
 end)
 
@@ -736,15 +736,15 @@ function setupChatBarConnections()
 	end
 	ChatBarConnections = {}
 
-	local focusLostConnection = ChatBar:GetTextBox().FocusLost:connect(chatBarFocusLost)
+	local focusLostConnection = ChatBar:GetTextBox().FocusLost:Connect(chatBarFocusLost)
 	table.insert(ChatBarConnections, focusLostConnection)
 
-	local focusGainedConnection = ChatBar:GetTextBox().Focused:connect(chatBarFocused)
+	local focusGainedConnection = ChatBar:GetTextBox().Focused:Connect(chatBarFocused)
 	table.insert(ChatBarConnections, focusGainedConnection)
 end
 
 setupChatBarConnections()
-ChatBar.GuiObjectsChanged:connect(setupChatBarConnections)
+ChatBar.GuiObjectsChanged:Connect(setupChatBarConnections)
 
 function getEchoMessagesInGeneral()
 	if ChatSettings.EchoMessagesInGeneralChannel == nil then
@@ -753,7 +753,7 @@ function getEchoMessagesInGeneral()
 	return ChatSettings.EchoMessagesInGeneralChannel
 end
 
-EventFolder.OnMessageDoneFiltering.OnClientEvent:connect(function(messageData)
+EventFolder.OnMessageDoneFiltering.OnClientEvent:Connect(function(messageData)
 	if not ChatSettings.ShowUserOwnFilteredMessage then
 		if messageData.FromSpeaker == LocalPlayer.Name then
 			return
@@ -774,7 +774,7 @@ EventFolder.OnMessageDoneFiltering.OnClientEvent:connect(function(messageData)
 	end
 end)
 
-EventFolder.OnNewMessage.OnClientEvent:connect(function(messageData, channelName)
+EventFolder.OnNewMessage.OnClientEvent:Connect(function(messageData, channelName)
 	local channelObj = ChatWindow:GetChannel(channelName)
 	if (channelObj) then
 		channelObj:AddMessageToChannel(messageData)
@@ -797,7 +797,7 @@ EventFolder.OnNewMessage.OnClientEvent:connect(function(messageData, channelName
 	end
 end)
 
-EventFolder.OnNewSystemMessage.OnClientEvent:connect(function(messageData, channelName)
+EventFolder.OnNewSystemMessage.OnClientEvent:Connect(function(messageData, channelName)
 	channelName = channelName or "System"
 
 	local channelObj = ChatWindow:GetChannel(channelName)
@@ -895,27 +895,27 @@ function HandleChannelJoined(channel, welcomeMessage, messageLog, channelNameCol
 
 end
 
-EventFolder.OnChannelJoined.OnClientEvent:connect(function(channel, welcomeMessage, messageLog, channelNameColor)
+EventFolder.OnChannelJoined.OnClientEvent:Connect(function(channel, welcomeMessage, messageLog, channelNameColor)
 	HandleChannelJoined(channel, welcomeMessage, messageLog, channelNameColor, false, true)
 end)
 
-EventFolder.OnChannelLeft.OnClientEvent:connect(function(channel)
+EventFolder.OnChannelLeft.OnClientEvent:Connect(function(channel)
 	ChatWindow:RemoveChannel(channel)
 
 	DoFadeInFromNewInformation()
 end)
 
-EventFolder.OnMuted.OnClientEvent:connect(function(channel)
+EventFolder.OnMuted.OnClientEvent:Connect(function(channel)
 	--// Do something eventually maybe?
 	--// This used to take away the chat bar in channels the player was muted in.
 	--// We found out this behavior was inconvenient for doing chat commands though.
 end)
 
-EventFolder.OnUnmuted.OnClientEvent:connect(function(channel)
+EventFolder.OnUnmuted.OnClientEvent:Connect(function(channel)
 	--// Same as above.
 end)
 
-EventFolder.OnMainChannelSet.OnClientEvent:connect(function(channel)
+EventFolder.OnMainChannelSet.OnClientEvent:Connect(function(channel)
 	DoSwitchCurrentChannel(channel)
 end)
 
@@ -923,7 +923,7 @@ coroutine.wrap(function()
 	-- ChannelNameColorUpdated may not exist if the client version is older than the server version.
 	local ChannelNameColorUpdated = DefaultChatSystemChatEvents:WaitForChild("ChannelNameColorUpdated", 5)
 	if ChannelNameColorUpdated then
-		ChannelNameColorUpdated.OnClientEvent:connect(function(channelName, channelNameColor)
+		ChannelNameColorUpdated.OnClientEvent:Connect(function(channelName, channelNameColor)
 			ChatBar:SetChannelNameColor(channelName, channelNameColor)
 		end)
 	end
@@ -977,7 +977,7 @@ function MutePlayer(player)
 end
 
 if PlayerBlockedEvent then
-	PlayerBlockedEvent.Event:connect(function(player)
+	PlayerBlockedEvent.Event:Connect(function(player)
 		if MutePlayer(player) then
 			local playerName
 
@@ -1001,7 +1001,7 @@ if PlayerBlockedEvent then
 end
 
 if PlayerMutedEvent then
-	PlayerMutedEvent.Event:connect(function(player)
+	PlayerMutedEvent.Event:Connect(function(player)
 		if MutePlayer(player) then
 			local playerName
 
@@ -1033,7 +1033,7 @@ function UnmutePlayer(player)
 end
 
 if PlayerUnBlockedEvent then
-	PlayerUnBlockedEvent.Event:connect(function(player)
+	PlayerUnBlockedEvent.Event:Connect(function(player)
 		if UnmutePlayer(player) then
 			local playerName
 
@@ -1057,7 +1057,7 @@ if PlayerUnBlockedEvent then
 end
 
 if PlayerUnMutedEvent then
-	PlayerUnMutedEvent.Event:connect(function(player)
+	PlayerUnMutedEvent.Event:Connect(function(player)
 		if UnmutePlayer(player) then
 			local playerName
 

@@ -110,7 +110,7 @@ function TransparencyController:SetupTransparency(character)
 		end
 	end)
 	if self.descendantRemovingConn then self.descendantRemovingConn:disconnect() end
-	self.descendantRemovingConn = character.DescendantRemoving:connect(function(object)
+	self.descendantRemovingConn = character.DescendantRemoving:Connect(function(object)
 		if self.cachedParts[object] then
 			self.cachedParts[object] = nil
 			-- Reset the transparency

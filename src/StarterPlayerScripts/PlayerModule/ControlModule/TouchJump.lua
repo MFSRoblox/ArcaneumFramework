@@ -162,7 +162,7 @@ function TouchJump:Create()
         UDim2.new(1, -(jumpButtonSize*1.5-10), 1, -jumpButtonSize * 1.75)
 
 	local touchObject = nil
-	self.jumpButton.InputBegan:connect(function(inputObject)
+	self.jumpButton.InputBegan:Connect(function(inputObject)
 		--A touch that starts elsewhere on the screen will be sent to a frame's InputBegan event
 		--if it moves over the frame. So we check that this is actually a new touch (inputObject.UserInputState ~= Enum.UserInputState.Begin)
 		if touchObject or inputObject.UserInputType ~= Enum.UserInputType.Touch
@@ -181,13 +181,13 @@ function TouchJump:Create()
 		self.jumpButton.ImageRectOffset = Vector2.new(1, 146)
 	end
 
-	self.jumpButton.InputEnded:connect(function(inputObject)
+	self.jumpButton.InputEnded:Connect(function(inputObject)
 		if inputObject == touchObject then
 			OnInputEnded()
 		end
 	end)
 
-	GuiService.MenuOpened:connect(function()
+	GuiService.MenuOpened:Connect(function()
 		if touchObject then
 			OnInputEnded()
 		end

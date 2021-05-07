@@ -153,7 +153,7 @@ function methods:DoLockChatBar()
 	end
 	if self.TextBox then
 		self.TextBox.Active = false
-		self.TextBox.Focused:connect(function()
+		self.TextBox.Focused:Connect(function()
 			self.TextBox:ReleaseFocus()
 		end)
 	end
@@ -167,7 +167,7 @@ function methods:SetUpTextBoxEvents(TextBox, TextLabel, MessageModeTextButton)
 	end
 
 	--// Code for getting back into general channel from other target channel when pressing backspace.
-	self.TextBoxConnections.UserInputBegan = UserInputService.InputBegan:connect(function(inputObj, gpe)
+	self.TextBoxConnections.UserInputBegan = UserInputService.InputBegan:Connect(function(inputObj, gpe)
 		if (inputObj.KeyCode == Enum.KeyCode.Backspace) then
 			if (self:IsFocused() and TextBox.Text == "") then
 				self:SetChannelTarget(ChatSettings.GeneralChannelName)
@@ -175,7 +175,7 @@ function methods:SetUpTextBoxEvents(TextBox, TextLabel, MessageModeTextButton)
 		end
 	end)
 
-	self.TextBoxConnections.TextBoxChanged = TextBox.Changed:connect(function(prop)
+	self.TextBoxConnections.TextBoxChanged = TextBox.Changed:Connect(function(prop)
 		if prop == "AbsoluteSize" then
 			self:CalculateSize()
 			return
@@ -212,20 +212,20 @@ function methods:SetUpTextBoxEvents(TextBox, TextLabel, MessageModeTextButton)
 		end
 	end
 
-	self.TextBoxConnections.MessageModeClick = MessageModeTextButton.MouseButton1Click:connect(function()
+	self.TextBoxConnections.MessageModeClick = MessageModeTextButton.MouseButton1Click:Connect(function()
 		if MessageModeTextButton.Text ~= "" then
 			self:SetChannelTarget(ChatSettings.GeneralChannelName)
 		end
 	end)
 
-	self.TextBoxConnections.TextBoxFocused = TextBox.Focused:connect(function()
+	self.TextBoxConnections.TextBoxFocused = TextBox.Focused:Connect(function()
 		if not self.UserHasChatOff then
 			self:CalculateSize()
 			UpdateOnFocusStatusChanged(true)
 		end
 	end)
 
-	self.TextBoxConnections.TextBoxFocusLost = TextBox.FocusLost:connect(function(enterPressed, inputObject)
+	self.TextBoxConnections.TextBoxFocusLost = TextBox.FocusLost:Connect(function(enterPressed, inputObject)
 		self:CalculateSize()
 		if (inputObject and inputObject.KeyCode == Enum.KeyCode.Escape) then
 			TextBox.Text = ""
@@ -585,7 +585,7 @@ function module.new(CommandProcessor, ChatWindow)
 
 	obj:InitializeAnimParams()
 
-	ChatSettings.SettingsChanged:connect(function(setting, value)
+	ChatSettings.SettingsChanged:Connect(function(setting, value)
 		if (setting == "ChatBarTextSize") then
 			obj:SetTextSize(value)
 		end

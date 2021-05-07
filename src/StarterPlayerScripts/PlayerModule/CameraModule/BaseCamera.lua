@@ -784,17 +784,17 @@ function BaseCamera:ConnectInputEvents()
 		self:OnInputEnded(input, processed)
 	end)
 
-	self.menuOpenedConn = GuiService.MenuOpened:connect(function()
+	self.menuOpenedConn = GuiService.MenuOpened:Connect(function()
 		self:ResetInputStates()
 	end)
 
-	self.gamepadConnectedConn = UserInputService.GamepadDisconnected:connect(function(gamepadEnum)
+	self.gamepadConnectedConn = UserInputService.GamepadDisconnected:Connect(function(gamepadEnum)
 		if self.activeGamepad ~= gamepadEnum then return end
 		self.activeGamepad = nil
 		self:AssignActivateGamepad()
 	end)
 
-	self.gamepadDisconnectedConn = UserInputService.GamepadConnected:connect(function(gamepadEnum)
+	self.gamepadDisconnectedConn = UserInputService.GamepadConnected:Connect(function(gamepadEnum)
 		if self.activeGamepad == nil then
 			self:AssignActivateGamepad()
 		end

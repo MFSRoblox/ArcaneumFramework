@@ -164,7 +164,7 @@ local function createMap()
 		if not this.data[key] then
 			this.data[key] = createCharacterChats()
 			local emptiedCon = nil
-			emptiedCon = this.data[key].Fifo.Emptied:connect(function()
+			emptiedCon = this.data[key].Fifo.Emptied:Connect(function()
 				emptiedCon:disconnect()
 				this:Erase(key)
 			end)
@@ -334,7 +334,7 @@ local function createBillboardInstance(adornee)
 	billboardFrame.Parent = billboardGui
 
 	local billboardChildRemovedCon = nil
-	billboardChildRemovedCon = billboardFrame.ChildRemoved:connect(function()
+	billboardChildRemovedCon = billboardFrame.ChildRemoved:Connect(function()
 		if #billboardFrame:GetChildren() <= 1 then
 			billboardChildRemovedCon:disconnect()
 			billboardGui:Destroy()
@@ -700,18 +700,18 @@ function findPlayer(playerName)
 	end
 end
 
-ChatService.Chatted:connect(function(origin, message, color) this:OnGameChatMessage(origin, message, color) end)
+ChatService.Chatted:Connect(function(origin, message, color) this:OnGameChatMessage(origin, message, color) end)
 
 local cameraChangedCon = nil
 if game.Workspace.CurrentCamera then
-	cameraChangedCon = game.Workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):connect(function(prop) this:CameraCFrameChanged() end)
+	cameraChangedCon = game.Workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function(prop) this:CameraCFrameChanged() end)
 end
 
-game.Workspace.Changed:connect(function(prop)
+game.Workspace.Changed:Connect(function(prop)
 	if prop == "CurrentCamera" then
 		if cameraChangedCon then cameraChangedCon:disconnect() end
 		if game.Workspace.CurrentCamera then
-			cameraChangedCon = game.Workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):connect(function(prop) this:CameraCFrameChanged() end)
+			cameraChangedCon = game.Workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function(prop) this:CameraCFrameChanged() end)
 		end
 	end
 end)
@@ -757,7 +757,7 @@ local ChatEvents = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents")
 local OnMessageDoneFiltering = ChatEvents:WaitForChild("OnMessageDoneFiltering")
 local OnNewMessage = ChatEvents:WaitForChild("OnNewMessage")
 
-OnNewMessage.OnClientEvent:connect(function(messageData, channelName)
+OnNewMessage.OnClientEvent:Connect(function(messageData, channelName)
 	if not checkAllowedMessageType(messageData) then
 		return
 	end
@@ -776,7 +776,7 @@ OnNewMessage.OnClientEvent:connect(function(messageData, channelName)
 	this:OnPlayerChatMessage(sender, messageData.Message, nil)
 end)
 
-OnMessageDoneFiltering.OnClientEvent:connect(function(messageData, channelName)
+OnMessageDoneFiltering.OnClientEvent:Connect(function(messageData, channelName)
 	if not checkAllowedMessageType(messageData) then
 		return
 	end

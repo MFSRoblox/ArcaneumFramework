@@ -39,7 +39,7 @@ local function DoEverything()
 		event.Name = name
 		containerTable.ChatWindow[name] = event
 
-		event.Event:connect(function(...) Chat[name](Chat, ...) end)
+		event.Event:Connect(function(...) Chat[name](Chat, ...) end)
 	end
 
 	local function ConnectFunction(name)
@@ -55,7 +55,7 @@ local function DoEverything()
 		event.Name = name
 		containerTable.ChatWindow[name] = event
 
-		Chat[name]:connect(function(...) event:Fire(...) end)
+		Chat[name]:Connect(function(...) event:Fire(...) end)
 	end
 
 	local function ConnectSignal(name)
@@ -63,7 +63,7 @@ local function DoEverything()
 		event.Name = name
 		containerTable.ChatWindow[name] = event
 
-		event.Event:connect(function(...) Chat[name]:fire(...) end)
+		event.Event:Connect(function(...) Chat[name]:fire(...) end)
 	end
 
 	local function ConnectSetCore(name)
@@ -71,7 +71,7 @@ local function DoEverything()
 		event.Name = name
 		containerTable.SetCore[name] = event
 
-		event.Event:connect(function(...) Chat[name.."Event"]:fire(...) end)
+		event.Event:Connect(function(...) Chat[name.."Event"]:fire(...) end)
 	end
 
 	local function ConnectGetCore(name)

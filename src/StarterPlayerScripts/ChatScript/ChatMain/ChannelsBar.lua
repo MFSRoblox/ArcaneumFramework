@@ -113,11 +113,11 @@ function methods:CreateGuiObjects(targetParent)
 	LeaveTarget.Parent = LeaveConfirmationFrame
 
 	local outPos = LeaveConfirmationFrame.Position
-	LeaveConfirmationButtonYes.MouseButton1Click:connect(function()
+	LeaveConfirmationButtonYes.MouseButton1Click:Connect(function()
 		MessageSender:SendMessage(string.format("/leave %s", LeaveTarget.Value), nil)
 		LeaveConfirmationFrame:TweenPosition(outPos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
 	end)
-	LeaveConfirmationButtonNo.MouseButton1Click:connect(function()
+	LeaveConfirmationButtonNo.MouseButton1Click:Connect(function()
 		LeaveConfirmationFrame:TweenPosition(outPos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
 	end)
 
@@ -185,8 +185,8 @@ function methods:CreateGuiObjects(targetParent)
 	self.GuiObjects.PageRightButtonArrow = PageRightButton.ArrowLabel
 	self:AnimGuiObjects()
 
-	PageLeftButton.MouseButton1Click:connect(function() self:ScrollChannelsFrame(-1) end)
-	PageRightButton.MouseButton1Click:connect(function() self:ScrollChannelsFrame(1) end)
+	PageLeftButton.MouseButton1Click:Connect(function() self:ScrollChannelsFrame(-1) end)
+	PageRightButton.MouseButton1Click:Connect(function() self:ScrollChannelsFrame(1) end)
 
 	self:ScrollChannelsFrame(0)
 end
@@ -214,7 +214,7 @@ function methods:AddChannelTab(channelName)
 	self:OrganizeChannelTabs()
 
 	if (ChatSettings.RightClickToLeaveChannelEnabled) then
-		tab.NameTag.MouseButton2Click:connect(function()
+		tab.NameTag.MouseButton2Click:Connect(function()
 			self.LeaveConfirmationNotice.Text = string.format("Leave channel %s?", tab.ChannelName)
 			self.LeaveConfirmationFrame.LeaveTarget.Value = tab.ChannelName
 			self.LeaveConfirmationFrame:TweenPosition(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.2, true)
@@ -388,7 +388,7 @@ function module.new()
 
 	obj:InitializeAnimParams()
 
-	ChatSettings.SettingsChanged:connect(function(setting, value)
+	ChatSettings.SettingsChanged:Connect(function(setting, value)
 		if (setting == "ChatChannelsTabTextSize") then
 			obj:ResizeChannelTabText(value)
 		end

@@ -4,6 +4,6 @@ local DefaultKeyboardControls = {
     moveBackwardAction = Enum.PlayerActions.CharacterBackward;
     moveLeftAction = Enum.PlayerActions.CharacterLeft;
     moveRightAction = Enum.PlayerActions.CharacterRight;
-    jumpAction = Enum.PlayerActions.CharacterJump; 
+    jumpAction = Enum.PlayerActions.CharacterJump;
 }
 return DefaultKeyboardControls
