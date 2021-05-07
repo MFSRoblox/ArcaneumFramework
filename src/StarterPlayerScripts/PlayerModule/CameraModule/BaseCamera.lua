@@ -1697,11 +1697,11 @@ function BaseCamera:GetVRRotationInput()
 
 	if math.abs(vrGamepadRotation.x) >= self:GetActivateValue() then
 		if (delayExpired or not self.vrRotateKeyCooldown[Enum.KeyCode.Thumbstick2]) then
-			local sign = 1
+			local numSign = 1
 			if vrGamepadRotation.x < 0 then
-				sign = -1
+				numSign = -1
 			end
-			vrRotateSum = vrRotateSum + self:GetRotateAmountValue(vrRotationIntensity) * sign
+			vrRotateSum = vrRotateSum + self:GetRotateAmountValue(vrRotationIntensity) * numSign
 			self.vrRotateKeyCooldown[Enum.KeyCode.Thumbstick2] = true
 		end
 	elseif math.abs(vrGamepadRotation.x) < self:GetActivateValue() - 0.1 then

@@ -19,10 +19,13 @@ end
 
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-local success, UserShouldLocalizeGameChatBubble = pcall(function()
-	return UserSettings():IsUserFeatureEnabled("UserShouldLocalizeGameChatBubble")
-end)
-local UserShouldLocalizeGameChatBubble = success and UserShouldLocalizeGameChatBubble
+local UserShouldLocalizeGameChatBubble do
+	local success, value = pcall(function()
+		return UserSettings():IsUserFeatureEnabled("UserShouldLocalizeGameChatBubble")
+	end)
+	UserShouldLocalizeGameChatBubble = success and value
+end
+
 
 local UserFixBubbleChatText do
 	local success, value = pcall(function()
@@ -669,9 +672,9 @@ function this:BubbleChatEnabled()
 	end
 	local clientChatModules = ChatService:FindFirstChild("ClientChatModules")
 	if clientChatModules then
-		local chatSettings = clientChatModules:FindFirstChild("ChatSettings")
-		if chatSettings then
-			local chatSettings = require(chatSettings)
+		local chatSettingsModule = clientChatModules:FindFirstChild("ChatSettings")
+		if chatSettingsModule then
+			local chatSettings = require(chatSettingsModule)
 			if chatSettings.BubbleChatEnabled ~= nil then
 				return chatSettings.BubbleChatEnabled
 			end

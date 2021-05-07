@@ -116,7 +116,6 @@ EventFolder = useEvents
 --// Rest of code after waiting for correct events.
 
 local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer

@@ -14,7 +14,7 @@ end
 local module = {}
 
 local Players = game:GetService("Players")
-local Chat = game:GetService("Chat")
+--local Chat = game:GetService("Chat")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
@@ -156,7 +156,7 @@ function methods:CreateGuiObjects(targetParent)
 
 		if (not BaseFrame:IsDescendantOf(PlayerGui)) then return end
 
-		local screenGuiParent = GetScreenGuiParent()
+		screenGuiParent = GetScreenGuiParent()
 
 		local minWinSize = ChatSettings.MinimumWindowSize
 		local maxWinSize = ChatSettings.MaximumWindowSize
@@ -285,7 +285,7 @@ function methods:CreateGuiObjects(targetParent)
 		local useXScale = 0
 		local useXOffset = 0
 
-		local screenGuiParent = GetScreenGuiParent()
+		screenGuiParent = GetScreenGuiParent()
 
 		if (deviceType == DEVICE_PHONE) then
 			useXScale = ChatSettings.DefaultWindowSizePhone.X.Scale
@@ -308,7 +308,7 @@ function methods:CreateGuiObjects(targetParent)
 
 	else
 
-		local screenGuiParent = GetScreenGuiParent()
+		screenGuiParent = GetScreenGuiParent()
 
 		if (deviceType == DEVICE_PHONE) then
 			BaseFrame.Size = ChatSettings.DefaultWindowSizePhone
