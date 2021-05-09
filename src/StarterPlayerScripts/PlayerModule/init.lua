@@ -13,6 +13,7 @@ function PlayerModule.new()
 	local self = setmetatable({},PlayerModule)
 	self.cameras = require(script:WaitForChild("CameraModule"))
 	self.controls = require(script:WaitForChild("ControlModule"))
+	self.reactions = require(script:WaitForChild("ReactionModule"))
 	return self
 end
 
@@ -22,6 +23,10 @@ end
 
 function PlayerModule:GetControls()
 	return self.controls
+end
+
+function PlayerModule:GetReactions()
+	return self.reactions
 end
 
 function PlayerModule:GetClickToMoveController()

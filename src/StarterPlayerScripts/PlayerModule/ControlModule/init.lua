@@ -18,6 +18,8 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedEvents = ReplicatedStorage.Events
 local UserGameSettings = UserSettings():GetService("UserGameSettings")
 
 -- Roblox User Input Control Modules - each returns a new() constructor function used to create controllers as needed
@@ -101,6 +103,7 @@ function ControlModule.new()
 	self.activeController = nil
 	self.touchJumpController = nil
 	self.moveFunction = Players.LocalPlayer.Move
+	self.customActionFunction = ReplicatedEvents:WaitForChild("PlayerAction")
 	self.humanoid = nil
 	self.lastInputType = Enum.UserInputType.None
 
@@ -358,7 +361,7 @@ function ControlModule:OnRenderStepped(dt)
 			self.humanoid.Jump = self.activeController:GetIsJumping() or (self.touchJumpController and self.touchJumpController:GetIsJumping())
 		end
 		if self.activeController:GetIsAttacking() then
-			game:GetService("ReplicatedStorage").Events.PlayAnimation:Fire("punch")
+			self.customActionFunction:FireServer("attack")
 		end
 	end
 end
