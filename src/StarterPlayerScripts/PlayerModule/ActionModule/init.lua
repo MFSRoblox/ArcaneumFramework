@@ -3,8 +3,6 @@ local LocalPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ReplicatedEvents = ReplicatedStorage.Events
 
-local DefaultActions = require(script:WaitForChild("DefaultActions"))
-
 local ActionModule = {}
 ActionModule.__index = ActionModule
 
