@@ -22,22 +22,29 @@ function ActionModule.new()
 	if LocalPlayer.Character then
 		self:OnCharacterAdded(LocalPlayer.Character)
 	end
-    self.ValidActions = nil
+    self.ValidActions = {}
+    self.ActionFolder = LocalPlayer:WaitForChild("PlayerActions")
+    self.ActionFolder.ChildAdded:Connect(function(Child)
+        self:LoadAction(Child)
+    end)
     self:LoadActions()
     return self
 end
 
 function ActionModule:LoadActions()
-    if self.ValidActions then
-        for ActionName, ActionSubModule in next, self.ValidActions do
-            ActionSubModule:Enable(false)
-            self.ValidActions[ActionName] = nil
-        end
-        self.ValidActions = nil
+    local Children = self.ActionFolder:GetChildren()
+    for i=1, #Children do
+        local Child = Children[i]
+        self:LoadAction(Child)
     end
-    local ValidActions = {}
+end
+
+function ActionModule:LoadAction(Child)
+    if self.ValidActions[Child.Name] then
+        self.ValidActions[Child.Name] = nil
+    end
+    self.ValidActions[Child.Name] = Child
     --insert code here
-    self.ValidActions = ValidActions
 end
 
 function ActionModule:ExecuteAction(ActionName:String)
