@@ -48,10 +48,7 @@ local runAnimKeyframeHandler = nil
 local PreloadedAnims = {}
 
 local animTable = {}
-local animNames = { 
-	punch = {
-		{id = "http://www.roblox.com/asset/?id=6745003570", weight = 1}
-	},
+local animNames = {
 	idle = 	{	
 				{ id = "http://www.roblox.com/asset/?id=507766666", weight = 1 },
 				{ id = "http://www.roblox.com/asset/?id=507766951", weight = 1 },
