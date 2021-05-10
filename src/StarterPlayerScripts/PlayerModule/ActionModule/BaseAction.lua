@@ -3,12 +3,12 @@ local LocalPlayer = Players.LocalPlayer
 
 local BaseAction = {}
 BaseAction.__index = BaseAction
-function BaseAction.new()
-    local self = setmetatable(script:GetAttributes(),BaseAction)
+function BaseAction.new(Attributes:Dictionary)
+    local self = setmetatable(Attributes,BaseAction)
     self.Humanoid = nil
     self.Animator = nil
     LocalPlayer.CharacterAdded:Connect(function(char) self:OnCharacterAdded(char) end)
-	LocalPlayer.CharacterRemoving:Connect(function(char)  self:OnCharacterRemoving(char) end)
+	LocalPlayer.CharacterRemoving:Connect(function(char) self:OnCharacterRemoving(char) end)
 	if LocalPlayer.Character then
 		self:OnCharacterAdded(LocalPlayer.Character)
 	end
@@ -17,8 +17,12 @@ function BaseAction.new()
     return self
 end
 
+function BaseAction:Enable(ToEnable:Boolean)
+    warn("BaseAction:Enable wasn't overwritten")
+end
+
 function BaseAction:Execute()
-    warn("Action wasn't overwritten")
+    warn("BaseAction:Execute wasn't overwritten")
 end
 
 function BaseAction:LoadAnimation(AnimationId:Content)
