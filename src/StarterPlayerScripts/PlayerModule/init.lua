@@ -14,6 +14,7 @@ function PlayerModule.new()
 	self.cameras = require(script:WaitForChild("CameraModule"))
 	self.controls = require(script:WaitForChild("ControlModule"))
 	self.reactions = require(script:WaitForChild("ReactionModule"))
+	self.actions = require(script:WaitForChild("ActionModule"))
 	return self
 end
 
@@ -23,6 +24,10 @@ end
 
 function PlayerModule:GetControls()
 	return self.controls
+end
+
+function PlayerModule:GetActions()
+	return self.actions
 end
 
 function PlayerModule:GetReactions()

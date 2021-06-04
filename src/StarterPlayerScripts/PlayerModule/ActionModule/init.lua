@@ -9,14 +9,14 @@ ActionModule.__index = ActionModule
 function ActionModule.new()
     local self = setmetatable({},ActionModule)
     self.ServerEvent = ReplicatedEvents:WaitForChild("PlayerAction")
-    self.ServerEvent.OnClientEvent:Connect(function(ActionName) self:PlayAction(ActionName) end)
+    self.ServerEvent.OnClientEvent:Connect(function(ActionName, Data) self:ExecuteAction(ActionName, Data) end)
     self.ClientEvent = Instance.new("BindableEvent")
-    self.ClientEvent.Event:Connect(function(ActionName) self:PlayAction(ActionName) end)
+    self.ClientEvent.Event:Connect(function(ActionName, Data) self:ExecuteAction(ActionName, Data) end)
     self.Humanoid = nil
     self.Animator = nil
     self.Animations = {}
     LocalPlayer.CharacterAdded:Connect(function(char) self:OnCharacterAdded(char) end)
-	LocalPlayer.CharacterRemoving:Connect(function(char)  self:OnCharacterRemoving(char) end)
+	LocalPlayer.CharacterRemoving:Connect(function(char) self:OnCharacterRemoving(char) end)
 	if LocalPlayer.Character then
 		self:OnCharacterAdded(LocalPlayer.Character)
 	end
@@ -41,14 +41,15 @@ function ActionModule:LoadAction(Child)
     if self.ValidActions[Child.Name] then
         self.ValidActions[Child.Name] = nil
     end
-    self.ValidActions[Child.Name] = Child
+    self.ValidActions[Child.Name] = require(Child)
+    
     --insert code here
 end
 
-function ActionModule:ExecuteAction(ActionName:String)
+function ActionModule:ExecuteAction(ActionName:String, Data: Dictionary)
     local SubModule = self.ValidActions[ActionName]
     if SubModule then
-        SubModule:Execute()
+        SubModule:Execute(Data)
     else
         warn("Unknown Action",ActionName,"called on Client")
     end
@@ -68,12 +69,13 @@ function ActionModule:OnCharacterRemoving(char)
     self.Animator = nil
 end
 
-function ActionModule:GetServerEvent()
-    return self.ServerEvent
-end
+do --Getters
+    function ActionModule:GetServerEvent()
+        return self.ServerEvent
+    end
 
-function ActionModule:GetClientEvent()
-    return self.ClientEvent
+    function ActionModule:GetClientEvent()
+        return self.ClientEvent
+    end
 end
-
 return ActionModule.new()

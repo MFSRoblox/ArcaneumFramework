@@ -2,4 +2,8 @@
 local AttackAction = {}
 AttackAction.__index = AttackAction
 
-return AttackAction
+function AttackAction.new()
+
+end
+
+return AttackAction.new()
