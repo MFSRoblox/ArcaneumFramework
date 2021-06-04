@@ -11,12 +11,12 @@ ServerModule.__index = ServerModule
 
 function ServerModule.new()
 	local self = setmetatable({},ServerModule)
-	self.playerActions = require(script:WaitForChild("PlayerActionHandler"))
+	self.PlayerActionHandler = require(script:WaitForChild("PlayerActionHandler"))
 	return self
 end
 
-function ServerModule:GetPlayerActions()
-	return self.playerActions
+function ServerModule:GetPlayerActionHandler()
+	return self.PlayerActionHandler
 end
 
 return ServerModule.new()
