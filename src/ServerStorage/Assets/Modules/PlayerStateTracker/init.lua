@@ -1,27 +1,20 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")
+local Utilities do
+    local Module = ReplicatedModules:WaitForChild("ScriptUtilities")
+    Utilities = require(Module)
+end
 local PlayerState = {}
 PlayerState.__index = PlayerState
 
-local function ModulesToTable(ObjectTable: Table)
-    local self = {}
-    for i=1, #ObjectTable do
-        local Object = ObjectTable[i]
-        if Object:IsA("ModuleScript") then
-            local ModuleData = require(Object)
-            if not ModuleData.IsBaseClass then
-                self[Object.Name] = require(Object)
-            end
-        elseif Object:IsA("Folder") then
-            self[Object.Name] = ModulesToTable(Object:GetChildren())
-        end
-    end
-    return self
-end
-local TrackerSubmodules = ModulesToTable(script:GetChildren())
+local TrackerSubmodules = Utilities:ModulesToTable(script:GetChildren())
 
 function PlayerState.new(Player: Player)
     local self = {}
     setmetatable(self, PlayerState)
     self.Player = Player
+    Players.PlayerRemoving:Connect(function(player) if Player == player then self:Remove() end end)
     self.Loaded = false
     self.LastAction = nil
     self.Class = nil
@@ -35,7 +28,20 @@ end
 
 function PlayerState:LoadState(StateData: Dictionary)
     self.Loaded = false
-    
+    for StateName, Data in StateData, next do
+        local Submodule = TrackerSubmodules[StateName]
+        if Submodule then
+            self[StateName] = Submodule.new(Data)
+        else
+            self[StateName] = Data
+        end
+    end
+    self.Loaded = true
+end
+
+function PlayerState:FreshState() --Good for debugging, should be called if this is the first time a player has played
+    self.Loaded = false
+    self.Class = TrackerSubmodules["ClassTracker"]
     self.Loaded = true
 end
 
