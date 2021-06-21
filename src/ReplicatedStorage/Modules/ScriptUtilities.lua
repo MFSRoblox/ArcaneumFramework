@@ -8,8 +8,10 @@ function ScriptUtilities.new()
     return self
 end
 
-function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:String)
-    
+function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:String, ...)
+    local Success, Result = pcall(PCallFunction, ...)
+    if not Success then warn(string.format("%s: %s",ErrorMsg, Result)) end
+    return Success
 end
 
 function ScriptUtilities:ModulesToTable(ObjectTable: Table)
