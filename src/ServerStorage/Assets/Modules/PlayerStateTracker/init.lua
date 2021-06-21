@@ -14,6 +14,7 @@ function PlayerState.new(Player: Player)
     local self = {}
     setmetatable(self, PlayerState)
     self.Player = Player
+    self.ClassName = "PlayerStateTracker"
     Players.PlayerRemoving:Connect(function(player) if Player == player then self:Remove() end end)
     self.Loaded = false
     self.LastAction = nil
