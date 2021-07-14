@@ -1,6 +1,4 @@
-local BaseClass = {
-    Version = 0
-}
+local BaseClass = {}
 BaseClass.__index = BaseClass
 
 function BaseClass:New(ClassName:String)
