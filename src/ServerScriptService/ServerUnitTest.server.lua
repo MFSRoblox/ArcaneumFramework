@@ -1,7 +1,18 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")
+local GlobalsMod = ReplicatedModules:WaitForChild("Globals")
+local Globals do
+    if GlobalsMod then
+        Globals = require(GlobalsMod)
+    end
+end
+--Globals tests
+do
+    for GlobalVar,Data in pairs(Globals) do
+        print(GlobalVar,Data)
+    end
+end
 local LogService = game:GetService("LogService")
---BaseClass tests
 local function ListenForMessage(Message:String,True:Function,False:Function)
     local MessageOutListener do
         MessageOutListener = LogService.MessageOut:Connect(function(OutputMessage,MessageType)
@@ -14,6 +25,8 @@ local function ListenForMessage(Message:String,True:Function,False:Function)
         end)
     end
 end
+
+--BaseClass tests
 local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
     assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
     local BaseClass = require(BaseClassMod)
