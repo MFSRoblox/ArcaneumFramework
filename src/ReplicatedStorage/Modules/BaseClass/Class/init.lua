@@ -1,16 +1,20 @@
-local Class = {
-    Version = 0;
-}
-Class.__index = Class
 local BaseClass do
     local Module = script.Parent
     if Module then
         BaseClass = require(Module)
     end
 end
+local Class = BaseClass:Extend({
+    Version = 0;
+    Object = script;
+})
 function Class:New(ClassName:String)
-    local NewClass = BaseClass:New(ClassName)
-    NewClass.Sourcers = {}
+    local NewClass = self:Extend(
+        {
+            ClassName = ClassName;
+            Sourcers = {}
+        }
+    )
     return NewClass
 end
 

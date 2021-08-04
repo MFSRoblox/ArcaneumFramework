@@ -6,7 +6,6 @@ local ScriptUtilities do
         ScriptUtilities = require(Mod)
     end
 end
-
 return ScriptUtilities:ModulesToTable(script:GetChildren())
 --[[
     {
