@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")
-local GlobalsMod = ReplicatedModules:WaitForChild("Globals")
 local Globals do
+    local GlobalsMod = ReplicatedModules:WaitForChild("Globals")
     if GlobalsMod then
         Globals = require(GlobalsMod)
     end
@@ -12,19 +12,31 @@ do
         print(GlobalVar,Data)
     end
 end
-local LogService = game:GetService("LogService")
+--[[local LogService = game:GetService("LogService")
 local function ListenForMessage(Message:String,True:Function,False:Function)
-    local MessageOutListener do
-        MessageOutListener = LogService.MessageOut:Connect(function(OutputMessage,MessageType)
-            if OutputMessage == Message then
-                if True then True() end
-            else
-                if False then False() end
+    local MessageOutListener
+    MessageOutListener = LogService.MessageOut:Connect(function()
+        local History = LogService:GetLogHistory()
+        local LatestMessage = History[#History]
+        --print(LatestMessage)
+        --print(OutputMessage, MessageType)
+        local OutputMessage = ""
+        for k,v in pairs(LatestMessage) do
+            print(k,v)
+            if k == "message" then
+                OutputMessage = v
+                print("Got the message!", v)
+                break
             end
-            MessageOutListener:Disconnect()
-        end)
-    end
-end
+        end
+        if OutputMessage == Message then
+            if True then True() end
+        else
+            if False then False() end
+        end
+        MessageOutListener:Disconnect()
+    end)
+end]]
 
 --BaseClass tests
 local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
@@ -34,11 +46,11 @@ local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
     local TestClassName = "BaseTestClass"
     local Object = BaseClass:New(TestClassName)
     assert(Object, "BaseClass didn't return an object!")
-    ListenForMessage(
+    --[[ListenForMessage(
         TestClassName .." has not overwritten Destroy!",
         nil,
-        function() warn("Destroy test failed!") end
-    )
+        function() warn("BaseClassMod: Destroy test failed!") end
+    )]]
     Object:Destroy()
 end
 local ClassMod = BaseClassMod:WaitForChild("Class") do
@@ -48,10 +60,10 @@ local ClassMod = BaseClassMod:WaitForChild("Class") do
     local TestClassName = "TestClass"
     local Object = NewClass:New(TestClassName)
     assert(Object, "BaseClass didn't return an object!")
-    ListenForMessage(
+    --[[ListenForMessage(
         TestClassName .." has not overwritten Destroy!",
         nil,
-        function() warn("Destroy test failed!") end
-    )
+        function() warn("ClassMod: Destroy test failed!") end
+    )]]
     Object:Destroy()
 end
