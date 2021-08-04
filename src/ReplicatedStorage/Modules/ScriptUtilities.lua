@@ -1,10 +1,6 @@
 local ScriptUtilities = {}
 ScriptUtilities.__index = ScriptUtilities
 
-function ScriptUtilities.new()
-    return setmetatable({}, ScriptUtilities)
-end
-
 function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:String, ...)
     local Success, Result = pcall(PCallFunction, ...)
     if not Success then warn(string.format("%s: %s",ErrorMsg, Result)) end
@@ -29,4 +25,4 @@ function ScriptUtilities:ModulesToTable(ObjectTable: Table)
     return output
 end
 
-return ScriptUtilities.new()
+return ScriptUtilities
