@@ -12,6 +12,7 @@ function Class:New(ClassName:String)
     local NewClass = self:Extend(
         {
             ClassName = ClassName;
+            Connections = {};
             Sourcers = {}
         }
     )

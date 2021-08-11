@@ -12,6 +12,8 @@ function InternalClass:New(ClassName:String, Name:String)
     local NewClass = self:Extend((
         {
             ClassName = ClassName;
+            Connections = {};
+            Sourcers = {};
             Name = Name or "UnnamedInternalClass";
         }
     ))
