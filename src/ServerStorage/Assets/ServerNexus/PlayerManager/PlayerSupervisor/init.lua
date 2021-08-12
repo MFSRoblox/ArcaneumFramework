@@ -14,7 +14,7 @@ function PlayerSupervisor:New(Player: Player)
     local PlayerInterface = Instance.new("RemoteEvent")
     PlayerInterface.Name = "ServerHotline"
     NewSupervisor.Interface = PlayerInterface
-    PlayerInterface.Parent = Player.PlayerScripts --Cannot be seen by other players, nice security
+    PlayerInterface.Parent = Player.PlayerGui --Cannot be seen by other players, nice security
     NewSupervisor.Connections.PlayerInterface = PlayerInterface.OnServerEvent:Connect(function(Sender,Data)
         if Player ~= Sender then
             warn(tostring(Sender).." somehow sent data from "..tostring(Player).."'s interface! Should probably look into this...")
@@ -45,6 +45,8 @@ function PlayerSupervisor:Destroy()
         self.Interface:Destroy()
         self.Interface = nil
     end
+    warn(self.ClassName .." has called Destroy at PlayerSupervisor!")
+    BaseClass.Destroy(self)
 end
 
 return PlayerSupervisor
