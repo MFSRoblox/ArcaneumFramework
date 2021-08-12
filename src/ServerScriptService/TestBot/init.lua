@@ -7,12 +7,12 @@ local TestData = {
 }
 local ServerTestData = script:WaitForChild("Server",1) do
     if ServerTestData then
-        TestData.Server = Utilities:ModulesToTable(ServerTestData:GetChildren())
+        TestData.Server = ServerTestData:GetChildren()
     end
 end
 local ClientTestData = script:WaitForChild("Client",1) do
     if ClientTestData then
-        TestData.Client = Utilities:ModulesToTable(ClientTestData:GetChildren())
+        TestData.Client = ClientTestData:GetChildren()
     end
 end
 local function OnRun()
@@ -28,8 +28,11 @@ local function OnRun()
         end)
     end
     for i,Tester in next, TestData.Server do
-        local TesterFeedback = Tester:RunTests()
-        print(TesterFeedback)
+        Tester = require(Tester)
+        if Tester.RunTests then
+            local TesterFeedback = Tester:RunTests()
+            print(TesterFeedback)
+        end
     end
     return true
 end
