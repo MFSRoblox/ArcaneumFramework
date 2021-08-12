@@ -22,14 +22,31 @@ ThisTest:AddTest("PlayerManager Test", function()
     return true
 end, true)
 
+local TestPlayer
 ThisTest:AddTest("PlayerManager Player Presence Test", function()
     local CurrentPlayers = game:GetService("Players"):GetPlayers()
     if #CurrentPlayers < 1 then return "No players to run test on." end
     assert(PlayerManager,"PlayerManager doesn't exist! Abort!")
-    local TestPlayer = CurrentPlayers[1]
-    print(PlayerManager.Supervisors)
+    TestPlayer = CurrentPlayers[1]
+    print(TestPlayer,PlayerManager.Supervisors)
     local TestSupervisor = PlayerManager.Supervisors[TestPlayer]
+    print(TestSupervisor)
     assert(TestSupervisor, "No Supervisor found!")
+    return true
+end)
+
+ThisTest:AddTest("PlayerManager Player \"Removed\" Test", function()
+    if not TestPlayer then return "TestPlayer is nil!" end
+    PlayerManager:RemovePlayer(TestPlayer)
+    assert(not PlayerManager.Supervisors[TestPlayer], "Supervisor for TestPlayer still exists!")
+    return true
+end)
+
+ThisTest:AddTest("PlayerManager Player \"Added\" Test", function()
+    if not TestPlayer then return "TestPlayer is nil!" end
+    PlayerManager:AddPlayer(TestPlayer)
+    print(PlayerManager.Supervisors[TestPlayer])
+    assert(PlayerManager.Supervisors[TestPlayer], "Supervisor for doesn't exist!")
     return true
 end)
 
