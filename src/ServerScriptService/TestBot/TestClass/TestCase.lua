@@ -4,13 +4,10 @@ local TestCaseClass = BaseClass:Extend({
     Object = script;
 })
 function TestCaseClass:New(Name: String, Function: Function, StopOnFailure: Boolean)
-    local NewTest = self:Extend({
-        ClassName = "TestCase";
-        Name = Name;
-        Function = Function or function() end;
-        StopOnFailure = StopOnFailure or false;
-    })
-    return NewTest
+    local NewTest = BaseClass:New("TestCase",Name)
+    NewTest.Function = Function or function() end;
+    NewTest.StopOnFailure = StopOnFailure or false;
+    return self:Extend(NewTest)
 end
 
 function TestCaseClass:Run()

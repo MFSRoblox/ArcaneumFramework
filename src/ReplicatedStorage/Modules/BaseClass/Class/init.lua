@@ -9,14 +9,9 @@ local Class = BaseClass:Extend({
     Object = script;
 })
 function Class:New(ClassName:String)
-    local NewClass = self:Extend(
-        {
-            ClassName = ClassName;
-            Connections = {};
-            Sourcers = {}
-        }
-    )
-    return NewClass
+    local NewClass = BaseClass:New(ClassName)
+    NewClass.Sourcers = {}
+    return self:Extend(NewClass)
 end
 
 function Class:CreateLink(Target: Class): Sourcer

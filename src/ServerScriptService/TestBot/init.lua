@@ -5,12 +5,12 @@ local TestData = {
     Client = {};
     Server = {};
 }
-local ServerTestData = script:WaitForChild("Server") do
+local ServerTestData = script:WaitForChild("Server",1) do
     if ServerTestData then
         TestData.Server = Utilities:ModulesToTable(ServerTestData:GetChildren())
     end
 end
-local ClientTestData = script:WaitForChild("Client") do
+local ClientTestData = script:WaitForChild("Client",1) do
     if ClientTestData then
         TestData.Client = Utilities:ModulesToTable(ClientTestData:GetChildren())
     end
@@ -21,7 +21,7 @@ local function OnRun()
             local aSuc, aNum = pcall(function() return a.Name + 0 end)
             local bSuc, bNum = pcall(function() return b.Name + 0 end)
             if aSuc and bSuc then
-                return aNum > bNum
+                return aNum < bNum
             else
                 warn("One of these aren't a number! A: " .. a.Name .. ", B: " .. b.Name)
             end

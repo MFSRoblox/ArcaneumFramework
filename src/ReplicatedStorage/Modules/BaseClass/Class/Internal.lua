@@ -9,15 +9,9 @@ local InternalClass = BaseClass:Extend({
     Object = script;
 })
 function InternalClass:New(ClassName:String, Name:String)
-    local NewClass = self:Extend((
-        {
-            ClassName = ClassName;
-            Connections = {};
-            Sourcers = {};
-            Name = Name or "UnnamedInternalClass";
-        }
-    ))
-    return NewClass
+    local NewClass = BaseClass:New(ClassName)
+    NewClass.Name = Name or "UnnamedInternalClass"
+    return self:Extend(NewClass)
 end
 
 return InternalClass

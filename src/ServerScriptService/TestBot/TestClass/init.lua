@@ -10,14 +10,9 @@ local Tester = BaseClass:Extend({
     Object = script;
 })
 function Tester:New(TestName: String)
-    local NewTest = self:Extend(
-        {
-            ClassName = "Tester";
-            Name = TestName;
-            Tests = {}
-        }
-    )
-    return NewTest
+    local NewTest = BaseClass:New("Tester",TestName)
+    NewTest.Tests = {}
+    return self:Extend(NewTest)
 end
 
 function Tester:AddTest(Name: String, Function: Function, StopOnFailure: Boolean)
@@ -31,6 +26,7 @@ function Tester:RunTests()
         local Tests = self.Tests
         for i = 1, #Tests do
             local Test = Tests[i]
+            print(Test)
             local Success, Result = Test:Run()
             table.insert(output,{IsSuccessful = Success; Result = Result})
         end
