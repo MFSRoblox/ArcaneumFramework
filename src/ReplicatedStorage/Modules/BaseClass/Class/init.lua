@@ -18,4 +18,14 @@ function Class:CreateLink(Target: Class): Sourcer
     warn(self.ClassName .. " has not overwritten CreateLink!")
 end
 
+function Class:Destroy()
+    for i=1, #self.Sourcers do
+        local Sourcer = self.Sourcers[i]
+        Sourcer:Destroy()
+    end
+    self.Sourcers = nil
+    --warn(self.ClassName .." has called Destroy at Class!")
+    BaseClass.Destroy(self)
+end
+
 return Class

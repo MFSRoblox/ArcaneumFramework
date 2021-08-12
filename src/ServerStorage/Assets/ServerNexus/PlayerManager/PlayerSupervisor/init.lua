@@ -45,7 +45,7 @@ function PlayerSupervisor:Destroy()
         self.Interface:Destroy()
         self.Interface = nil
     end
-    warn(self.ClassName .." has called Destroy at PlayerSupervisor!")
+    --warn(self.ClassName .." has called Destroy at PlayerSupervisor!")
     BaseClass.Destroy(self)
 end
 

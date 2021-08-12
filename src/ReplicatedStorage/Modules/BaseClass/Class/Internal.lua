@@ -14,4 +14,10 @@ function InternalClass:New(ClassName:String, Name:String)
     return self:Extend(NewClass)
 end
 
+function InternalClass:Destroy()
+    self.Name = nil
+    --warn(self.ClassName .." has called Destroy at Internal!")
+    BaseClass.Destroy(self)
+end
+
 return InternalClass

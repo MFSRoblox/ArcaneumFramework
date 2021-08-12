@@ -17,7 +17,14 @@ function BaseClass:New(ClassName:String)
 end
 
 function BaseClass:Destroy(): nil
-    warn(self.ClassName .. " has not overwritten Destroy!")
+    for Label, Connection in next, self.Connections do
+        Connection:Disconnect()
+        self.Connections[Label] = nil
+    end
+    self.Connections = nil
+    --warn(self.ClassName .. " has been Destroyed!")
+    self.ClassName = nil
+    self = nil
 end
 
 return BaseClass
