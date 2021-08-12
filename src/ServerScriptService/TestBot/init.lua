@@ -15,6 +15,7 @@ local ClientTestData = script:WaitForChild("Client",1) do
         TestData.Client = ClientTestData:GetChildren()
     end
 end
+local Separator = "----------------------------------"
 local function OnRun()
     for DataSetName, Data in next, TestData do
         table.sort(Data,function(a,b)
@@ -30,8 +31,10 @@ local function OnRun()
     for i,Tester in next, TestData.Server do
         Tester = require(Tester)
         if Tester.RunTests then
+            print("\n\n"..Separator.."\n" .. Tester.DisplayName .. " will now start their tests (".. Tester.Name ..").")
             local TesterFeedback = Tester:RunTests()
             print(TesterFeedback)
+            print(Separator .."\n\n")
         end
     end
     return true

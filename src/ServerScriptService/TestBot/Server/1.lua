@@ -2,7 +2,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local ServerAssets = ServerStorage:WaitForChild("Assets")
 local Nexus
 local Globals = _G.Arcaneum
-local ThisTest = Globals.ClassFunctions.Tester:New("Test 1: ServerNexus")
+local ThisTest = Globals.ClassFunctions.Tester:New("Nexus Creation")
 ThisTest:AddTest("Nexus Test", function()
     Nexus = ServerAssets:WaitForChild("ServerNexus")
     if Nexus then

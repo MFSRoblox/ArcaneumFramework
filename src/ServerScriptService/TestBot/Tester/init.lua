@@ -9,14 +9,19 @@ local Tester = BaseClass:Extend({
     Version = 1;
     Object = script;
 })
-function Tester:New(TestName: String)
+function Tester:New(TestName: String, DisplayName: String)
     local NewTest = BaseClass:New("Tester",TestName)
+    if not DisplayName then
+        local RandomNames = {"John Doe", "Jane Doe"}
+        DisplayName = "Tester ".. RandomNames[Random.new():NextInteger(1,2)]
+    end
+    NewTest.DisplayName = DisplayName
     NewTest.Tests = {}
     return self:Extend(NewTest)
 end
 
 function Tester:AddTest(Name: String, Function: Function, StopOnFailure: Boolean)
-    print("Tester added test",Name)
+    print(self.DisplayName.." added test",Name)
     table.insert(self.Tests, TestCaseClass:New(Name, Function, StopOnFailure))
 end
 
@@ -31,7 +36,7 @@ function Tester:RunTests()
             table.insert(output,{IsSuccessful = Success; Result = Result})
         end
     end)
-    if not s then output = {} warn("Tester cannot execute all tests! Result:"..tostring(v)) end
+    if not s then output = {} warn("Tester " .. self.DisplayName .." cannot execute all tests! Result:"..tostring(v)) end
     return output
 end
 
