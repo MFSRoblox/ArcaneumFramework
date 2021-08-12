@@ -10,7 +10,7 @@ local InternalClass = BaseClass:Extend({
 })
 function InternalClass:New(ClassName:String, Name:String)
     local NewClass = BaseClass:New(ClassName)
-    NewClass.Name = Name or "UnnamedInternalClass"
+    NewClass.Name = Name or ClassName
     return self:Extend(NewClass)
 end
 
