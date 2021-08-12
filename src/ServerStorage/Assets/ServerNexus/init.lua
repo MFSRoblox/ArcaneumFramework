@@ -5,18 +5,27 @@
 
 	2018 PlayerScripts Update - AllYourBlox
 --]]
+local Globals = _G.Arcaneum
+local BaseClass = _G.Arcaneum.ClassFunctions.Internal
 
-local ServerModule = {}
-ServerModule.__index = ServerModule
+local ServerModule = BaseClass:Extend({
+    Version = 0;
+    Object = script;
+})
 
 function ServerModule.new()
-	local self = setmetatable({},ServerModule)
+	local self = ServerModule:Extend(BaseClass:New("ServerNexus", "ServerNexus"))
 	self.PlayerActionHandler = require(script:WaitForChild("PlayerActionHandler"))
+	self.PlayerManager = require(script:WaitForChild("PlayerManager"))
 	return self
 end
 
 function ServerModule:GetPlayerActionHandler()
 	return self.PlayerActionHandler
+end
+
+function ServerModule:GetPlayerManager()
+	return self.PlayerManager
 end
 
 return ServerModule.new()
