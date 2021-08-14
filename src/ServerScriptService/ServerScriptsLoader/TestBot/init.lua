@@ -1,6 +1,5 @@
 local Globals = _G.Arcaneum
-_G.Arcaneum.ClassFunctions.Tester = require(script.Tester)
-local Utilities = Globals.Utilities
+Globals.ClassFunctions.Tester = require(script.Tester)
 local TestData = {
     Client = {};
     Server = {};

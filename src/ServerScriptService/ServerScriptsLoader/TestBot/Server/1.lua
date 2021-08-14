@@ -1,17 +1,16 @@
 local ServerStorage = game:GetService("ServerStorage")
-local ServerAssets = ServerStorage:WaitForChild("Assets")
 local Nexus
 local Globals = _G.Arcaneum
 local ThisTest = Globals.ClassFunctions.Tester:New("Nexus Creation")
 ThisTest:AddTest("Nexus Test", function()
-    Nexus = ServerAssets:WaitForChild("ServerNexus")
+    Nexus = ServerStorage:WaitForChild("ArcaneumEngine")
     if Nexus then
         Nexus = require(Nexus)
     else
         warn("Nexus doesn't exist! Abort!")
         return false
     end
-    print(Nexus)
+    --print(Nexus)
     return true
 end, true)
 local PlayerManager
@@ -37,6 +36,7 @@ end)
 
 ThisTest:AddTest("PlayerManager Player \"Removed\" Test", function()
     if not TestPlayer then return "TestPlayer is nil!" end
+    print(PlayerManager)
     PlayerManager:RemovePlayer(TestPlayer)
     assert(not PlayerManager.Supervisors[TestPlayer], "Supervisor for TestPlayer still exists!")
     local ServerInterface = TestPlayer.PlayerGui:FindFirstChildWhichIsA("RemoteEvent")

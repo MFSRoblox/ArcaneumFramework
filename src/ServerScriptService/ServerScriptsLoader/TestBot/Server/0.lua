@@ -1,5 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")
+--[[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")]]
 local Globals = _G.Arcaneum
 --Globals tests
 local ThisTest = Globals.ClassFunctions.Tester:New("Engine Foundation")
@@ -13,9 +13,9 @@ ThisTest:AddTest(
     return true
 end, true)
 ThisTest:AddTest("BaseClass Check", function()
-    local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
-        assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
-        local BaseClass = require(BaseClassMod)
+    --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
+        --assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
+        local BaseClass = Globals.ClassFunctions.BaseClass--require(BaseClassMod)
         assert(BaseClass, "BaseClass didn't return anything!")
         local TestClassName = "BaseTestClass"
         local Object = BaseClass:New(TestClassName)
@@ -26,14 +26,14 @@ ThisTest:AddTest("BaseClass Check", function()
             function() warn("BaseClassMod: Destroy test failed!") end
         )]]
         Object:Destroy()
-    end
+    --end
     return true
 end, true)
 ThisTest:AddTest("Class Test", function()
-    local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass")
-    local ClassMod = BaseClassMod:WaitForChild("Class") do
-        assert(ClassMod, "Class doesn't exist in ReplicatedStorage.Modules!")
-        local NewClass = require(ClassMod)
+    --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass")
+    --local ClassMod = BaseClassMod:WaitForChild("Class") do
+        --assert(ClassMod, "Class doesn't exist in ReplicatedStorage.Modules!")
+        local NewClass = Globals.ClassFunctions.Class--require(ClassMod)
         assert(NewClass, "Class didn't return anything!")
         local TestClassName = "TestClass"
         local Object = NewClass:New(TestClassName)
@@ -44,7 +44,7 @@ ThisTest:AddTest("Class Test", function()
             function() warn("ClassMod: Destroy test failed!") end
         )]]
         Object:Destroy()
-    end
+    --studend
     return true
 end, true)
 --[[local LogService = game:GetService("LogService")

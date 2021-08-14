@@ -31,7 +31,7 @@ function Tester:RunTests()
         local Tests = self.Tests
         for i = 1, #Tests do
             local Test = Tests[i]
-            print(Test)
+            print(Test.Name, Test)
             local Success, Result = Test:Run()
             table.insert(output,{IsSuccessful = Success; Result = Result})
         end

@@ -31,6 +31,7 @@ function PlayerManager:AddPlayer(Player: Player)
 end
 
 function PlayerManager:RemovePlayer(Player: Player)
+    print(self.Supervisors[Player])
     self.Supervisors[Player]:Destroy()
     self.Supervisors[Player] = nil
 end

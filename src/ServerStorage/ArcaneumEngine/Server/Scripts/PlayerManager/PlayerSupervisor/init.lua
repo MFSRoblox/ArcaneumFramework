@@ -21,6 +21,7 @@ function PlayerSupervisor:New(Player: Player)
         end
         NewSupervisor:DataFromPlayer(Data)
     end)
+    print(NewSupervisor)
     return NewSupervisor
 end
 
@@ -41,6 +42,8 @@ function PlayerSupervisor:SavePlayerData()
 end
 
 function PlayerSupervisor:Destroy()
+    print(self)
+    print(self.Interface)
     if self.Interface then
         self.Interface:Destroy()
         self.Interface = nil
