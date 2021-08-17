@@ -13,9 +13,6 @@ function Arcaneum:New()
         _G.Arcaneum[Name] = Data
     end
     local Module = require(script[Perspective])
-    if Globals.IsStudio then
-        require(script.TestBot)
-    end
     return Module
 end
 
