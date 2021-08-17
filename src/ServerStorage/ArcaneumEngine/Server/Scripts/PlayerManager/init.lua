@@ -9,7 +9,7 @@ local PlayerManager = BaseClass:Extend(
 )
 local PlayerSupervisor = require(script.PlayerSupervisor)
 
-function PlayerManager:New()
+function PlayerManager:New(): PlayerManager
     local NewManager = self:Extend(BaseClass:New("PlayerManager"))
     NewManager.Supervisors = {}
     NewManager.Connections["PlayerRemoving"] = Players.PlayerRemoving:Connect(function(Player)
@@ -26,12 +26,13 @@ function PlayerManager:New()
     return NewManager
 end
 
-function PlayerManager:AddPlayer(Player: Player)
-    self.Supervisors[Player] = PlayerSupervisor:New(Player)
+function PlayerManager:AddPlayer(Player: Player): PlayerSupervisor
+    local NewSupervisor = PlayerSupervisor:New(Player)
+    self.Supervisors[Player] = NewSupervisor
+    return NewSupervisor
 end
 
-function PlayerManager:RemovePlayer(Player: Player)
-    print(self.Supervisors[Player])
+function PlayerManager:RemovePlayer(Player: Player): nil
     self.Supervisors[Player]:Destroy()
     self.Supervisors[Player] = nil
 end
