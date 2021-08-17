@@ -27,11 +27,22 @@ local function OnRun()
             end
         end)
     end
-    for i,Tester in next, TestData.Server do
+    for _,Tester in next, TestData.Server do
         Tester = require(Tester)
+        local DisplayName = Tester.DisplayName
+        local TestName = Tester.Name
         if Tester.RunTests then
-            print("\n\n"..Separator.."\n" .. Tester.DisplayName .. " will now start their tests (".. Tester.Name ..").")
+            print("\n\n"..Separator.."\n" .. DisplayName .. " will now start their tests (".. TestName ..").")
             local TesterFeedback = Tester:RunTests()
+            print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
+            for i=1, #TesterFeedback do
+                local Feedback = TesterFeedback[i]
+                if Feedback.IsSuccessful then
+                    print(Feedback.Name .. " has worked! Result: " .. tostring(Feedback.Result))
+                else
+                    warn(Feedback.Name .. " has failed! Result: " .. tostring(Feedback.Result))
+                end
+            end
             print(TesterFeedback)
             print(Separator .."\n\n")
         end

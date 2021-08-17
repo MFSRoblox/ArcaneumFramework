@@ -33,7 +33,7 @@ function Tester:RunTests()
             local Test = Tests[i]
             print(Test.Name, Test)
             local Success, Result = Test:Run()
-            table.insert(output,{IsSuccessful = Success; Result = Result})
+            table.insert(output,{Name = Test.Name; IsSuccessful = Success; Result = Result})
         end
     end)
     if not s then output = {} warn("Tester " .. self.DisplayName .." cannot execute all tests! Result:"..tostring(v)) end
