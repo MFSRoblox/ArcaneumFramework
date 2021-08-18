@@ -5,6 +5,12 @@ local TestCaseClass do
         TestCaseClass = require(Mod)
     end
 end
+local TestResultClass do
+    local Mod = script:WaitForChild("TestResult")
+    if Mod then
+        TestResultClass = require(Mod)
+    end
+end
 local Tester = BaseClass:Extend({
     Version = 1;
     Object = script;
@@ -33,7 +39,7 @@ function Tester:RunTests()
             local Test = Tests[i]
             print(Test.Name, Test)
             local Success, Result = Test:Run()
-            table.insert(output,{Name = Test.Name; IsSuccessful = Success; Result = Result})
+            table.insert(output,TestResultClass:New(Test.Name, Success, Result))
         end
     end)
     if not s then output = {} warn("Tester " .. self.DisplayName .." cannot execute all tests! Result:"..tostring(v)) end

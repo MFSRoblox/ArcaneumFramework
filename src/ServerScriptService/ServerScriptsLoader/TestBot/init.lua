@@ -36,14 +36,13 @@ local function OnRun()
             local TesterFeedback = Tester:RunTests()
             print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
             for i=1, #TesterFeedback do
-                local Feedback = TesterFeedback[i]
-                if Feedback.IsSuccessful then
-                    print(Feedback.Name .. " has worked! Result: " .. tostring(Feedback.Result))
+                local Result = TesterFeedback[i]
+                if Result.IsSuccessful then
+                    print(Result)
                 else
-                    warn(Feedback.Name .. " has failed! Result: " .. tostring(Feedback.Result))
+                    warn(Result)
                 end
             end
-            print(TesterFeedback)
             print(Separator .."\n\n")
         end
     end
