@@ -9,10 +9,10 @@ local ServerModule = BaseClass:Extend({
 })
 
 function ServerModule:New()
-	local self = ServerModule:Extend(BaseClass:New("ServerNexus", "ServerNexus"))
-	self.PlayerActionHandler = require(Scripts:WaitForChild("PlayerActionHandler"))
-	self.PlayerManager = require(Scripts:WaitForChild("PlayerManager"))
-	return self
+	local this = self:Extend(BaseClass:New("ServerNexus", "ServerNexus"))
+	this.PlayerActionHandler = nil --require(Scripts:WaitForChild("PlayerActionHandler"))
+	this.PlayerManager = require(Scripts:WaitForChild("PlayerManager"))
+	return this
 end
 
 function ServerModule:GetPlayerActionHandler()
