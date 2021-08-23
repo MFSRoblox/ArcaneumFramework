@@ -28,7 +28,9 @@ end
 
 function Tester:AddTest(Name: String, Function: Function, StopOnFailure: Boolean)
     print(self.DisplayName.." added test",Name)
-    table.insert(self.Tests, TestCaseClass:New(Name, Function, StopOnFailure))
+    local NewTest = TestCaseClass:New(Name, Function, StopOnFailure)
+    table.insert(self.Tests, NewTest)
+    return NewTest
 end
 
 function Tester:RunTests()
