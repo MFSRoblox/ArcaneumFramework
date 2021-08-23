@@ -3,7 +3,6 @@ local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")]]
 local Globals = _G.Arcaneum
 --Globals tests
 local ThisTest = Globals.ClassFunctions.Tester:New("Engine Foundation")
-print(ThisTest)
 ThisTest:AddTest(
     "Global Check",
     function()
