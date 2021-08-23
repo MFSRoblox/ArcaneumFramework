@@ -11,7 +11,7 @@ ThisTest:AddTest(
     end
     return true
 end, true)
-ThisTest:AddTest("BaseClass Check", function()
+ThisTest:AddTest("BaseClass Check", true, function()
     --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
         --assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
         local BaseClass = Globals.ClassFunctions.BaseClass--require(BaseClassMod)
@@ -27,8 +27,8 @@ ThisTest:AddTest("BaseClass Check", function()
         Object:Destroy()
     --end
     return true
-end, true)
-ThisTest:AddTest("Class Test", function()
+end)
+ThisTest:AddTest("Class Test", true, function()
     --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass")
     --local ClassMod = BaseClassMod:WaitForChild("Class") do
         --assert(ClassMod, "Class doesn't exist in ReplicatedStorage.Modules!")
@@ -45,7 +45,7 @@ ThisTest:AddTest("Class Test", function()
         Object:Destroy()
     --studend
     return true
-end, true)
+end)
 --[[local LogService = game:GetService("LogService")
 local function ListenForMessage(Message:String,True:Function,False:Function)
     local MessageOutListener

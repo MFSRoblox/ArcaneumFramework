@@ -2,7 +2,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Nexus
 local Globals = _G.Arcaneum
 local ThisTest = Globals.ClassFunctions.Tester:New("Nexus Creation")
-ThisTest:AddTest("Nexus Test", function()
+ThisTest:AddTest("Nexus Test", true, function()
     Nexus = ServerStorage:WaitForChild("ArcaneumEngine")
     if Nexus then
         Nexus = require(Nexus)
@@ -12,17 +12,17 @@ ThisTest:AddTest("Nexus Test", function()
     end
     --print(Nexus)
     return true
-end, true)
+end)
 local PlayerManager
-ThisTest:AddTest("PlayerManager Test", function()
+ThisTest:AddTest("PlayerManager Test", true, function()
     PlayerManager = Nexus:GetPlayerManager()
     assert(PlayerManager,"PlayerManager doesn't exist! Abort!")
     print(PlayerManager)
     return true
-end, true)
+end)
 
 local TestPlayer
-ThisTest:AddTest("PlayerManager Player Presence Test", function()
+ThisTest:AddTest("PlayerManager Player Presence Test", false, function()
     local CurrentPlayers = game:GetService("Players"):GetPlayers()
     if #CurrentPlayers < 1 then return "No players to run test on." end
     assert(PlayerManager,"PlayerManager doesn't exist! Abort!")
@@ -34,7 +34,7 @@ ThisTest:AddTest("PlayerManager Player Presence Test", function()
     return true
 end)
 
-ThisTest:AddTest("PlayerManager Player \"Removed\" Test", function()
+ThisTest:AddTest("PlayerManager Player \"Removed\" Test", false, function()
     if not TestPlayer then return "TestPlayer is nil!" end
     print(PlayerManager)
     PlayerManager:RemovePlayer(TestPlayer)
@@ -44,7 +44,7 @@ ThisTest:AddTest("PlayerManager Player \"Removed\" Test", function()
     return true
 end)
 
-ThisTest:AddTest("PlayerManager Player \"Added\" Test", function()
+ThisTest:AddTest("PlayerManager Player \"Added\" Test", false, function()
     if not TestPlayer then return "TestPlayer is nil!" end
     PlayerManager:AddPlayer(TestPlayer)
     print(PlayerManager.Supervisors[TestPlayer])
