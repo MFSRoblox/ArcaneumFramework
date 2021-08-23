@@ -3,14 +3,12 @@ local ReplicatedModules = ReplicatedStorage:WaitForChild("Modules")]]
 local Globals = _G.Arcaneum
 --Globals tests
 local ThisTest = Globals.ClassFunctions.Tester:New("Engine Foundation")
-ThisTest:AddTest(
-    "Global Check",
-    function()
+ThisTest:AddTest("Global Check", true, function()
     for GlobalVar,Data in pairs(Globals) do
         print(GlobalVar,Data)
     end
     return true
-end, true)
+end)
 ThisTest:AddTest("BaseClass Check", true, function()
     --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
         --assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
