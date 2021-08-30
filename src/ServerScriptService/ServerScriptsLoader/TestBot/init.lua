@@ -1,5 +1,6 @@
 local Globals = _G.Arcaneum
 Globals.ClassFunctions.Tester = require(script.Tester)
+Globals.TestBot = {}
 local RawData = {
     Server = {};
     Client = {};
@@ -35,6 +36,28 @@ for Perspective, DataSet in next, RawData do
         table.insert(TestData.Positions,Position)
     end
 end
+
+local Players = game:GetService("Players")
+local TestBotProxy = script.TestBotProxy
+TestBotProxy.Disabled = false
+local TargetPlayer do
+    local CurrentPlayers = Players:GetPlayers()
+    if #CurrentPlayers > 0 then
+        TargetPlayer = CurrentPlayers[1]
+    else
+        warn("No Player")
+        --TargetPlayer = Players.PlayerAdded:Wait()
+    end
+    if TargetPlayer then
+        local ProxyFunction = Instance.new("RemoteFunction", TargetPlayer)
+        ProxyFunction.Name = "ProxyFunction"
+        local ProxyEvent = Instance.new("RemoteEvent", TargetPlayer)
+        ProxyEvent.Name = "ProxyEvent"
+    end
+end
+TestBotProxy.Parent = TargetPlayer.PlayerGui
+Globals.TestBot.TestPlayer = TargetPlayer
+
 RawData = nil
 local Separator = "----------------------------------"
 local function OnRun()
@@ -43,21 +66,38 @@ local function OnRun()
         local Perspective = TesterData.Perspective
         local Module = TesterData.Tester
         local Tester = require(Module)
-        local DisplayName = Tester.DisplayName
-        local TestName = Tester.Name
-        if Perspective == "Server" and Tester.RunTests then
-            print("\n\n"..Separator.."\n" .. DisplayName .. " will now start their tests (".. TestName ..").")
-            local TesterFeedback = Tester:RunTests()
-            print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
-            for j=1, #TesterFeedback do
-                local Result = TesterFeedback[j]
-                if Result.IsSuccessful then
-                    print(Result)
-                else
-                    warn(Result)
+        if Tester.RunTests then
+            local DisplayName = Tester.DisplayName
+            local TestName = Tester.Name
+            if Perspective == "Server" then
+                print("\n\n"..Separator.."\n" .. DisplayName .. " will now start their tests (".. TestName ..").")
+                local TesterFeedback = Tester:RunTests()
+                print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
+                for j=1, #TesterFeedback do
+                    local Result = TesterFeedback[j]
+                    if Result.IsSuccessful then
+                        print(Result)
+                    else
+                        warn(Result)
+                    end
                 end
+                print(Separator .."\n\n")
+            elseif Perspective == "Client" then
+                print("\n\n"..Separator.."\n" .. DisplayName .. " will now start their tests (".. TestName ..").")
+                local TesterFeedback = Tester:RunTests()
+                print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
+                for j=1, #TesterFeedback do
+                    local Result = TesterFeedback[j]
+                    if Result.IsSuccessful then
+                        print(Result)
+                    else
+                        warn(Result)
+                    end
+                end
+                print(Separator .."\n\n")
+            else
+                warn("Unknown Perspective: ", Perspective, Module)
             end
-            print(Separator .."\n\n")
         end
     end
     return true
