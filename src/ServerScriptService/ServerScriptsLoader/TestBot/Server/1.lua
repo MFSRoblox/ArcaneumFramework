@@ -39,8 +39,8 @@ ThisTest:AddTest("PlayerManager Player \"Removed\" Test", false, function()
     print(PlayerManager)
     PlayerManager:RemovePlayer(TestPlayer)
     assert(not PlayerManager.Supervisors[TestPlayer], "Supervisor for TestPlayer still exists!")
-    local ServerInterface = TestPlayer.PlayerGui:FindFirstChildWhichIsA("RemoteEvent")
-    assert(not ServerInterface, "ServerInterface is still present in TestPlayer!")
+    --local ServerInterface = TestPlayer.PlayerGui:FindFirstChild("ServerHotline")
+    --assert(not ServerInterface, "ServerInterface is still present in TestPlayer!")
     return true
 end)
 
@@ -49,8 +49,8 @@ ThisTest:AddTest("PlayerManager Player \"Added\" Test", false, function()
     PlayerManager:AddPlayer(TestPlayer)
     print(PlayerManager.Supervisors[TestPlayer])
     assert(PlayerManager.Supervisors[TestPlayer], "Supervisor for doesn't exist!")
-    local ServerInterface = TestPlayer.PlayerGui:FindFirstChildWhichIsA("RemoteEvent")
-    assert(ServerInterface, "ServerInterface not still present in TestPlayer!")
+    --local ServerInterface = TestPlayer.PlayerGui:FindFirstChild("ServerHotline")
+    --assert(ServerInterface, "ServerInterface not still present in TestPlayer!")
     return true
 end)
 
