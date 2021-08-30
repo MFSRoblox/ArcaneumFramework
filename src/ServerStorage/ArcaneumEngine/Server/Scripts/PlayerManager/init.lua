@@ -7,14 +7,18 @@ local PlayerManager = BaseClass:Extend(
         Object = script
     }
 )
+
+local PlayerInterface = Instance.new("RemoteEvent",Globals.Events)
+PlayerInterface.Name = "PlayerInterface"
 local PlayerSupervisor = require(script.PlayerSupervisor)
 
 function PlayerManager:New(): PlayerManager
     local NewManager = self:Extend(BaseClass:New("PlayerManager"))
-    NewManager.Supervisors = {}
-    NewManager.Connections["PlayerRemoving"] = Players.PlayerRemoving:Connect(function(Player)
-        NewManager:RemovePlayer(Player)
+    --NewManager.PlayerInterface = PlayerInterface
+    NewManager.Connections.Interface = PlayerInterface.OnServerEvent:Connect(function(Sender,Data)
+        NewManager.Supervisors[Sender]:DataFromPlayer(Data)
     end)
+    NewManager.Supervisors = {}
     local CurrentPlayers = Players:GetPlayers()
     for i=1, #CurrentPlayers do
         local Player = CurrentPlayers[i]
@@ -23,10 +27,15 @@ function PlayerManager:New(): PlayerManager
     NewManager.Connections["PlayerAdded"] = Players.PlayerAdded:Connect(function(Player)
         NewManager:AddPlayer(Player)
     end)
+    NewManager.Connections["PlayerRemoving"] = Players.PlayerRemoving:Connect(function(Player)
+        NewManager:RemovePlayer(Player)
+    end)
+    print("PlayerManager Booted:", NewManager)
     return NewManager
 end
 
 function PlayerManager:AddPlayer(Player: Player): PlayerSupervisor
+    print("PlayerManager AddPlayer Triggered!", Player)
     local NewSupervisor = PlayerSupervisor:New(Player)
     self.Supervisors[Player] = NewSupervisor
     return NewSupervisor
