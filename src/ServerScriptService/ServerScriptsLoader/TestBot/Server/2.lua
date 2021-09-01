@@ -9,20 +9,11 @@ local Timeout = 10
 local EventFunctions = {
 
 }
-ThisTest:AddTest("TestBotProxy Check", true, function()
-    ProxyFunction = ThisTest.ProxyFunction
-    assert(ProxyFunction, "No ProxyInterface found!")
-    ProxyEvent = ThisTest.ProxyEvent
-    assert(ProxyEvent, "No ProxyEvent found!")
+ThisTest:AddTest("TestBotProxy Check", true, "Client")
+local ConnectionTest = ThisTest:AddTest("Client Connection Test", true, "Client")
+ConnectionTest:AddStep("Client",function(HasConnection)
+    assert(HasConnection,"Stopped test due to lack of connection.")
+    print("insert test stuff here")
     return true
-end)
-ThisTest:AddTest("Client Connection Test", true, function()
-    ProxyEvent:FireClient(TargetPlayer,"Ping", true)
-    local Result, Counter
-    repeat
-        Result = nil
-        Counter += task.wait()
-    until not Result or Counter > Timeout
-    return Result
 end)
 return ThisTest

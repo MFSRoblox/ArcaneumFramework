@@ -3,12 +3,23 @@ local TestCaseClass = BaseClass:Extend({
     Version = 1;
     Object = script;
 })
-function TestCaseClass:New(Name: String, StopOnFailure: Boolean, StartFunction: Function)
+function TestCaseClass:New(Name: String, StopOnFailure: Boolean, StartFunction: Function, ClientConnector: ClientConnector)
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
+    NewTest.ProxyEvent = ClientConnector
     if StartFunction then
         NewTest:AddStep("Server", StartFunction)
+    elseif StartFunction == "Client" then
+        NewTest:AddStep("Server", function()
+            local TargetPlayer = ClientConnector.TargetPlayer
+            assert(TargetPlayer, "No TargetPlayer found!")
+            local ProxyFunction = ClientConnector.ProxyFunction
+            assert(ProxyFunction, "No ProxyInterface found!")
+            local ProxyEvent = ClientConnector.ProxyEvent
+            assert(ProxyEvent, "No ProxyEvent found!")
+            return true
+        end)
     end
     return NewTest
 end
@@ -26,11 +37,13 @@ function TestCaseClass:Run()
     local Steps = self.Steps
     for i=1, #Steps do
         local CurrentStep = Steps[i]
+        local Function = CurrentStep.Function
+        if Function then
+            Success, TestResult = pcall(CurrentStep.Function, TestResult)
+        end
         local Perspective = CurrentStep.Perspective
-        if Perspective ~= "Client" then
-            Success, TestResult = pcall(Steps[i].Function, TestResult)
-        else
-            --Success, TestResult = --InvokeRemote Function of sorts
+        if Perspective == "Client" then
+            Success, TestResult = pcall(self.InvokeClient, self, TestResult)
         end
         if Success == false then
             break
@@ -53,6 +66,22 @@ function TestCaseClass:Run()
         end
         return false, TestResult
     end
+end
+
+function TestCaseClass:InvokeClient(TestResult)
+    local ClientConnector = self.ClientConnector
+    local Timeout = ClientConnector.Timeout
+    local Success = false
+    ClientConnector.ProxyEvent:FireClient(ClientConnector.TargetPlayer,"Ping", TestResult)
+    local Result, Counter
+    repeat
+        Result = nil
+        Counter += task.wait()
+    until not Result or Counter > Timeout
+    if Counter <= Timeout then
+        Success = true
+    end
+    return Result
 end
 
 function TestCaseClass:Destroy()

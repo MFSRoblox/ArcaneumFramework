@@ -1,4 +1,10 @@
 local BaseClass = _G.Arcaneum.ClassFunctions.Internal
+local ClientConnectorClass do
+    local Mod = script:WaitForChild("ClientConnector")
+    if Mod then
+        ClientConnectorClass = require(Mod)
+    end
+end
 local TestCaseClass do
     local Mod = script:WaitForChild("TestCase")
     if Mod then
@@ -12,7 +18,7 @@ local TestResultClass do
     end
 end
 local Tester = BaseClass:Extend({
-    Version = 1;
+    Version = 2;
     Object = script;
 })
 function Tester:New(TestName: String, DisplayName: String)
@@ -28,7 +34,14 @@ end
 
 function Tester:AddTest(Name: String, StopOnFailure: Boolean, StartFunction: Function)
     print(self.DisplayName.." added test",Name)
-    local NewTest = TestCaseClass:New(Name, StopOnFailure, StartFunction)
+    local ClientConnector = nil
+    if StartFunction == "Client" then
+        if not self.ClientConnector then
+            self.ClientConnector = ClientConnectorClass:New(self.TestName..self.Name)
+        end
+        ClientConnector = self.ClientConnector
+    end
+    local NewTest = TestCaseClass:New(Name, StopOnFailure, StartFunction, ClientConnector)
     table.insert(self.Tests, NewTest)
     return NewTest
 end
@@ -48,9 +61,9 @@ function Tester:RunTests()
     return output
 end
 
-function Tester:Destroy()
+function Tester:Destroy(): boolean
     self.Tests = nil
-    return true
+    return BaseClass.Destroy(self)
 end
 
 print(Tester)
