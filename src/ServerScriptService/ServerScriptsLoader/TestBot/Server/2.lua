@@ -5,15 +5,24 @@ local ThisTest = Globals.ClassFunctions.Tester:New("Client Foundations")
 
 local ProxyFunction
 local ProxyEvent
+local Timeout = 10
+local EventFunctions = {
+
+}
 ThisTest:AddTest("TestBotProxy Check", true, function()
-    ProxyFunction = TargetPlayer:WaitForChild("ProxyFunction", 10)
-    ProxyEvent = TargetPlayer:WaitForChild("ProxyEvent", 10)
+    ProxyFunction = ThisTest.ProxyFunction
     assert(ProxyFunction, "No ProxyInterface found!")
+    ProxyEvent = ThisTest.ProxyEvent
     assert(ProxyEvent, "No ProxyEvent found!")
     return true
 end)
 ThisTest:AddTest("Client Connection Test", true, function()
-    local Result = ProxyFunction:InvokeClient(TargetPlayer,"Ping", true)
+    ProxyEvent:FireClient(TargetPlayer,"Ping", true)
+    local Result, Counter
+    repeat
+        Result = nil
+        Counter += task.wait()
+    until not Result or Counter > Timeout
     return Result
 end)
 return ThisTest
