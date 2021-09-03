@@ -32,16 +32,19 @@ function Tester:New(TestName: String, DisplayName: String)
     return self:Extend(NewTest)
 end
 
-function Tester:AddTest(Name: String, StopOnFailure: Boolean, StartFunction: Function)
-    print(self.DisplayName.." added test",Name)
+function Tester:AddTest(TestName: String, StopOnFailure: Boolean, StartFunction: Function)
+    print(self.DisplayName.." added test:",TestName)
     local ClientConnector = nil
     if StartFunction == "Client" then
         if not self.ClientConnector then
-            self.ClientConnector = ClientConnectorClass:New(self.TestName..self.Name)
+            self.ClientConnector = ClientConnectorClass:New(TestName..self.Name)
         end
         ClientConnector = self.ClientConnector
+        StartFunction = function()
+            return "ClientConnector initialized."
+        end
     end
-    local NewTest = TestCaseClass:New(Name, StopOnFailure, StartFunction, ClientConnector)
+    local NewTest = TestCaseClass:New(TestName, StopOnFailure, StartFunction, ClientConnector)
     table.insert(self.Tests, NewTest)
     return NewTest
 end

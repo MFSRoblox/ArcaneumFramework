@@ -66,7 +66,7 @@ function ClientConnector:FireClient(PacketName: String, Data: Dictionary)
 end
 
 function ClientConnector:StartMail(BaseName: String)
-    local RealName = BaseName
+    local RealName = BaseName or "UnnamedMail"
     local ExistingMail = self.Mailbox[RealName]
     local Counter = 1
     while ExistingMail do
@@ -78,12 +78,13 @@ function ClientConnector:StartMail(BaseName: String)
     return NewMail
 end
 
-function ClientConnector:InvokeClient(TestName, Data)
+function ClientConnector:InvokeClient(TestName, Data): Boolean
     local Timeout = self.Timeout
     local Success = false
     local WatchedMail = self:StartMail(TestName)
     self:FireClient(TestName,Data)
-    local Result, Counter
+    local Result
+    local Counter = 0
     repeat
         Result = WatchedMail:GetContents()
         Counter += task.wait()

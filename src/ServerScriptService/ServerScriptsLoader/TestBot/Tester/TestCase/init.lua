@@ -7,7 +7,7 @@ function TestCaseClass:New(Name: String, StopOnFailure: Boolean, StartFunction: 
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
-    NewTest.ProxyEvent = ClientConnector
+    NewTest.ClientConnector = ClientConnector
     if StartFunction then
         NewTest:AddStep("Server", StartFunction)
     elseif StartFunction == "Client" then
@@ -69,19 +69,7 @@ function TestCaseClass:Run()
 end
 
 function TestCaseClass:InvokeClient(TestResult)
-    local ClientConnector = self.ClientConnector
-    local Timeout = ClientConnector.Timeout
-    local Success = false
-    ClientConnector.ProxyEvent:FireClient(ClientConnector.TargetPlayer,"Ping", TestResult)
-    local Result, Counter
-    repeat
-        Result = nil
-        Counter += task.wait()
-    until not Result or Counter > Timeout
-    if Counter <= Timeout then
-        Success = true
-    end
-    return Result
+    return self.ClientConnector:InvokeClient(self.TestName, TestResult)
 end
 
 function TestCaseClass:Destroy()
