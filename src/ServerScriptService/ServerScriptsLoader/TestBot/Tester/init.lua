@@ -1,22 +1,9 @@
-local BaseClass = _G.Arcaneum.ClassFunctions.Internal
-local ClientConnectorClass do
-    local Mod = script:WaitForChild("ClientConnector")
-    if Mod then
-        ClientConnectorClass = require(Mod)
-    end
-end
-local TestCaseClass do
-    local Mod = script:WaitForChild("TestCase")
-    if Mod then
-        TestCaseClass = require(Mod)
-    end
-end
-local TestResultClass do
-    local Mod = script:WaitForChild("TestResult")
-    if Mod then
-        TestResultClass = require(Mod)
-    end
-end
+local Globals = _G.Arcaneum
+local BaseClass = Globals.ClassFunctions.Internal
+local ScriptUtilities = Globals.ScriptUtilities
+local ClientConnectorClass = ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
+local TestCaseClass = ScriptUtilities:ImportModule(script,"TestCase")
+local TestResultClass = ScriptUtilities:ImportModule(script,"TestResult")
 local Tester = BaseClass:Extend({
     Version = 2;
     Object = script;
