@@ -25,4 +25,34 @@ function ScriptUtilities:ModulesToTable(ObjectTable: Table)
     return output
 end
 
+
+--[[
+    local MailClass do
+    local Mod = script:WaitForChild("Mail")
+    if Mod then
+        MailClass = require(Mod)
+    end
+end
+]]
+function ScriptUtilities:ImportModule(Start: Instance, ...: String)
+    local GuidingOrder = table.pack(...)
+    local CurrentObject = Start
+    for i=1, GuidingOrder do
+        local NextObjectName = GuidingOrder[i]
+        if NextObjectName == "Parent" then
+            CurrentObject = CurrentObject.NextObjectName
+        else
+            local ScannedObject = CurrentObject:WaitForChild(NextObjectName)
+            if ScannedObject then
+                CurrentObject = ScannedObject
+            end
+        end
+    end
+    local output = CurrentObject
+    if typeof(output) == "Instance" and output:IsA("ModuleScript") then
+        output = require(CurrentObject)
+    end
+    return output
+end
+
 return ScriptUtilities
