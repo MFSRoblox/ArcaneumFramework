@@ -25,15 +25,6 @@ function ScriptUtilities:ModulesToTable(ObjectTable: Table)
     return output
 end
 
-
---[[
-    local MailClass do
-    local Mod = script:WaitForChild("Mail")
-    if Mod then
-        MailClass = require(Mod)
-    end
-end
-]]
 function ScriptUtilities:ImportModule(Start: Instance, ...: String)
     local GuidingOrder = table.pack(...)
     local CurrentObject = Start
