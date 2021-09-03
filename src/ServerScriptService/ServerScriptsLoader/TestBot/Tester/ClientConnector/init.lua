@@ -43,18 +43,22 @@ function ClientConnector:GotSend(PacketName: String, Data: Dictionary): boolean 
     if ThisMail.Status < 3 then
         ThisMail:SetContents(Data)
         self.ProxyEvent:FireClient(self.TargetPlayer,"Receive",PacketName)
+        return true
+    else
+        print("Got SEND extra packets for:", PacketName)
+        return false
     end
-    print("Got SEND extra packets for:", PacketName)
-    return
 end
 
 function ClientConnector:GotReceive(PacketName: String, Data: Dictionary): boolean -- If the player has recieved a packet from this connector.
     local ThisMail = self.Mailbox[PacketName]
     if ThisMail.Status < 2 then
         ThisMail:SetStatus(2)
+        return true
+    else
+        print("Got RECEIVE extra packets for:", PacketName)
+        return false
     end
-    print("Got RECEIVE extra packets for:", PacketName)
-    return
 end
 
 function ClientConnector:FireClient(PacketName: String, Data: Dictionary)
