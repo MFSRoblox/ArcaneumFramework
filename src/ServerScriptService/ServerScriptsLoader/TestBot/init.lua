@@ -55,6 +55,9 @@ local TargetPlayer do
         ProxyEvent.Name = "ProxyEvent"
     end
 end
+local ClientConnectorPackage = script:WaitForChild("ClientConnector")
+local ClientConnectorClone = ClientConnectorPackage:Clone()
+ClientConnectorClone.Parent = TestBotProxy
 TestBotProxy.Parent = TargetPlayer.PlayerGui
 Globals.TestBot.TestPlayer = TargetPlayer
 
