@@ -8,7 +8,7 @@ local Class = BaseClass:Extend({
     Version = 0;
     Object = script;
 })
-function Class:New(ClassName:String)
+function Class:New(ClassName:string)
     local NewClass = BaseClass:New(ClassName)
     NewClass.Sourcers = {}
     return self:Extend(NewClass)

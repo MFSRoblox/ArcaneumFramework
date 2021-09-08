@@ -6,7 +6,7 @@ local TestResultClass = BaseClass:Extend({
 TestResultClass.__tostring = function(self)
     return string.format("[%s] %s", self.Name, tostring(self.Result))
 end
-function TestResultClass:New(TestName: String, IsSuccessful: Boolean, Result)
+function TestResultClass:New(TestName: string, IsSuccessful: Boolean, Result)
     local NewTest = BaseClass:New("TestCase",TestName)
     NewTest.IsSuccessful = IsSuccessful or false;
     NewTest.Result = Result;

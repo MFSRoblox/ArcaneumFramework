@@ -41,7 +41,7 @@ function PlayerActionHandler:ResetActions()
     end
 end
 
-function PlayerActionHandler:LoadAction(ActionName: String, ServerModule: ModuleScript)
+function PlayerActionHandler:LoadAction(ActionName: string, ServerModule: ModuleScript)
     if not ServerModule:IsA("ModuleScript") then
         warn(ServerModule.Name .. "("..ActionName..") ".."is not a ModuleScript!")
         return
@@ -52,7 +52,7 @@ function PlayerActionHandler:LoadAction(ActionName: String, ServerModule: Module
     return true
 end
 
-function PlayerActionHandler:OnActionEvent(CallingPlayer: Player, ActionName:String, Data: Dictionary)
+function PlayerActionHandler:OnActionEvent(CallingPlayer: Player, ActionName:string, Data: Dictionary)
     ActionName = string.lower(ActionName)
     --[[local PlayerActions = {
         attack = function(Data:Dictionary)

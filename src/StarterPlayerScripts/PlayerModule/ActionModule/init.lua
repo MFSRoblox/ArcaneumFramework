@@ -46,7 +46,7 @@ function ActionModule:LoadAction(Child)
     --insert code here
 end
 
-function ActionModule:ExecuteAction(ActionName:String, Data: Dictionary)
+function ActionModule:ExecuteAction(ActionName:string, Data: Dictionary)
     local SubModule = self.ValidActions[ActionName]
     if SubModule then
         SubModule:Execute(Data)

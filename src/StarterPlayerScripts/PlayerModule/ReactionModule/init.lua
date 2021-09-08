@@ -40,7 +40,7 @@ function ReactionModule:OnCharacterRemoving(char)
     self.Animator = nil
 end
 
-function ReactionModule:PlayAction(ActionName:String)
+function ReactionModule:PlayAction(ActionName:string)
     ActionName = string.lower(ActionName)
     local Animation = self.Animations[ActionName]
     if not Animation then
@@ -54,7 +54,7 @@ function ReactionModule:PlayAction(ActionName:String)
     --Insert GetMarkerReachedSignal here if needed
 end
 
-function ReactionModule:LoadAction(ActionName:String, AnimationId:Content)
+function ReactionModule:LoadAction(ActionName:string, AnimationId:Content)
     ActionName = string.lower(ActionName)
     if not AnimationId then
         AnimationId = DefaultActions[ActionName]

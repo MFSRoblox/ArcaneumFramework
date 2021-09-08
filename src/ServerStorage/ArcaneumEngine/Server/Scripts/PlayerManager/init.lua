@@ -46,7 +46,7 @@ function PlayerManager:RemovePlayer(Player: Player): nil
     self.Supervisors[Player] = nil
 end
 
-function PlayerManager:SignalAllPlayers(FunctionName:String,...)
+function PlayerManager:SignalAllPlayers(FunctionName:string,...)
     local CurrentSupervisors = self.Supervisors
     for Player, Supervisor in next, CurrentSupervisors do
         Supervisor[FunctionName](Supervisor,...)

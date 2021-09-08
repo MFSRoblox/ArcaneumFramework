@@ -3,7 +3,7 @@ local TestCaseClass = BaseClass:Extend({
     Version = 1;
     Object = script;
 })
-function TestCaseClass:New(Name: String, StopOnFailure: Boolean, StartFunction: Function, ClientConnector: ClientConnector)
+function TestCaseClass:New(Name: string, StopOnFailure: Boolean, StartFunction: Function, ClientConnector: ClientConnector)
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
@@ -24,7 +24,7 @@ function TestCaseClass:New(Name: String, StopOnFailure: Boolean, StartFunction: 
     return NewTest
 end
 
-function TestCaseClass:AddStep(Perspective: String, Function: Function)
+function TestCaseClass:AddStep(Perspective: string, Function: Function)
     table.insert(self.Steps,{
         Perspective = Perspective;
         Function = Function;

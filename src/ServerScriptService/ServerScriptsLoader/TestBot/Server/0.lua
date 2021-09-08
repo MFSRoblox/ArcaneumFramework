@@ -45,7 +45,7 @@ ThisTest:AddTest("Class Test", true, function()
     return true
 end)
 --[[local LogService = game:GetService("LogService")
-local function ListenForMessage(Message:String,True:Function,False:Function)
+local function ListenForMessage(Message:string,True:Function,False:Function)
     local MessageOutListener
     MessageOutListener = LogService.MessageOut:Connect(function()
         local History = LogService:GetLogHistory()

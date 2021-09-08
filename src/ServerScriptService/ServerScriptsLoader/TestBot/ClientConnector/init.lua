@@ -13,7 +13,7 @@ local ClientConnector = BaseClass:Extend({
     Object = script;
     Timeout = 10;
 })
-function ClientConnector:New(Name: String): ClientConnector
+function ClientConnector:New(Name: string): ClientConnector
     local NewConnector = self:Extend(BaseClass:New("ClientConnector",Name))
     local TargetPlayer = Globals.TestBot.TestPlayer
     NewConnector.TargetPlayer = TargetPlayer
@@ -25,7 +25,7 @@ function ClientConnector:New(Name: String): ClientConnector
     NewConnector.ProxyEvent = ProxyEvent
     assert(ProxyEvent, "No ProxyEvent found!")
     NewConnector.Mailbox = {}
-    NewConnector.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: String, PacketName: String, Data: Dictionary)
+    NewConnector.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: string, PacketName: string, Data: Dictionary)
         if TargetPlayer == Player then
             local PacketHandler = NewConnector["Got"..tostring(Type)]
             if PacketHandler then
@@ -50,7 +50,7 @@ function ClientConnector:GotSend(PacketName: string, Data: Dictionary): boolean 
     end
 end
 
-function ClientConnector:GotReceive(PacketName: String, Data: Dictionary): boolean -- If the player has recieved a packet from this connector.
+function ClientConnector:GotReceive(PacketName: string, Data: Dictionary): boolean -- If the player has recieved a packet from this connector.
     local ThisMail = self.Mailbox[PacketName]
     if ThisMail.Status < 2 then
         ThisMail:SetStatus(2)
@@ -61,11 +61,11 @@ function ClientConnector:GotReceive(PacketName: String, Data: Dictionary): boole
     end
 end
 
-function ClientConnector:FireClient(PacketName: String, Data: Dictionary)
+function ClientConnector:FireClient(PacketName: string, Data: Dictionary)
     self.ProxyEvent:FireClient(self.TargetPlayer,"Send",PacketName,Data)
 end
 
-function ClientConnector:StartMail(BaseName: String)
+function ClientConnector:StartMail(BaseName: string)
     local RealName = BaseName or "UnnamedMail"
     local ExistingMail = self.Mailbox[RealName]
     local Counter = 1

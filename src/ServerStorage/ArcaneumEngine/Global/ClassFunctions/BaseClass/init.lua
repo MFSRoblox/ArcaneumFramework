@@ -12,7 +12,7 @@ function BaseClass:Extend(NewObject)
     return output
 end
 
-function BaseClass:New(ClassName:String)
+function BaseClass:New(ClassName:string)
     return self:Extend({ClassName = ClassName; Connections = {};})
 end
 

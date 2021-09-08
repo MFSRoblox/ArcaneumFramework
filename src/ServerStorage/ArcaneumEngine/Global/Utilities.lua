@@ -1,7 +1,7 @@
 local ScriptUtilities = {}
 ScriptUtilities.__index = ScriptUtilities
 
-function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:String, ...)
+function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:string, ...)
     local Success, Result = pcall(PCallFunction, ...)
     if not Success then warn(string.format("%s: %s",ErrorMsg, Result)) end
     return Success
@@ -25,7 +25,7 @@ function ScriptUtilities:ModulesToTable(ObjectTable: Table)
     return output
 end
 
-function ScriptUtilities:ImportModule(Start: Instance, ...: String)
+function ScriptUtilities:ImportModule(Start: Instance, ...: string)
     local GuidingOrder = table.pack(...)
     local CurrentObject = Start
     for i=1, GuidingOrder do

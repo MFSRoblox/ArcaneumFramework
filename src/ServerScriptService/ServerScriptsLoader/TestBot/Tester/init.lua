@@ -8,7 +8,7 @@ local Tester = BaseClass:Extend({
     Version = 2;
     Object = script;
 })
-function Tester:New(TestName: String, DisplayName: String)
+function Tester:New(TestName: string, DisplayName: string)
     local NewTest = BaseClass:New("Tester",TestName)
     if not DisplayName then
         local RandomNames = {"John Doe", "Jane Doe"}
@@ -19,7 +19,7 @@ function Tester:New(TestName: String, DisplayName: String)
     return self:Extend(NewTest)
 end
 
-function Tester:AddTest(TestName: String, StopOnFailure: Boolean, StartFunction: Function)
+function Tester:AddTest(TestName: string, StopOnFailure: Boolean, StartFunction: Function)
     print(self.DisplayName.." added test:",TestName)
     local ClientConnector = nil
     if StartFunction == "Client" then
