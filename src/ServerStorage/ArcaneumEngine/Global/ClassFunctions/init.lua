@@ -1,35 +1,17 @@
-local BaseClassMod = script:WaitForChild("BaseClass")
-local BaseClass do
-    if BaseClassMod then
-        BaseClass = require(BaseClassMod)
-    end
-end
-local ClassMod do
-    if BaseClassMod then
-        ClassMod = BaseClassMod:WaitForChild("Class")
-    end
-end
-local Class do
-    if ClassMod then
-        Class = require(ClassMod)
-    end
-end
-local Internal do
-    local Mod = ClassMod:WaitForChild("Internal")
+local Utilities do
+    local Mod = script.Parent:WaitForChild("Utilities")
     if Mod then
-        Internal = require(Mod)
+        Utilities = require(Mod)
     end
 end
-local External do
-    local Mod = nil--ClassMod:WaitForChild("External")
-    if Mod then
-        External = require(Mod)
-    end
-end
+local Class = Utilities:ImportModule(script,"Class")
+local Internal = Utilities:ImportModule(script,"Class","Internal")
+local ClientConnector = Utilities:ImportModule(script,"Class","Internal","ClientConnector")
+local External = nil --Utilities:ImportModule(script,"Class","External")
 local Output = {
-    BaseClass = BaseClass;
     Class = Class;
     Internal = Internal;
+    ClientConnector = ClientConnector;
     External = External;
 }
 return Output

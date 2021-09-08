@@ -1,6 +1,6 @@
 local Globals = require(script.Global)
 _G.Arcaneum = Globals
-local BaseClass = Globals.ClassFunctions.BaseClass
+local BaseClass = Globals.ClassFunctions.Class
 local Arcaneum = BaseClass:Extend({
     Globals = Globals
 })
