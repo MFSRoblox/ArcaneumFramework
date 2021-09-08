@@ -13,32 +13,32 @@ local ClientConnector = BaseClass:Extend({
     Object = script;
     Timeout = 10;
 })
-function ClientConnector:New(TestName: String): ClientConnector
-    local NewTest = self:Extend(BaseClass:New("ClientConnector",TestName))
+function ClientConnector:New(Name: String): ClientConnector
+    local NewConnector = self:Extend(BaseClass:New("ClientConnector",Name))
     local TargetPlayer = Globals.TestBot.TestPlayer
-    NewTest.TargetPlayer = TargetPlayer
+    NewConnector.TargetPlayer = TargetPlayer
     assert(TargetPlayer, "No TargetPlayer found!")
     local ProxyFunction = TargetPlayer:WaitForChild("ProxyFunction", 10)
-    NewTest.ProxyFunction = ProxyFunction
+    NewConnector.ProxyFunction = ProxyFunction
     assert(ProxyFunction, "No ProxyInterface found!")
     local ProxyEvent = TargetPlayer:WaitForChild("ProxyEvent", 10)
-    NewTest.ProxyEvent = ProxyEvent
+    NewConnector.ProxyEvent = ProxyEvent
     assert(ProxyEvent, "No ProxyEvent found!")
-    NewTest.Mailbox = {}
-    NewTest.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: String, PacketName: String, Data: Dictionary)
+    NewConnector.Mailbox = {}
+    NewConnector.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: String, PacketName: String, Data: Dictionary)
         if TargetPlayer == Player then
-            local PacketHandler = NewTest["Got"..tostring(Type)]
+            local PacketHandler = NewConnector["Got"..tostring(Type)]
             if PacketHandler then
-                PacketHandler(NewTest,PacketName, Data)
+                PacketHandler(NewConnector,PacketName, Data)
             else
                 warn("Received invalid ProxyEvent Type from "..tostring(Player).."!")
             end
         end
     end)
-    return NewTest
+    return NewConnector
 end
 
-function ClientConnector:GotSend(PacketName: String, Data: Dictionary): boolean -- If the player has sent a packet to this connector.
+function ClientConnector:GotSend(PacketName: string, Data: Dictionary): boolean -- If the player has sent a packet to this connector.
     local ThisMail = self.Mailbox[PacketName]
     if ThisMail.Status < 3 then
         ThisMail:SetContents(Data)
