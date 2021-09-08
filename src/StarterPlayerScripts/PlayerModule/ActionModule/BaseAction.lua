@@ -3,7 +3,7 @@ local LocalPlayer = Players.LocalPlayer
 
 local BaseAction = {}
 BaseAction.__index = BaseAction
-function BaseAction.new(Attributes:Dictionary)
+function BaseAction.new(Attributes:table)
     local self = setmetatable(Attributes,BaseAction)
     self.Humanoid = nil
     self.Animator = nil
@@ -17,7 +17,7 @@ function BaseAction.new(Attributes:Dictionary)
     return self
 end
 
-function BaseAction:Enable(ToEnable:Boolean)
+function BaseAction:Enable(ToEnable:boolean)
     warn("BaseAction:Enable wasn't overwritten")
 end
 

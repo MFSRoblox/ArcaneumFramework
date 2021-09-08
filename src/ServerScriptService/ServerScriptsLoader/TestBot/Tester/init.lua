@@ -19,7 +19,7 @@ function Tester:New(TestName: string, DisplayName: string)
     return self:Extend(NewTest)
 end
 
-function Tester:AddTest(TestName: string, StopOnFailure: Boolean, StartFunction: Function)
+function Tester:AddTest(TestName: string, StopOnFailure: boolean, StartFunction: Function)
     print(self.DisplayName.." added test:",TestName)
     local ClientConnector = nil
     if StartFunction == "Client" then

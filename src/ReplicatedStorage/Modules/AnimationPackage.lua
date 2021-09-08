@@ -36,6 +36,7 @@ function AnimationClass.new(Package:ModuleScript)
     return self
 end
 
+type Content = string
 function AnimationClass:LoadAnimation(AnimationId:Content)
     if not AnimationId then
         --AnimationId = T-Pose here
@@ -50,7 +51,7 @@ function AnimationClass:LoadAnimation(AnimationId:Content)
     return Animation
 end
 
-function AnimationClass:PickAnimation(AnimationGroup:Table)
+function AnimationClass:PickAnimation(AnimationGroup:table)
     local WeightSum = 0
     local AnimationOrder = {}
     local WeightBounds = {}
@@ -73,7 +74,7 @@ function AnimationClass:PickAnimation(AnimationGroup:Table)
     assert(false,"No Animation was ever selected for AnimationClass:PickAction()! Critical Error!")
 end
 
-function AnimationClass:PlayAnimation(TargetTime: Number)
+function AnimationClass:PlayAnimation(TargetTime: number)
     if self.Animator then
         local Animation = self:PickAnimation()
         local AnimationTrack = self.Animator:LoadAnimation(Animation)

@@ -3,7 +3,8 @@ local TestCaseClass = BaseClass:Extend({
     Version = 1;
     Object = script;
 })
-function TestCaseClass:New(Name: string, StopOnFailure: Boolean, StartFunction: Function, ClientConnector: ClientConnector)
+type ClientConnector = table
+function TestCaseClass:New(Name: string, StopOnFailure: boolean, StartFunction: Function, ClientConnector: ClientConnector)
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}

@@ -96,7 +96,7 @@ local Poppercam = require(script:WaitForChild("Poppercam"))
 local TransparencyController = require(script:WaitForChild("TransparencyController"))
 local MouseLockController = require(script:WaitForChild("MouseLockController"))
 
--- Table of camera controllers that have been instantiated. They are instantiated as they are used.
+-- table of camera controllers that have been instantiated. They are instantiated as they are used.
 local instantiatedCameraControllers = {}
 local instantiatedOcclusionModules = {}
 

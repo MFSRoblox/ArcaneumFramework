@@ -8,6 +8,8 @@ local Class = BaseClass:Extend({
     Version = 0;
     Object = script;
 })
+type Class = table
+type Sourcer = table
 function Class:New(ClassName:string)
     local NewClass = BaseClass:New(ClassName)
     NewClass.Sourcers = {}

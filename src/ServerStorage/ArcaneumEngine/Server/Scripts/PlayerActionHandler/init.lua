@@ -52,10 +52,10 @@ function PlayerActionHandler:LoadAction(ActionName: string, ServerModule: Module
     return true
 end
 
-function PlayerActionHandler:OnActionEvent(CallingPlayer: Player, ActionName:string, Data: Dictionary)
+function PlayerActionHandler:OnActionEvent(CallingPlayer: Player, ActionName:string, Data: table)
     ActionName = string.lower(ActionName)
     --[[local PlayerActions = {
-        attack = function(Data:Dictionary)
+        attack = function(Data:table)
             self.ReactionEvent:FireClient(CallingPlayer, "punch")
         end;
     }]]

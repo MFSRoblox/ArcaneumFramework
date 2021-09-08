@@ -7,7 +7,7 @@ function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:string, ...)
     return Success
 end
 
-function ScriptUtilities:ModulesToTable(ObjectTable: Table)
+function ScriptUtilities:ModulesToTable(ObjectTable: table)
     --print("ModulesToTable Invoked!")
     local output = {}
     for i=1, #ObjectTable do

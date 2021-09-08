@@ -7,6 +7,7 @@ local PlayerManager = BaseClass:Extend(
         Object = script
     }
 )
+type PlayerManager = table
 
 local PlayerInterface = Instance.new("RemoteEvent",Globals.Events)
 PlayerInterface.Name = "PlayerInterface"
@@ -34,6 +35,7 @@ function PlayerManager:New(): PlayerManager
     return NewManager
 end
 
+type PlayerSupervisor = table
 function PlayerManager:AddPlayer(Player: Player): PlayerSupervisor
     print("PlayerManager AddPlayer Triggered!", Player)
     local NewSupervisor = PlayerSupervisor:New(Player)

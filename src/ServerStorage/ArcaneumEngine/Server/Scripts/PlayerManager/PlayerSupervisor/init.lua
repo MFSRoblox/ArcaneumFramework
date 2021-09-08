@@ -20,11 +20,11 @@ function PlayerSupervisor:New(Player: Player)
     return NewSupervisor
 end
 
-function PlayerSupervisor:DataToPlayer(Data: Table)
+function PlayerSupervisor:DataToPlayer(Data: table)
     PlayerInterface:FireClient(self.Player,Data)
 end
 
-function PlayerSupervisor:DataFromPlayer(Data: Table)
+function PlayerSupervisor:DataFromPlayer(Data: table)
     local Function = self.Functions[Data.Name]
     if self.Functions[Data.Name] then
         return Function(Data)

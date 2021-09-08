@@ -12,7 +12,7 @@ Mail.Statuses = {
     "Received",
     "Read"
 }
-
+type Mail = table
 function Mail:New(Name: string): Mail
     local Birthtime = tick()
     local NewMail = self:Extend(BaseClass:New("Mail",Name));
@@ -32,7 +32,7 @@ function Mail:GetStatus(): string
     return self.Statuses[self.Status]
 end
 
-function Mail:SetStatus(StatusCode: integer): string
+function Mail:SetStatus(StatusCode: number): string
     local UpdateTime = nil
     if self.Status < StatusCode then
         UpdateTime = tick()

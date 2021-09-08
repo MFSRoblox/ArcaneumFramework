@@ -13,6 +13,7 @@ local ClientConnector = BaseClass:Extend({
     Object = script;
     Timeout = 10;
 })
+type ClientConnector = table
 function ClientConnector:New(Name: string): ClientConnector
     local NewConnector = self:Extend(BaseClass:New("ClientConnector",Name))
     local TargetPlayer = Globals.TestBot.TestPlayer
@@ -25,7 +26,7 @@ function ClientConnector:New(Name: string): ClientConnector
     NewConnector.ProxyEvent = ProxyEvent
     assert(ProxyEvent, "No ProxyEvent found!")
     NewConnector.Mailbox = {}
-    NewConnector.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: string, PacketName: string, Data: Dictionary)
+    NewConnector.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: string, PacketName: string, Data: table)
         if TargetPlayer == Player then
             local PacketHandler = NewConnector["Got"..tostring(Type)]
             if PacketHandler then
@@ -38,7 +39,7 @@ function ClientConnector:New(Name: string): ClientConnector
     return NewConnector
 end
 
-function ClientConnector:GotSend(PacketName: string, Data: Dictionary): boolean -- If the player has sent a packet to this connector.
+function ClientConnector:GotSend(PacketName: string, Data: table): boolean -- If the player has sent a packet to this connector.
     local ThisMail = self.Mailbox[PacketName]
     if ThisMail.Status < 3 then
         ThisMail:SetContents(Data)
@@ -50,7 +51,7 @@ function ClientConnector:GotSend(PacketName: string, Data: Dictionary): boolean 
     end
 end
 
-function ClientConnector:GotReceive(PacketName: string, Data: Dictionary): boolean -- If the player has recieved a packet from this connector.
+function ClientConnector:GotReceive(PacketName: string, Data: table): boolean -- If the player has recieved a packet from this connector.
     local ThisMail = self.Mailbox[PacketName]
     if ThisMail.Status < 2 then
         ThisMail:SetStatus(2)
@@ -61,7 +62,7 @@ function ClientConnector:GotReceive(PacketName: string, Data: Dictionary): boole
     end
 end
 
-function ClientConnector:FireClient(PacketName: string, Data: Dictionary)
+function ClientConnector:FireClient(PacketName: string, Data: table)
     self.ProxyEvent:FireClient(self.TargetPlayer,"Send",PacketName,Data)
 end
 
@@ -78,7 +79,7 @@ function ClientConnector:StartMail(BaseName: string)
     return NewMail
 end
 
-function ClientConnector:InvokeClient(TestName, Data): Boolean
+function ClientConnector:InvokeClient(TestName, Data): boolean
     local Timeout = self.Timeout
     local Success = false
     local WatchedMail = self:StartMail(TestName)
