@@ -1,7 +1,8 @@
 print("Booting TestBotProxy")
 local Globals = _G.Arcaneum
 print(Globals)
-local ClientConnector = require(script:WaitForChild("ClientConnector")):New("TestProxy")
+local ClientConnectorClass = Globals.ClassFunctions.ClientConnector--local ClientConnector = require(script:WaitForChild("ClientConnector")):New("TestProxy")
+local ClientConnector = ClientConnectorClass:New("TestProxy")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local ProxyFunction = LocalPlayer:WaitForChild("ProxyFunction")
