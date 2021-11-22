@@ -7,8 +7,31 @@ function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:string, ...)
     return Success
 end
 
-function ScriptUtilities:ModulesToTable(ObjectTable: table)
+function ScriptUtilities:GetAttributeFromInstances(AttributeName: string, DefaultValue: any, ...: Instance): ...any
+    --[[
+        Used to get a specific attribute from a set of instances, setting a default value for the output if the instance doesn't have the attribute.
+        The output will return attribute values in the order of which they are inputted into the function.
+    ]]
+    local Objects = table.pack(...)
+    for k, Object in next, Objects do
+        local Output = Object:GetAttribute(AttributeName)
+        if Output == nil then
+            Output = DefaultValue
+        end
+        Objects[k] = Output
+    end
+    return table.unpack(Objects)
+end
+
+function ScriptUtilities:ModulesToTable(ObjectTable: table): Dictionary<any>
+    --[[
+        Used to turn a table of modules (commonly obtained through Instance:GetChildren()) into a dictionary that contains the each module, with the names of each module representing the key to said modules.
+    ]]
     --print("ModulesToTable Invoked!")
+    table.sort(ObjectTable,function(Object1:Instance, Object2:Instance)
+        local Sort1,Sort2 = self:GetAttributeFromInstances("BootPriority", 0, Object1, Object2)
+        return Sort1 > Sort2
+    end)
     local output = {}
     for i=1, #ObjectTable do
         local Object = ObjectTable[i]
@@ -26,12 +49,16 @@ function ScriptUtilities:ModulesToTable(ObjectTable: table)
 end
 
 function ScriptUtilities:ImportModule(Start: Instance, ...: string)
+    --[[
+        Safely imports a module using traditional syntax such as "script.Parent[InstanceName][InstanceName][InstanceName][etc]", but ensures each object in the index exists through WaitForChild functions.
+        If successful, it will require that module and return the contents of said module.
+    ]]
     local GuidingOrder = table.pack(...)
     local CurrentObject = Start
     for i=1, #GuidingOrder do
         local NextObjectName = GuidingOrder[i]
         if NextObjectName == "Parent" then
-            CurrentObject = CurrentObject.NextObjectName
+            CurrentObject = CurrentObject[NextObjectName]
         else
             local ScannedObject = CurrentObject:WaitForChild(NextObjectName)
             if ScannedObject then
