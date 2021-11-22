@@ -13,14 +13,16 @@ function ScriptUtilities:GetAttributeFromInstances(AttributeName: string, Defaul
         The output will return attribute values in the order of which they are inputted into the function.
     ]]
     local Objects = table.pack(...)
+    Objects.n = nil --It returns n apparently
+    local OutputTable = {}
     for k, Object in next, Objects do
         local Output = Object:GetAttribute(AttributeName)
         if Output == nil then
             Output = DefaultValue
         end
-        Objects[k] = Output
+        OutputTable[k] = Output
     end
-    return table.unpack(Objects)
+    return table.unpack(OutputTable)
 end
 
 function ScriptUtilities:ModulesToTable(ObjectTable: table): Dictionary<any>
