@@ -1,5 +1,6 @@
 local Globals = require(script.Global)
 _G.Arcaneum = Globals
+Globals.ClassFunctions.ClientConnector = Globals.Utilities:ImportModule(script,"Global","ClassFunctions","Class","Internal","ClientConnector")
 local BaseClass = Globals.ClassFunctions.Class
 local Arcaneum = BaseClass:Extend({
     Globals = Globals
