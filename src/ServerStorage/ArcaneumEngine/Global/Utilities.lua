@@ -1,6 +1,6 @@
 local ScriptUtilities = {}
 ScriptUtilities.__index = ScriptUtilities
-
+export type Function = typeof(function() end)
 function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:string, ...)
     local Success, Result = pcall(PCallFunction, ...)
     if not Success then warn(string.format("%s: %s",ErrorMsg, Result)) end
@@ -28,7 +28,7 @@ end
 function ScriptUtilities:ImportModule(Start: Instance, ...: string)
     local GuidingOrder = table.pack(...)
     local CurrentObject = Start
-    for i=1, GuidingOrder do
+    for i=1, #GuidingOrder do
         local NextObjectName = GuidingOrder[i]
         if NextObjectName == "Parent" then
             CurrentObject = CurrentObject.NextObjectName
