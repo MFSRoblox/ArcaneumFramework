@@ -8,6 +8,7 @@ local Tester = BaseClass:Extend({
     Version = 2;
     Object = script;
 })
+type Function = typeof(function() end)
 function Tester:New(TestName: string, DisplayName: string)
     local NewTest = BaseClass:New("Tester",TestName)
     if not DisplayName then
