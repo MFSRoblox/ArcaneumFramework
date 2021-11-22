@@ -1,6 +1,6 @@
 local Globals = _G.Arcaneum
 local BaseClass = Globals.ClassFunctions.Internal
-local ScriptUtilities = Globals.ScriptUtilities
+local ScriptUtilities = Globals.Utilities
 local ClientConnectorClass = ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
 local TestCaseClass = ScriptUtilities:ImportModule(script,"TestCase")
 local TestResultClass = ScriptUtilities:ImportModule(script,"TestResult")
