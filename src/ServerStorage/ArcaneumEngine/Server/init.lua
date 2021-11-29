@@ -1,4 +1,4 @@
-local Globals = _G.Arcaneum
+local Globals = require(script.Parent.Global)
 local BaseClass = Globals.ClassFunctions.Internal
 
 local Scripts = script.Scripts
