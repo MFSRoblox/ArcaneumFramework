@@ -3,7 +3,10 @@ ScriptUtilities.__index = ScriptUtilities
 export type Function = typeof(function() end)
 function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:string, ...)
     local Success, Result = pcall(PCallFunction, ...)
-    if not Success then warn(string.format("%s: %s",ErrorMsg, Result)) end
+    if not Success then
+        local warnMessage = string.format("%s: %s",ErrorMsg, Result)
+        warn(warnMessage)
+    end
     return Success
 end
 
