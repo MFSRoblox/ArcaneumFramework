@@ -1,4 +1,5 @@
 local BaseClass = _G.Arcaneum.ClassFunctions.Internal
+type Function = typeof(function() end)
 local TestCaseClass = BaseClass:Extend({
     Version = 1;
     Object = script;
