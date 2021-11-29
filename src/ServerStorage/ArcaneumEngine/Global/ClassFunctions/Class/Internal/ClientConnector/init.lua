@@ -60,6 +60,9 @@ function ClientConnector:GotReceive(PacketName: string, Data: table): boolean --
         print("Got RECEIVE extra packets for:", PacketName)
         return false
     end
+    if Data ~= nil then
+        print("Got RECEIVE Data, but it isn't really used:", Data)
+    end
 end
 
 function ClientConnector:FireClient(PacketName: string, Data: table)
