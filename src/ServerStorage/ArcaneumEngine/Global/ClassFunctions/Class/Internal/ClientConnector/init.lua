@@ -14,9 +14,9 @@ local ClientConnector = BaseClass:Extend({
     Timeout = 10;
 })
 type ClientConnector = table
-function ClientConnector:New(Name: string): ClientConnector
+function ClientConnector:New(Name: string, TargetPlayer: Player): ClientConnector
     local NewConnector = self:Extend(BaseClass:New("ClientConnector",Name))
-    local TargetPlayer = Globals.TestBot.TestPlayer
+    --local TargetPlayer = Globals.TestBot.TestPlayer
     NewConnector.TargetPlayer = TargetPlayer
     assert(TargetPlayer, "No TargetPlayer found!")
     local ProxyFunction = TargetPlayer:WaitForChild("ProxyFunction", 10)
@@ -26,7 +26,7 @@ function ClientConnector:New(Name: string): ClientConnector
     NewConnector.ProxyEvent = ProxyEvent
     assert(ProxyEvent, "No ProxyEvent found!")
     NewConnector.Mailbox = {}
-    NewConnector.Connections["TestBotProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: string, PacketName: string, Data: table)
+    NewConnector.Connections["ProxyListener"] = ProxyEvent.OnServerEvent:Connect(function(Player: Player, Type: string, PacketName: string, Data: table)
         if TargetPlayer == Player then
             local PacketHandler = NewConnector["Got"..tostring(Type)]
             if PacketHandler then
