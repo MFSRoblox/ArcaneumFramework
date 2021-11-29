@@ -1,9 +1,4 @@
-local BaseClass do
-    local Module = script.Parent
-    if Module then
-        BaseClass = require(Module)
-    end
-end
+local BaseClass = require(script.Parent)
 local InternalClass = BaseClass:Extend({
     Version = 0;
     Object = script;
