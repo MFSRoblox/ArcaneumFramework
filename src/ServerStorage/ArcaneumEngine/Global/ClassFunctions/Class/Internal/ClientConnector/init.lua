@@ -1,4 +1,3 @@
-local Globals = _G.Arcaneum
 local BaseClass = require(script.Parent)
 
 local MailClass do
