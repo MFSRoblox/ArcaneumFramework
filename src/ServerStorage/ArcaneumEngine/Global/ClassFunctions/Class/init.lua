@@ -30,7 +30,7 @@ function BaseClass:Extend(NewObject)
     return output
 end
 --[=[
-    Creates a raw BaseClass.
+    Creates a new BaseClass object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
