@@ -1,10 +1,11 @@
 local ServerStorage = game:GetService("ServerStorage")
-local RunService = game:GetService("RunService")
 local BootDrive = ServerStorage:WaitForChild("ArcaneumEngine")
 print("Booting")
-require(BootDrive)
+local Software = require(BootDrive)
 print("Booted")
---[[print(RunService:IsRunMode())
+--[[
+local RunService = game:GetService("RunService")
+print(RunService:IsRunMode())
 if _G.Arcaneum.IsStudio and not RunService:IsRunMode() then
     game:GetService("Players").PlayerAdded:Wait()]]
 --end
@@ -15,5 +16,5 @@ if _G.Arcaneum.IsTesting then
         print(i)
         wait(1)
     end
-    require(script.TestBot)
+    require(script.TestBot)(Software)
 end
