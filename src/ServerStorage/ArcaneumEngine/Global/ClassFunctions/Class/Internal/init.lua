@@ -1,10 +1,10 @@
+local BaseClass = require(script.Parent)
 --[=[
     @class InternalClass
     @server
     @client
     The foundational class for replicated objects. In comparison to the BaseClass, the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
 ]=]
-local BaseClass = require(script.Parent)
 local InternalClass = BaseClass:Extend({
     Version = 0;
     Object = script;
