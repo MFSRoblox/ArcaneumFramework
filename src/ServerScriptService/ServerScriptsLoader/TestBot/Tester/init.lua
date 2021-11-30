@@ -48,7 +48,10 @@ function Tester:RunTests()
             table.insert(output,TestResultClass:New(Test.Name, Success, Result))
         end
     end)
-    if not s then output = {} warn("Tester " .. self.DisplayName .." cannot execute all tests! Result:"..tostring(v)) end
+    if not s then
+        output = {}
+        warn("Tester " .. self.DisplayName .." cannot execute all tests! Result:"..tostring(v))
+    end
     return output
 end
 

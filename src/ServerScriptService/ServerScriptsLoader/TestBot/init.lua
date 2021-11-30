@@ -23,15 +23,21 @@ local TestData = {
 }
 for Perspective, DataSet in next, RawData do
     table.sort(DataSet,function(a,b)
-        local aSuc, aNum = pcall(function() return a.Name + 0 end)
-        local bSuc, bNum = pcall(function() return b.Name + 0 end)
+        local aSuc, aNum = pcall(function()
+            return a.Name + 0
+        end)
+        local bSuc, bNum = pcall(function()
+            return b.Name + 0
+        end)
         assert(aSuc and bSuc,"One of these aren't a number! A: " .. a.Name .. ", B: " .. b.Name)
         return aNum < bNum
     end)
     for i=1, #DataSet do
         local ModuleScript = DataSet[i]
         local Position = ModuleScript.Name
-        if TestData.Tests[Position] then warn("The test with the number \""..Position.."\" [",TestData.Tests[Position],"] was replaced by", ModuleScript) end
+        if TestData.Tests[Position] then
+            warn("The test with the number \""..Position.."\" [",TestData.Tests[Position],"] was replaced by", ModuleScript)
+        end
         TestData.Tests[Position] = {Perspective = Perspective; Tester = ModuleScript}
         table.insert(TestData.Positions,Position)
     end
@@ -49,10 +55,12 @@ local TargetPlayer do
         --TargetPlayer = Players.PlayerAdded:Wait()
     end
     if TargetPlayer then
-        local ProxyFunction = Instance.new("RemoteFunction", TargetPlayer)
+        local ProxyFunction = Instance.new("RemoteFunction")
         ProxyFunction.Name = "ProxyFunction"
-        local ProxyEvent = Instance.new("RemoteEvent", TargetPlayer)
+        ProxyFunction.Parent = TargetPlayer
+        local ProxyEvent = Instance.new("RemoteEvent")
         ProxyEvent.Name = "ProxyEvent"
+        ProxyEvent.Parent = TargetPlayer
     end
 end
 TestBotProxy.Parent = TargetPlayer.PlayerGui
