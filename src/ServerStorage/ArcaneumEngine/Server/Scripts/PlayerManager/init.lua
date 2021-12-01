@@ -18,8 +18,9 @@ local PlayerManager = BaseClass:Extend(
 )
 type PlayerManager = table
 
-local PlayerInterface = Instance.new("RemoteEvent",ArcaneumGlobals.Events)
+local PlayerInterface = Instance.new("RemoteEvent")
 PlayerInterface.Name = "PlayerInterface"
+PlayerInterface.Parent = ArcaneumGlobals.Events
 local PlayerSupervisor = require(script.PlayerSupervisor)
 
 function PlayerManager:New(): PlayerManager
@@ -59,7 +60,7 @@ end
 
 function PlayerManager:SignalAllPlayers(FunctionName:string,...)
     local CurrentSupervisors = self.Supervisors
-    for Player, Supervisor in next, CurrentSupervisors do
+    for _Player, Supervisor in next, CurrentSupervisors do
         Supervisor[FunctionName](Supervisor,...)
     end
 end
