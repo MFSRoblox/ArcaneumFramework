@@ -16,7 +16,7 @@ until ArcaneumGlobals ~= nil
 --[[
 local RunService = game:GetService("RunService")
 print(RunService:IsRunMode())
-if _G.Arcaneum.IsStudio and not RunService:IsRunMode() then
+if ArcaneumGlobals.IsStudio and not RunService:IsRunMode() then
     game:GetService("Players").PlayerAdded:Wait()]]
 --end
 local WaitTime = 10
