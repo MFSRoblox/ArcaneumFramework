@@ -8,9 +8,8 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
-Globals.ClassFunctions.Tester = require(script.Tester)
-Globals.TestBot = {}
+ArcaneumGlobals.ClassFunctions.Tester = require(script.Tester)
+ArcaneumGlobals.TestBot = {}
 local RawData = {
     Server = {};
     Client = {};
@@ -74,7 +73,7 @@ local TargetPlayer do
     end
 end
 TestBotProxy.Parent = TargetPlayer.PlayerGui
-Globals.TestBot.TestPlayer = TargetPlayer
+ArcaneumGlobals.TestBot.TestPlayer = TargetPlayer
 
 RawData = nil
 local Separator = "----------------------------------"

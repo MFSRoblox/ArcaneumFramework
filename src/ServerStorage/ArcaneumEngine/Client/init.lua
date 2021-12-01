@@ -8,8 +8,7 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
-local BaseClass = Globals.ClassFunctions.Internal
+local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
 
 local Scripts = script.Scripts
 

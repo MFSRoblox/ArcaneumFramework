@@ -8,8 +8,7 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
-local BaseClass = Globals.ClassFunctions.Internal
+local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
 local Players = game:GetService("Players")
 local PlayerManager = BaseClass:Extend(
     {
@@ -19,7 +18,7 @@ local PlayerManager = BaseClass:Extend(
 )
 type PlayerManager = table
 
-local PlayerInterface = Instance.new("RemoteEvent",Globals.Events)
+local PlayerInterface = Instance.new("RemoteEvent",ArcaneumGlobals.Events)
 PlayerInterface.Name = "PlayerInterface"
 local PlayerSupervisor = require(script.PlayerSupervisor)
 

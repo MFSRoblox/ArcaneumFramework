@@ -8,7 +8,6 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
 local BaseClass = require(script.Parent.Parent)
 local Mail = BaseClass:Extend({
     Version = 2;

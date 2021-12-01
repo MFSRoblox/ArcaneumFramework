@@ -8,10 +8,9 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
-local TargetPlayer = Globals.TestBot.TestPlayer
+local TargetPlayer = ArcaneumGlobals.TestBot.TestPlayer
 print("Got TargetPlayer:",TargetPlayer)
-local ThisTest = Globals.ClassFunctions.Tester:New("Client Foundations")
+local ThisTest = ArcaneumGlobals.ClassFunctions.Tester:New("Client Foundations")
 ThisTest:AddTest("TestBotProxy Check", true, "Client")
 local ConnectionTest = ThisTest:AddTest("Client Connection Test", true, "Client")
 local ClientConnector = ConnectionTest.ClientConnector

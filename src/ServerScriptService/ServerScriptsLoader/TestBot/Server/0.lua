@@ -10,11 +10,10 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
 --Globals tests
-local ThisTest = Globals.ClassFunctions.Tester:New("Engine Foundation")
+local ThisTest = ArcaneumGlobals.ClassFunctions.Tester:New("Engine Foundation")
 ThisTest:AddTest("Global Check", true, function()
-    for GlobalVar,Data in pairs(Globals) do
+    for GlobalVar,Data in pairs(ArcaneumGlobals) do
         print(GlobalVar,Data)
     end
     return true
@@ -22,7 +21,7 @@ end)
 ThisTest:AddTest("BaseClass Check", true, function()
     --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
         --assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
-        local BaseClass = Globals.ClassFunctions.Class--require(BaseClassMod)
+        local BaseClass = ArcaneumGlobals.ClassFunctions.Class--require(BaseClassMod)
         assert(BaseClass, "BaseClass didn't return anything!")
         local TestClassName = "BaseTestClass"
         local Object = BaseClass:New(TestClassName)

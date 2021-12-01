@@ -10,8 +10,7 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local Globals = ArcaneumGlobals
-local ThisTest = Globals.ClassFunctions.Tester:New("Nexus Creation")
+local ThisTest = ArcaneumGlobals.ClassFunctions.Tester:New("Nexus Creation")
 ThisTest:AddTest("Nexus Test", true, function()
     Nexus = ServerStorage:WaitForChild("ArcaneumEngine")
     if Nexus then
