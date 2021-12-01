@@ -1,0 +1,8 @@
+[package]
+name = "leoyulee/arcaneumframework"
+version = "0.1.0"
+registry = "https://github.com/MFSRoblox/LeylinesAlpha"
+realm = "shared"
+
+[dependencies]
+Knit = "sleitnick/knit@^1"
