@@ -1,7 +1,18 @@
 print("Initializing Arcaneum Globals...")
-local Globals = require(script.Global)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedFolderName = "Arcaneum"
+local ReplicatedFolder = ReplicatedStorage:FindFirstChild(ReplicatedFolderName) do
+    if not ReplicatedFolder then
+        ReplicatedFolder = Instance.new("Folder")
+        ReplicatedFolder.Name = ReplicatedFolderName
+        ReplicatedFolder.Parent = ReplicatedStorage
+    end
+end
+local GlobalsModule = script.Global
+GlobalsModule.Parent = ReplicatedFolder
+local Globals = require(GlobalsModule)
 --_G.Arcaneum = Globals
-Globals.ClassFunctions.ClientConnector = Globals.Utilities:ImportModule(script,"Global","ClassFunctions","Class","Internal","ClientConnector")
+Globals.ClassFunctions.ClientConnector = Globals.Utilities:ImportModule(GlobalsModule,"ClassFunctions","Class","Internal","ClientConnector")
 print("Arcaneum Globals:",Globals)
 local BaseClass = Globals.ClassFunctions.Class
 local Arcaneum = BaseClass:Extend({
