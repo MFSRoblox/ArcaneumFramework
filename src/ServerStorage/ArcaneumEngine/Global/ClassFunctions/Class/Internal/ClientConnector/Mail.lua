@@ -1,5 +1,5 @@
-local Globals = _G.Arcaneum
-local BaseClass = Globals.ClassFunctions.Internal
+--local Globals = _G.Arcaneum
+local BaseClass = require(script.Parent.Parent)
 local Mail = BaseClass:Extend({
     Version = 2;
     Object = script;
