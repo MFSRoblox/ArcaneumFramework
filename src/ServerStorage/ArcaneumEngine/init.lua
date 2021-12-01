@@ -10,7 +10,6 @@ local GlobalsModule = ReplicatedStorage:FindFirstChild(GlobalModuleName) do
 end
 GlobalsModule.Parent = ReplicatedStorage
 local ArcaneumGlobals = require(GlobalsModule)
---_G.Arcaneum = Globals
 ArcaneumGlobals.ClassFunctions.ClientConnector = ArcaneumGlobals.Utilities:ImportModule(GlobalsModule,"ClassFunctions","Class","Internal","ClientConnector")
 print("Arcaneum Globals:",ArcaneumGlobals)
 local BaseClass = ArcaneumGlobals.ClassFunctions.Class

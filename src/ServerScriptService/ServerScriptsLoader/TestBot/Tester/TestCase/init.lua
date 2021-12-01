@@ -1,4 +1,14 @@
-local BaseClass = _G.Arcaneum.ClassFunctions.Internal
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GlobalModuleName = "Arcaneum"
+local ArcaneumGlobals repeat
+    ArcaneumGlobals = ReplicatedStorage:FindFirstChild(GlobalModuleName)
+    if ArcaneumGlobals == nil then
+        task.wait(1)
+    else
+        ArcaneumGlobals = require(ArcaneumGlobals)
+    end
+until ArcaneumGlobals ~= nil
+local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
 type Function = typeof(function() end)
 local TestCaseClass = BaseClass:Extend({
     Version = 1;
