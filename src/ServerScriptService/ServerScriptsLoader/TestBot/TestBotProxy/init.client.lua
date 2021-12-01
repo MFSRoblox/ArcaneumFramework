@@ -1,5 +1,15 @@
 print("Booting TestBotProxy")
-local Globals = _G.Arcaneum
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GlobalModuleName = "Arcaneum"
+local ArcaneumGlobals repeat
+    ArcaneumGlobals = ReplicatedStorage:FindFirstChild(GlobalModuleName)
+    if ArcaneumGlobals == nil then
+        task.wait(1)
+    else
+        ArcaneumGlobals = require(ArcaneumGlobals)
+    end
+until ArcaneumGlobals ~= nil
+local Globals = ArcaneumGlobals
 print(Globals)
 local ClientConnectorClass = Globals.ClassFunctions.ClientConnector--local ClientConnector = require(script:WaitForChild("ClientConnector")):New("TestProxy")
 local ClientConnector = ClientConnectorClass:New("TestProxy")

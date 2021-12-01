@@ -1,5 +1,14 @@
-local Globals = require(script.Parent.Global)
-local BaseClass = Globals.ClassFunctions.Internal
+local GlobalModuleName = "Arcaneum"
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ArcaneumGlobals repeat
+    ArcaneumGlobals = ReplicatedStorage:FindFirstChild(GlobalModuleName)
+    if ArcaneumGlobals == nil then
+        task.wait(1)
+    else
+        ArcaneumGlobals = require(ArcaneumGlobals)
+    end
+until ArcaneumGlobals ~= nil
+local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
 
 local Scripts = script.Scripts
 
