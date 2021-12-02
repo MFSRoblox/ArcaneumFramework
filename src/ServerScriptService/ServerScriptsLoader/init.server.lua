@@ -1,3 +1,8 @@
+--[[=[
+    @class ServerScriptsLoader
+    @server
+    This script sets up Arcaneum for the environment.
+]=]]
 local ServerStorage = game:GetService("ServerStorage")
 local BootDrive = ServerStorage:WaitForChild("ArcaneumEngine")
 print("Booting")
