@@ -10,7 +10,7 @@
       "Packages": {
         "$className": "Folder",
         "$ignoreUnknownInstances": true,
-        "$path": "/Packages"
+        "$path": "Packages"
       }
     },
     "ReplicatedFirst": {
