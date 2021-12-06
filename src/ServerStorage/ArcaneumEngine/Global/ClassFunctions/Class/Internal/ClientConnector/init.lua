@@ -15,7 +15,6 @@ local ClientConnector = BaseClass:Extend({
 type ClientConnector = table
 function ClientConnector:New(Name: string, TargetPlayer: Player): ClientConnector
     local NewConnector = self:Extend(BaseClass:New("ClientConnector",Name))
-    --local TargetPlayer = Globals.TestBot.TestPlayer
     NewConnector.TargetPlayer = TargetPlayer
     assert(TargetPlayer, "No TargetPlayer found!")
     local ProxyFunction = TargetPlayer:WaitForChild("ProxyFunction", 10)
