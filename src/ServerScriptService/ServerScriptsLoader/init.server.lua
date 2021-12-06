@@ -6,7 +6,7 @@
 local ServerStorage = game:GetService("ServerStorage")
 local BootDrive = ServerStorage:WaitForChild("ArcaneumEngine")
 print("Booting")
-local Software = require(BootDrive)
+local _Software = require(BootDrive)
 print("Booted")
 --[[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GlobalModuleName = "Arcaneum"

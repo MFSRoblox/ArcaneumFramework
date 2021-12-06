@@ -84,7 +84,7 @@ function TestBot:New(TestPlayer: Player | nil)
             TestBotProxy:Destroy()
         end
     end
-    
+    return self
 end
 
 function TestBot:Run()
@@ -131,4 +131,4 @@ function TestBot:Run()
     return true
 end
 
-return TestBot:New()
+return TestBot
