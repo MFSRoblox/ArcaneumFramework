@@ -16,22 +16,22 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+  #lint:
+  #  name: Lint
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #  - name: Checkout code
+  #    uses: actions/checkout@v2
 
-    - uses: Roblox/setup-foreman@v1
-      name: Install Foreman
-      with:
-          version: "^1.0.0"
-          token: ${{ SECRETS.GITHUB_TOKEN }}
+  #  - uses: Roblox/setup-foreman@v1
+  #    name: Install Foreman
+  #    with:
+  #        version: "^1.0.0"
+  #        token: ${{ SECRETS.GITHUB_TOKEN }}
 
-    - name: Lint
-      run: |
-        selene ./modules
+  #  - name: Lint
+  #    run: |
+  #      selene ./modules
   unit-tests:
     name: Unit Tests
     runs-on: windows-latest
@@ -40,14 +40,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-          architecture: 'x64'
-          cache: 'pip'
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
+      #- name: Setup Python
+      #  uses: actions/setup-python@v2
+      #  with:
+      #    python-version: '3.10'
+      #    architecture: 'x64'
+      #    cache: 'pip'
+      #- name: Install Python dependencies
+      #  run: pip install -r requirements.txt
 
       - name: Install Roblox Studio
         uses: OrbitalOwen/roblox-win-installer-action@1.1
