@@ -3,4 +3,9 @@
 /*.rbxlx.lock
 /.vscode
 /.vs
-roblox.toml
+/roblox.toml
+/build.rbxl
+
+# Added by cargo
+
+/target

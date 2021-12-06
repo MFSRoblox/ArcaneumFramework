@@ -1,12 +1,17 @@
 {
   "name": "L PreAlpha",
-  "servePlaceIds": [6719801244,7310567727,95206881],
+  "servePlaceIds": [6719801244,7310567727,95206881,7396624661],
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "$ignoreUnknownInstances": true,
-      "$path": "src/ReplicatedStorage"
+      "$path": "src/ReplicatedStorage",
+      "Packages": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true,
+        "$path": "Packages"
+      }
     },
     "ReplicatedFirst": {
       "$className": "ReplicatedFirst",
