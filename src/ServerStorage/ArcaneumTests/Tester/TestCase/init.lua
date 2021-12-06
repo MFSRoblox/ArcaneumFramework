@@ -36,7 +36,7 @@ function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any)
     return NewTest
 end
 
-function TestCaseClass:AddStep(Perspective: string, Callback: Function)
+function TestCaseClass:AddStep(Perspective: string, Callback: (any) -> any)
     table.insert(self.Steps,{
         Perspective = Perspective;
         Callback = Callback;
