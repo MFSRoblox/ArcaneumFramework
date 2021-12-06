@@ -11,6 +11,7 @@ local ArcaneumGlobals repeat
 until ArcaneumGlobals ~= nil
 local TestBot = ArcaneumGlobals.ClassFunctions.Class:Extend(
     {
+        ArcaneumGlobals = ArcaneumGlobals;
         Version = 0;
         Object = script;
         TestVariables = {};
@@ -93,7 +94,7 @@ function TestBot:Run()
         local TesterData = TestData.Tests[TestData.Positions[i]]
         local Perspective = TesterData.Perspective
         local Module = TesterData.Tester
-        local Tester = require(Module)
+        local Tester = require(Module)(self)
         if Tester.RunTests then
             local DisplayName = Tester.DisplayName
             local TestName = Tester.Name
