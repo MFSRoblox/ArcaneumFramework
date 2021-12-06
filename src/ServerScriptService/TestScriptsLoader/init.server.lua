@@ -22,7 +22,7 @@ print(RunService:IsRunMode())
 if ArcaneumGlobals.IsStudio and not RunService:IsRunMode() then
     game:GetService("Players").PlayerAdded:Wait()]]
 --end
-local WaitTime = 10
+local WaitTime = 3
 local TestModuleName = "ArcaneumTests"
 local TestModule = ServerStorage:FindFirstChild(TestModuleName)
 if ArcaneumGlobals.IsTesting then
