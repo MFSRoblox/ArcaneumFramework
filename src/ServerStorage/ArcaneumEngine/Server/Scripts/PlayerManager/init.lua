@@ -1,5 +1,14 @@
-local Globals = _G.Arcaneum
-local BaseClass = Globals.ClassFunctions.Internal
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GlobalModuleName = "Arcaneum"
+local ArcaneumGlobals repeat
+    ArcaneumGlobals = ReplicatedStorage:FindFirstChild(GlobalModuleName)
+    if ArcaneumGlobals == nil then
+        task.wait(1)
+    else
+        ArcaneumGlobals = require(ArcaneumGlobals)
+    end
+until ArcaneumGlobals ~= nil
+local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
 local Players = game:GetService("Players")
 local PlayerManager = BaseClass:Extend(
     {
@@ -9,8 +18,9 @@ local PlayerManager = BaseClass:Extend(
 )
 type PlayerManager = table
 
-local PlayerInterface = Instance.new("RemoteEvent",Globals.Events)
+local PlayerInterface = Instance.new("RemoteEvent")
 PlayerInterface.Name = "PlayerInterface"
+PlayerInterface.Parent = ArcaneumGlobals.Events
 local PlayerSupervisor = require(script.PlayerSupervisor)
 
 function PlayerManager:New(): PlayerManager
@@ -50,7 +60,7 @@ end
 
 function PlayerManager:SignalAllPlayers(FunctionName:string,...)
     local CurrentSupervisors = self.Supervisors
-    for Player, Supervisor in next, CurrentSupervisors do
+    for _Player, Supervisor in next, CurrentSupervisors do
         Supervisor[FunctionName](Supervisor,...)
     end
 end

@@ -1,0 +1,20 @@
+title = "Arcaneum Framework"  # From Git
+gitRepoUrl = "https://github.com/MFSRoblox/LeylinesAlpha/" # From Git
+
+gitSourceBranch = "JustArcaneum"
+changelog = true
+classOrder = []
+
+[docusaurus]
+onBrokenLinks = "throw"
+onBrokenMarkdownLinks = "warn"
+
+# From git:
+organizationName = "MFSRoblox"
+projectName = "LeylinesAlpha"
+url = "https://MFSRoblox.github.io"
+baseUrl = "/LeylinesAlpha/"
+tagline = "Just Arcane"
+
+[footer]
+style = "dark"  

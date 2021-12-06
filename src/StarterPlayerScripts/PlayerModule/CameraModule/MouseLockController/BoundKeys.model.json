@@ -1,7 +1,0 @@
-{
-    "Name": "BoundKeys",
-    "ClassName": "StringValue",
-    "Properties": {
-        "Value": "LeftShift,RightShift"
-    }
-}

@@ -2,3 +2,9 @@
 /*.rbxlx.lock
 /.vscode
 /.vs
+/roblox.toml
+/build.rbxl
+
+# Added by cargo
+
+/target
