@@ -1,7 +1,6 @@
 local ScriptUtilities = {}
 ScriptUtilities.__index = ScriptUtilities
-export type Function = typeof(function() end)
-function ScriptUtilities:pcall(PCallFunction: Function, ErrorMsg:string, ...)
+function ScriptUtilities:pcall(PCallFunction: (...any) -> any, ErrorMsg:string, ...)
     local Success, Result = pcall(PCallFunction, ...)
     if not Success then
         local warnMessage = string.format("%s: %s",ErrorMsg, Result)
