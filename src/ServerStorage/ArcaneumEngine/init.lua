@@ -13,9 +13,7 @@ local ArcaneumGlobals = require(GlobalsModule)
 ArcaneumGlobals.ClassFunctions.ClientConnector = ArcaneumGlobals.Utilities:ImportModule(GlobalsModule,"ClassFunctions","Class","Internal","ClientConnector")
 print("Arcaneum Globals:",ArcaneumGlobals)
 local BaseClass = ArcaneumGlobals.ClassFunctions.Class
-local Arcaneum = BaseClass:Extend({
-    Globals = ArcaneumGlobals
-})
+local Arcaneum = BaseClass:Extend()
 
 function Arcaneum:New()
     local Perspective = ArcaneumGlobals.Perspective
@@ -29,7 +27,7 @@ function Arcaneum:New()
         end
         ArcaneumGlobals[Name] = Data
     end
-    local Module = require(script[Perspective])
+    local Module = require(script[Perspective])(ArcaneumGlobals)
     return Module
 end
 
