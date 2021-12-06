@@ -42,6 +42,7 @@ function TestBot:New(TestPlayer: Player | nil)
         end
     end
     self.RawData = RawData
+    self.TestPlayer = TestPlayer
     local NumberOfTests = #RawData.Server+#RawData.Client
     print("Number of Testers to check:",NumberOfTests)
     local TestData = {
