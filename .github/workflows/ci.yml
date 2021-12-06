@@ -40,15 +40,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      #- name: Setup Python
-      #  uses: actions/setup-python@v2
-      #  with:
-      #    python-version: '3.10'
-      #    architecture: 'x64'
-      #    cache: 'pip'
-      #- name: Install Python dependencies
-      #  run: pip install -r requirements.txt
-
       - name: Install Roblox Studio
         uses: OrbitalOwen/roblox-win-installer-action@1.1
         with:
@@ -59,9 +50,6 @@ jobs:
         uses: rojo-rbx/setup-foreman@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      #- name: Build tests
-      #  run: python build_tests.py
 
       - name: Build test place
         run: rojo build default.project.json -o test.rbxl
@@ -74,22 +62,3 @@ jobs:
       - name: Check test status
         shell: bash
         run: cat test-out.txt | grep "0 failed, 0 skipped" || (cat test-out.txt && exit 1)
-  # This workflow contains a single job called "build"
-  #build:
-    # The type of runner that the job will run on
-    #runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    #steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      #- uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      #- name: Run a one-line script
-      #  run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      #- name: Run a multi-line script
-      #  run: |
-      #    echo Add other actions to build,
-      #    echo test, and deploy your project.
