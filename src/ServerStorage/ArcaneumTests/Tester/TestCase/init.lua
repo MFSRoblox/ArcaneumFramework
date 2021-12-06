@@ -15,14 +15,14 @@ local TestCaseClass = BaseClass:Extend({
     Object = script;
 })
 type ClientConnector = table
-function TestCaseClass:New(Name: string, StopOnFailure: boolean, StartFunction: Function, ClientConnector: ClientConnector)
+function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any, ClientConnector: ClientConnector)
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
     NewTest.ClientConnector = ClientConnector
-    if StartFunction then
-        NewTest:AddStep("Server", StartFunction)
-    elseif StartFunction == "Client" then
+    if Callback then
+        NewTest:AddStep("Server", Callback)
+    elseif Callback == "Client" then
         NewTest:AddStep("Server", function()
             local TargetPlayer = ClientConnector.TargetPlayer
             assert(TargetPlayer, "No TargetPlayer found!")
@@ -36,10 +36,10 @@ function TestCaseClass:New(Name: string, StopOnFailure: boolean, StartFunction: 
     return NewTest
 end
 
-function TestCaseClass:AddStep(Perspective: string, Function: Function)
+function TestCaseClass:AddStep(Perspective: string, Callback: Function)
     table.insert(self.Steps,{
         Perspective = Perspective;
-        Function = Function;
+        Callback = Callback;
     })
 end
 
@@ -49,9 +49,9 @@ function TestCaseClass:Run()
     local Steps = self.Steps
     for i=1, #Steps do
         local CurrentStep = Steps[i]
-        local Function = CurrentStep.Function
-        if Function then
-            Success, TestResult = pcall(CurrentStep.Function, TestResult)
+        local Callback = CurrentStep.Callback
+        if Callback then
+            Success, TestResult = pcall(CurrentStep.Callback, TestResult)
         end
         local Perspective = CurrentStep.Perspective
         if Perspective == "Client" then

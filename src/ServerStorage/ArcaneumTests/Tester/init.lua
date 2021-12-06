@@ -17,7 +17,6 @@ local Tester = BaseClass:Extend({
     Version = 2;
     Object = script;
 })
-type Function = typeof(function() end)
 function Tester:New(TestName: string, DisplayName: string)
     local NewTest = BaseClass:New("Tester",TestName)
     if not DisplayName then
@@ -29,19 +28,19 @@ function Tester:New(TestName: string, DisplayName: string)
     return self:Extend(NewTest)
 end
 
-function Tester:AddTest(TestName: string, StopOnFailure: boolean, StartFunction: Function)
+function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (any) -> any)
     print(self.DisplayName.." added test:",TestName)
     local ClientConnector = nil
-    if StartFunction == "Client" then
+    if Callback == "Client" then
         if not self.ClientConnector then
             self.ClientConnector = ClientConnectorClass:New(TestName..self.Name)
         end
         ClientConnector = self.ClientConnector
-        StartFunction = function()
+        Callback = function()
             return "ClientConnector initialized."
         end
     end
-    local NewTest = TestCaseClass:New(TestName, StopOnFailure, StartFunction, ClientConnector)
+    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback, ClientConnector)
     table.insert(self.Tests, NewTest)
     return NewTest
 end
