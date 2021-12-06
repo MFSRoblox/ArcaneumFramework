@@ -1,4 +1,3 @@
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GlobalModuleName = "Arcaneum"
 local Separator = "----------------------------------"
@@ -26,7 +25,7 @@ local TestBot = ArcaneumGlobals.ClassFunctions.Class:Extend(
         }
     }
 )
-function TestBot:New()
+function TestBot:New(TestPlayer: Player | nil)
     local RawData = {
         Server = {};
         Client = {};
@@ -70,9 +69,25 @@ function TestBot:New()
         end
     end
     TestBot.TestData = TestData
+    local TestBotProxy = script.TestBotProxy do
+        if TestPlayer ~= nil then
+            TestBotProxy.Disabled = false
+            local ProxyFunction = Instance.new("RemoteFunction")
+            ProxyFunction.Name = "ProxyFunction"
+            ProxyFunction.Parent = TestPlayer
+            local ProxyEvent = Instance.new("RemoteEvent")
+            ProxyEvent.Name = "ProxyEvent"
+            ProxyEvent.Parent = TestPlayer
+            TestBotProxy.Parent = TestPlayer.PlayerGui
+            TestBot.TestPlayer = TestPlayer
+        else
+            TestBotProxy:Destroy()
+        end
+    end
+    
 end
 
-function TestBot:RunTests()
+function TestBot:Run()
     local TestData = self.TestData
     for i=1, #TestData.Positions do
         local TesterData = TestData.Tests[TestData.Positions[i]]
@@ -115,26 +130,5 @@ function TestBot:RunTests()
     end
     return true
 end
-local TestBotProxy = script.TestBotProxy
-TestBotProxy.Disabled = false
-local TargetPlayer do
-    local CurrentPlayers = Players:GetPlayers()
-    if #CurrentPlayers > 0 then
-        TargetPlayer = CurrentPlayers[1]
-    else
-        warn("No Player")
-        --TargetPlayer = Players.PlayerAdded:Wait()
-    end
-    if TargetPlayer then
-        local ProxyFunction = Instance.new("RemoteFunction")
-        ProxyFunction.Name = "ProxyFunction"
-        ProxyFunction.Parent = TargetPlayer
-        local ProxyEvent = Instance.new("RemoteEvent")
-        ProxyEvent.Name = "ProxyEvent"
-        ProxyEvent.Parent = TargetPlayer
-    end
-end
-TestBotProxy.Parent = TargetPlayer.PlayerGui
-TestBot.TestPlayer = TargetPlayer
 
 return TestBot:New()
