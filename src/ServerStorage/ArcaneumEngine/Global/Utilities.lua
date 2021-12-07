@@ -1,5 +1,7 @@
-local ScriptUtilities = {}
-ScriptUtilities.__index = ScriptUtilities
+local ScriptUtilities = {} do
+    ScriptUtilities.__index = ScriptUtilities
+    ScriptUtilities = setmetatable(ScriptUtilities,ScriptUtilities)
+end
 function ScriptUtilities:pcall(PCallFunction: (...any) -> any, ErrorMsg:string, ...)
     local Success, Result = pcall(PCallFunction, ...)
     if not Success then
