@@ -45,6 +45,13 @@ function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (any
     return NewTest
 end
 
+local TestStatuses = {
+    "Successful",
+    "Failure",
+    "Skipped",
+    "Unassigned"
+}
+
 function Tester:RunTests()
     local output = {}
     local s, v = pcall(function()
@@ -53,7 +60,16 @@ function Tester:RunTests()
             local Test = Tests[i]
             print(Test.Name, Test)
             local Success, Result = Test:Run()
-            table.insert(output,TestResultClass:New(Test.Name, Success, Result))
+            local Status = TestStatuses[4] do
+                if Success then
+                    Status = TestStatuses[1]
+                elseif Result == 3 then
+                    Status = TestStatuses[3]
+                elseif Result ~= nil then
+                    Status = TestStatuses[2]
+                end
+            end
+            table.insert(output,TestResultClass:New(Test.Name, Status, Result))
         end
     end)
     if not s then

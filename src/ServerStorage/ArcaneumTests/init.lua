@@ -91,11 +91,16 @@ end
 
 function TestBot:Run()
     local TestData = self.TestData
+    local FailedCounter, SkippedCounter = 0,0
     for i=1, #TestData.Positions do
         local TesterData = TestData.Tests[TestData.Positions[i]]
         local Perspective = TesterData.Perspective
         local Module = TesterData.Tester
         local Tester = require(Module)(self)
+        if Tester == 3 then
+            SkippedCounter += 1
+            continue
+        end
         if Tester.RunTests then
             local DisplayName = Tester.DisplayName
             local TestName = Tester.Name
@@ -105,10 +110,15 @@ function TestBot:Run()
                 print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
                 for j=1, #TesterFeedback do
                     local Result = TesterFeedback[j]
-                    if Result.IsSuccessful then
+                    if Result.Status == "Successful" then
                         print(Result)
-                    else
+                    elseif Result.Status == "Skipped" then
+                        SkippedCounter += 1
+                        warn("Test was skipped!")
+                    elseif Result.Status == "Failed" then
                         warn(Result)
+                    else
+                        warn("Test did not have a Status!")
                     end
                 end
                 print(Separator .."\n\n")
@@ -130,6 +140,7 @@ function TestBot:Run()
             end
         end
     end
+    print(FailedCounter,"failed,", SkippedCounter, "skipped")
     return true
 end
 

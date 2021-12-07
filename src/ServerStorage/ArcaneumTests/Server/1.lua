@@ -3,7 +3,7 @@ return function(self)
     --local ArcaneumGlobals = self.ArcaneumGlobals
     local TestPlayer = self.TestPlayer
     if TestPlayer == nil then
-        return {}
+        return 3
     end
     local Nexus
     local ThisTest = self.TesterClass:New("Nexus Creation")

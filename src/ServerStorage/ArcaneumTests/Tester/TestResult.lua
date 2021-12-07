@@ -16,11 +16,11 @@ local TestResultClass = BaseClass:Extend({
 TestResultClass.__tostring = function(self)
     return string.format("[%s] %s", self.Name, tostring(self.Result))
 end
-function TestResultClass:New(TestName: string, IsSuccessful: boolean, Result)
-    local NewTest = BaseClass:New("TestCase",TestName)
-    NewTest.IsSuccessful = IsSuccessful or false;
+function TestResultClass:New(TestName: string, Status: string, Result: any)
+    local NewTest = self:Extend(BaseClass:New("TestCase",TestName))
+    NewTest.Status = Status or "Unassigned";
     NewTest.Result = Result;
-    return self:Extend(NewTest)
+    return NewTest
 end
 
 return TestResultClass

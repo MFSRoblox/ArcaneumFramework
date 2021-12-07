@@ -2,7 +2,7 @@ return function(self)
     --local ArcaneumGlobals = self.ArcaneumGlobals
     local TargetPlayer = self.TestPlayer
     if TargetPlayer == nil then
-        return {}
+        return 3
     end
     print("Got TargetPlayer:",TargetPlayer)
     local ThisTest = self.TesterClass:New("Client Foundations")
