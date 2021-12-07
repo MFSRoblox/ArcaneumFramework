@@ -1,7 +1,7 @@
 local GlobalExpectations = {
     --Shared Globals
     ClassFunctions = "table";
-    Events = "userdata";
+    Events = "Folder";
     IsStudio = "boolean";
     Perspective = "string";
     Utilities = "table";
@@ -18,8 +18,15 @@ return function(self)
         for VarName,Data in pairs(ArcaneumGlobals) do
             local Expectation = GlobalExpectations[VarName]
             if Expectation ~= nil then
-                local DataType = type(Data)
-                assert(DataType==Expectation, string.format("Global var %s was a %s, which is not the intended type of %s!",VarName,DataType,Expectation))
+                if type(Expectation) == "string" then
+                    local DataType = typeof(Data)
+                    if DataType == "Instance" then
+                        DataType = Data.ClassName
+                    end
+                    assert(DataType==Expectation, string.format("Global var %s was a %s, which is not the intended type of %s!",VarName,DataType,Expectation))
+                else
+                    assert(Data == Expectation, string.format("Global var %s was set to %s, which does not match %s!",VarName,Data,Expectation))
+                end
             else
                 warn("No Type Check for",VarName,"!")
             end
