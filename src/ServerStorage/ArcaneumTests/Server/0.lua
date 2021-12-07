@@ -1,10 +1,25 @@
+local GlobalExpectations = {
+    ClassFunctions = "table";
+    Events = "userdata";
+    IsStudio = "boolean";
+    Perspective = "string";
+    Utilities = "table";
+    Version = "table";
+}
 return function(self)
     local ArcaneumGlobals = self.ArcaneumGlobals
     --Globals tests
     local ThisTest = self.TesterClass:New("Engine Foundation")
     ThisTest:AddTest("Global Check", true, function()
-        for GlobalVar,Data in pairs(ArcaneumGlobals) do
-            print(GlobalVar,Data)
+        for VarName,Data in pairs(ArcaneumGlobals) do
+            local Expectation = GlobalExpectations[VarName]
+            if Expectation ~= nil then
+                local DataType = type(Data)
+                assert(DataType==Expectation, string.format("Global var %s was a %s, which is not the intended type of %s!",VarName,DataType,Expectation))
+            else
+                warn("No Type Check for",VarName,"!")
+            end
+            print(VarName,Data)
         end
         return true
     end)
