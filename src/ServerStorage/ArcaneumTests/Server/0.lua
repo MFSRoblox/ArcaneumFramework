@@ -1,10 +1,14 @@
 local GlobalExpectations = {
+    --Shared Globals
     ClassFunctions = "table";
     Events = "userdata";
     IsStudio = "boolean";
     Perspective = "string";
     Utilities = "table";
     Version = "table";
+    --Server Globals
+    IsPublic = "boolean";
+    IsTesting = "boolean";
 }
 return function(self)
     local ArcaneumGlobals = self.ArcaneumGlobals
