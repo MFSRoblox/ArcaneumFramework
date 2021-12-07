@@ -27,7 +27,7 @@ function ScriptUtilities:GetAttributeFromInstances(AttributeName: string, Defaul
     return table.unpack(OutputTable)
 end
 
-function ScriptUtilities:ModulesToTable(ObjectTable: table): Dictionary<any>
+function ScriptUtilities:ModulesToTable(ObjectTable: table, BaseOutput: table | nil): Dictionary<any>
     --[[
         Used to turn a table of modules (commonly obtained through Instance:GetChildren()) into a dictionary that contains the each module, with the names of each module representing the key to said modules.
     ]]
@@ -36,7 +36,7 @@ function ScriptUtilities:ModulesToTable(ObjectTable: table): Dictionary<any>
         local Sort1,Sort2 = self:GetAttributeFromInstances("BootPriority", 0, Object1, Object2)
         return Sort1 > Sort2
     end)
-    local output = {}
+    local output = BaseOutput or {}
     for i=1, #ObjectTable do
         local Object = ObjectTable[i]
         if Object:IsA("ModuleScript") then
