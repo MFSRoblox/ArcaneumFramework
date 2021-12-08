@@ -9,7 +9,7 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 local PlayerInterface = ArcaneumGlobals.Events.PlayerInterface
-local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
+local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 
 local PlayerSupervisor = BaseClass:Extend(
     {

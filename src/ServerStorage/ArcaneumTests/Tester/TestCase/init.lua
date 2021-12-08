@@ -8,7 +8,7 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
+local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 type Function = typeof(function() end)
 local TestCaseClass = BaseClass:Extend({
     Version = 1;

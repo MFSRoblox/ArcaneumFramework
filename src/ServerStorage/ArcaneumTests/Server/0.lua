@@ -37,7 +37,7 @@ return function(self)
     ThisTest:AddTest("BaseClass Check", true, function()
         --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass") do
             --assert(BaseClassMod, "BaseClass doesn't exist in ReplicatedStorage.Modules!")
-            local BaseClass = ArcaneumGlobals.ClassFunctions.Class--require(BaseClassMod)
+            local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Class")--require(BaseClassMod)
             assert(BaseClass, "BaseClass didn't return anything!")
             local TestClassName = "BaseTestClass"
             local Object = BaseClass:New(TestClassName)
@@ -50,7 +50,7 @@ return function(self)
         --local BaseClassMod = ReplicatedModules:WaitForChild("BaseClass")
         --local ClassMod = BaseClassMod:WaitForChild("Class") do
             --assert(ClassMod, "Class doesn't exist in ReplicatedStorage.Modules!")
-            local NewClass = Globals.ClassFunctions.Class--require(ClassMod)
+            local NewClass = Globals.ClassFunctions:GetClass("Class")--require(ClassMod)
             assert(NewClass, "Class didn't return anything!")
             local TestClassName = "TestClass"
             local Object = NewClass:New(TestClassName)
