@@ -1,4 +1,4 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+--[[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GlobalModuleName = "Arcaneum"
 local ArcaneumGlobals repeat
     ArcaneumGlobals = ReplicatedStorage:FindFirstChild(GlobalModuleName)
@@ -7,7 +7,7 @@ local ArcaneumGlobals repeat
     else
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
-until ArcaneumGlobals ~= nil
+until ArcaneumGlobals ~= nil]]
 local BaseClass = require(script.Parent.Parent)
 local Mail = BaseClass:Extend({
     Version = 2;

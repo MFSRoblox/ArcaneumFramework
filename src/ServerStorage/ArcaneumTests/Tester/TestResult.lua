@@ -8,7 +8,7 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
+local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local TestResultClass = BaseClass:Extend({
     Version = 1;
     Object = script;

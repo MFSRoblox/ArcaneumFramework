@@ -10,7 +10,7 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 print(ArcaneumGlobals)
-local ClientConnectorClass = ArcaneumGlobals.ClassFunctions.ClientConnector--local ClientConnector = require(script:WaitForChild("ClientConnector")):New("TestProxy")
+local ClientConnectorClass = ArcaneumGlobals.ClassFunctions:GetClass("ClientConnector")--local ClientConnector = require(script:WaitForChild("ClientConnector")):New("TestProxy")
 local ClientConnector = ClientConnectorClass:New("TestProxy")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -20,7 +20,7 @@ local ProxyEvent = LocalPlayer:WaitForChild("ProxyEvent")
 ProxyEvent.OnClientEvent:Connect(function(Type,TestName, Data)
 
 end)
-ArcaneumGlobals.ClassFunctions.Tester = require(script.Tester)
+ArcaneumGlobals.ClassFunctions = require(script.Tester)
 ArcaneumGlobals.TestBot = {}
 local RawData = {
     Client = {};

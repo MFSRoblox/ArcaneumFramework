@@ -1,6 +1,6 @@
 local output = {
     __call = function(_output:table, ArcaneumGlobals: table)
-    local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
+    local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 
     local Scripts = script.Scripts
 

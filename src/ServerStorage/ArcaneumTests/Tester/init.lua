@@ -8,9 +8,9 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions.Internal
+local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local ScriptUtilities = ArcaneumGlobals.Utilities
-local ClientConnectorClass = ArcaneumGlobals.ClassFunctions.ClientConnector --ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
+local ClientConnectorClass = ArcaneumGlobals.ClassFunctions:GetClass("ClientConnector") --ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
 local TestCaseClass = ScriptUtilities:ImportModule(script,"TestCase")
 local TestResultClass = ScriptUtilities:ImportModule(script,"TestResult")
 local Tester = BaseClass:Extend({

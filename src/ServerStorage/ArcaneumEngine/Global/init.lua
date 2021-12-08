@@ -1,2 +1,6 @@
+local GlobalTable = {
+    ClassFunctions = require(script.ClassFunctions)
+}
 local Utilities = require(script.Utilities)
-return Utilities:ModulesToTable(script:GetChildren())
+GlobalTable = Utilities:ModulesToTable(script:GetChildren(), GlobalTable)
+return GlobalTable

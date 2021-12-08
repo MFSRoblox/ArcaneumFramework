@@ -9,7 +9,7 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
-local TestBot = ArcaneumGlobals.ClassFunctions.Class:Extend(
+local TestBot = ArcaneumGlobals.ClassFunctions:GetClass("Class"):Extend(
     {
         ArcaneumGlobals = ArcaneumGlobals;
         Version = 0;
