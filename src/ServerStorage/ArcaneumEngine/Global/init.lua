@@ -8,5 +8,5 @@ local GlobalTable = {
 local ScriptChildren = script:GetChildren()
 Utilities:RemoveFromTable(ScriptChildren,UtilitiesModule)
 Utilities:RemoveFromTable(ScriptChildren,ClassFunctionsModule)
-GlobalTable = Utilities:ModulesToTable(script:GetChildren(), GlobalTable)
+GlobalTable = Utilities:ModulesToTable(script:GetChildren(), GlobalTable, false)
 return GlobalTable
