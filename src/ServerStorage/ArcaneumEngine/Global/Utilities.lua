@@ -52,22 +52,20 @@ function ScriptUtilities:ModulesToTable(ObjectTable: table, BaseOutput: table?, 
     for i=1, #ObjectTable do
         local Object = ObjectTable[i]
         local ObjectName = Object.Name
-        if output[ObjectName] ~= nil then
-            if Overwrite then
-                local ThisOutput do
-                    if Object:IsA("ModuleScript") then
-                        local ModuleData = require(Object)
-                        ThisOutput = ModuleData
-                    elseif Object:IsA("Folder") then
-                        ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)
-                    end
+        local InitialOutput = output[ObjectName]
+        if InitialOutput == nil or Overwrite then
+            local ThisOutput do
+                if Object:IsA("ModuleScript") then
+                    local ModuleData = require(Object)
+                    ThisOutput = ModuleData
+                elseif Object:IsA("Folder") then
+                    ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)
                 end
-                output[ObjectName] = ThisOutput
-            else
-                warn("Attempted to overwrite",ObjectName,"when overwritting has been disabled!",debug.traceback())
             end
+            output[ObjectName] = ThisOutput
+        elseif InitialOutput ~= nil and Overwrite then
+            warn("Attempted to overwrite",ObjectName,"when overwritting has been disabled!",debug.traceback())
         end
-        
     end
     return output
 end
