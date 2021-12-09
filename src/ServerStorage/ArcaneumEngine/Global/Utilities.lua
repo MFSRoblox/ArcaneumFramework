@@ -10,7 +10,15 @@ function ScriptUtilities:pcall(PCallFunction: (...any) -> any, ErrorMsg:string, 
     end
     return Success
 end
-
+function ScriptUtilities:RemoveFromTable(TargetTable: table, ThingToRemove: any)
+    local PositionOfThing = table.find(TargetTable,ThingToRemove)
+    if PositionOfThing ~= nil then
+        table.remove(TargetTable,PositionOfThing)
+        return true
+    end
+    warn(ThingToRemove,"could not be found in",TargetTable,debug.traceback())
+    return false
+end
 function ScriptUtilities:GetAttributeFromInstances(AttributeName: string, DefaultValue: any, ...: Instance): ...any
     --[[
         Used to get a specific attribute from a set of instances, setting a default value for the output if the instance doesn't have the attribute.
@@ -29,11 +37,13 @@ function ScriptUtilities:GetAttributeFromInstances(AttributeName: string, Defaul
     return table.unpack(OutputTable)
 end
 
-function ScriptUtilities:ModulesToTable(ObjectTable: table, BaseOutput: table | nil): Dictionary<any>
+function ScriptUtilities:ModulesToTable(ObjectTable: table, BaseOutput: table?, Overwrite: boolean?): Dictionary<any>
     --[[
         Used to turn a table of modules (commonly obtained through Instance:GetChildren()) into a dictionary that contains the each module, with the names of each module representing the key to said modules.
     ]]
-    --print("ModulesToTable Invoked!")
+    if Overwrite == nil then
+        Overwrite = true
+    end
     table.sort(ObjectTable,function(Object1:Instance, Object2:Instance)
         local Sort1,Sort2 = self:GetAttributeFromInstances("BootPriority", 0, Object1, Object2)
         return Sort1 > Sort2
@@ -41,15 +51,23 @@ function ScriptUtilities:ModulesToTable(ObjectTable: table, BaseOutput: table | 
     local output = BaseOutput or {}
     for i=1, #ObjectTable do
         local Object = ObjectTable[i]
-        if Object:IsA("ModuleScript") then
-            local ModuleData = require(Object)
-            --print(type(ModuleData),typeof(ModuleData))
-            --if type(ModuleData) == "table" and not ModuleData.IsBaseClass then
-                output[Object.Name] = ModuleData
-            --end
-        elseif Object:IsA("Folder") then
-            output[Object.Name] = self:ModulesToTable(Object:GetChildren())
+        local ObjectName = Object.Name
+        if output[ObjectName] ~= nil then
+            if Overwrite then
+                local ThisOutput do
+                    if Object:IsA("ModuleScript") then
+                        local ModuleData = require(Object)
+                        ThisOutput = ModuleData
+                    elseif Object:IsA("Folder") then
+                        ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)
+                    end
+                end
+                output[ObjectName] = ThisOutput
+            else
+                warn("Attempted to overwrite",ObjectName,"when overwritting has been disabled!",debug.traceback())
+            end
         end
+        
     end
     return output
 end
