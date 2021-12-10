@@ -1,9 +1,17 @@
 title = "Arcaneum Framework"  # From Git
 gitRepoUrl = "https://github.com/MFSRoblox/LeylinesAlpha/" # From Git
 
-gitSourceBranch = "JustArcaneum"
+gitSourceBranch = "main"
 changelog = true
-classOrder = []
+[[classOrder]]
+section = "Class Functions"
+collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
+classes = ["BaseClass", "InternalClass"]
+
+[[classOrder]]
+section = "Globals"
+collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
+classes = ["Utilities"]
 
 [docusaurus]
 onBrokenLinks = "throw"
@@ -17,4 +25,4 @@ baseUrl = "/LeylinesAlpha/"
 tagline = "Just Arcane"
 
 [footer]
-style = "dark"  
+style = "dark"
