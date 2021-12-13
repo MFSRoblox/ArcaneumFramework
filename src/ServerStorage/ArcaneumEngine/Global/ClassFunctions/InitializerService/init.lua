@@ -27,6 +27,7 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
     local FileName = ModuleScript.Name
     local FileContents = require(ModuleScript)
+    FileContents.InitName = FileContents.InitName or FileName
     assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", ModuleScript, debug.traceback()))
     local BootPriority = FileContents.BootPriority
     assert(BootPriority ~= nil, string.format("ModuleScript %s does not have a BootPriority! %s", ModuleScript, debug.traceback()))
@@ -40,14 +41,10 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     --[[if FileBootIndex[Version] ~= nil then
         warn("The FileBootIndex of",ModuleScript,"with a Version of",Version,"already exists!")
     end]]
-    table.insert(FileBootIndex,FileContents)--SingletonInitClass:New(FileName,FileContents.__call,nil,BootPriority))
+    table.insert(FileBootIndex,SingletonInitClass:NewFromDictionary(FileContents))
 end
 
 function InitializerService:Initialize()
-    
-end
-
-function InitializerService:SetupBootGroups()
     local FilesToBoot = self.FilesToBoot
     for FileName, FileContents in next, FilesToBoot do
         assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
@@ -66,6 +63,26 @@ function InitializerService:SetupBootGroups()
             end
         end
         self:AddToBootGroup(FileToBoot)
+    end
+    local BootGroups = self.BootGroups
+    local BootOrders = {} do
+        for BootOrder, _ in next, BootGroups do
+            local PreviousOrder = table.find(BootOrders,BootOrder)
+            if PreviousOrder == nil then
+                table.insert(BootOrders, BootOrder)
+            end
+        end
+        table.sort(BootOrders,function(OrderA: number,OrderB: number)
+            return OrderA < OrderB
+        end)
+    end
+    for i=1, #BootOrders do
+        local CurrentOrder = BootOrders[i]
+        local CurrentGroup = BootGroups[CurrentOrder]
+        for j=1, #CurrentGroup do
+            local FileToBoot = CurrentGroup[j]
+            FileToBoot()
+        end
     end
 end
 
