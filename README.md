@@ -1,5 +1,5 @@
-# The Arcaneum Engine
-The github repository for The Arcaneum Engine and its documentation.
+# The Arcaneum Framework
+The github repository for The Arcaneum Framework and its documentation.
 
 The devUtils folder contains class diagrams that can be opened via yEd Live.
 
