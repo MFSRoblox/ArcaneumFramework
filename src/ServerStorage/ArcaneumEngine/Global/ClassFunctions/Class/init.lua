@@ -1,16 +1,16 @@
 --[=[
-    @class BaseClass
+    @class Class
     @server
     @client
     The foundational class for all classes.
 ]=]
-local BaseClass = {
+local Class = {
     Version = 0;
     Object = script;
 }
 --[=[
     @prop Object script
-    @within BaseClass
+    @within Class
     The script itself for external reference.
 ]=]
 
@@ -20,7 +20,7 @@ local BaseClass = {
     @param NewObject table -- The table you want to set the __index metatable to.
     @return table -- Returns the table with the index set to itself.
 ]=]
-function BaseClass:Extend(NewObject)
+function Class:Extend(NewObject)
     NewObject = NewObject or {
         ClassName = "";
         Connections = {}
@@ -30,29 +30,29 @@ function BaseClass:Extend(NewObject)
     return output
 end
 --[=[
-    Creates a new BaseClass object with a ClassName of "ClassName".
+    Creates a new Class object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
-    @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
+    @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 --[=[
     @prop ClassName string
-    @within BaseClass
+    @within Class
     The name of the object's class.
 ]=]
 --[=[
     @prop Connections table
-    @within BaseClass
+    @within Class
     A table containing all existing connections to this object.
 ]=]
-function BaseClass:New(ClassName:string)
+function Class:New(ClassName:string)
     return self:Extend({ClassName = ClassName; Connections = {};})
 end
 
 --[=[
-    Destroy the BaseClass Object to clear up memory.
+    Destroy the Class Object to clear up memory.
 ]=]
-function BaseClass:Destroy(): nil
+function Class:Destroy(): nil
     for Label, Connection in next, self.Connections do
         Connection:Disconnect()
         self.Connections[Label] = nil
@@ -63,4 +63,4 @@ function BaseClass:Destroy(): nil
     self = nil
 end
 
-return BaseClass
+return Class

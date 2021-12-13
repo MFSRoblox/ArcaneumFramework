@@ -6,7 +6,7 @@ changelog = true
 [[classOrder]]
 section = "Class Functions"
 collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
-classes = ["BaseClass", "InternalClass"]
+classes = ["Class", "InternalClass"]
 
 [[classOrder]]
 section = "Globals"
