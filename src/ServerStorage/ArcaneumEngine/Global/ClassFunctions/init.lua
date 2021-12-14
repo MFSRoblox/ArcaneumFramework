@@ -5,7 +5,7 @@ local Utilities do
     end
 end
 local BaseClass = Utilities:ImportModule(script,"BaseClass")
-local Class = Utilities:ImportModule(script,"BaseClass","Class")
+--local Class = Utilities:ImportModule(script,"BaseClass","Class")
 --[[local Internal = Utilities:ImportModule(script,"Class","Internal")
 local External = nil --Utilities:ImportModule(script,"Class","External")
 local Output = {
@@ -13,9 +13,9 @@ local Output = {
     Internal = Internal;
     External = External;
 }]]
-local ClassService = Class:New("ClassService") do
+local ClassService = BaseClass:New("ClassService") do
     function ClassService:AddClass(ClassName: string, ClassData: table)
-        ClassService[ClassName] = ClassData
+        self[ClassName] = ClassData
     end
     function ClassService:GetClass(ClassName: string): any
         local RequestedClass = self[ClassName]
@@ -25,6 +25,18 @@ local ClassService = Class:New("ClassService") do
             warn("ClassService was asked to return a class that doesn't exist!",ClassName,debug.traceback())
         end
     end
+    --[[local InitialModules = {
+        script.BaseClass;
+        script.BaseClass.Class;
+        script.BaseClass.DataTypes;
+        table.unpack(script.BaseClass.DataTypes:GetChildren());
+        script.InitializerService;
+        script.InitializerService.SingletonInitClass;
+    }
+    for i=1, #InitialModules do
+        local Module = InitialModules[i]
+        ClassService:AddClass(Module.Name, require(Module))
+    end]]
     local function UnpackClasses(Parent: ModuleScript): table
         local PotentialModules = Parent:GetChildren()
         for i=1, #PotentialModules do
