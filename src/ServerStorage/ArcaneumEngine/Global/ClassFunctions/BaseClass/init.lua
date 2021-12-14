@@ -1,16 +1,16 @@
 --[=[
-    @class Class
+    @class BaseClass
     @server
     @client
     The foundational class for all classes.
 ]=]
-local Class = {
+local BaseClass = {
     Version = 0;
     Object = script;
 }
 --[=[
     @prop Object script
-    @within Class
+    @within BaseClass
     The script itself for external reference.
 ]=]
 
@@ -20,47 +20,37 @@ local Class = {
     @param NewObject table -- The table you want to set the __index metatable to.
     @return table -- Returns the table with the index set to itself.
 ]=]
-function Class:Extend(NewObject)
+function BaseClass:Extend(NewObject)
     NewObject = NewObject or {
         ClassName = "";
-        Connections = {}
     }
     self.__index = self
     local output = setmetatable(NewObject, self)
     return output
 end
 --[=[
-    Creates a new Class object with a ClassName of "ClassName".
+    Creates a new BaseClass object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
-    @return NewClass -- Returns an object with the ClassName of "ClassName".
+    @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 --[=[
     @prop ClassName string
-    @within Class
+    @within BaseClass
     The name of the object's class.
 ]=]
---[=[
-    @prop Connections table
-    @within Class
-    A table containing all existing connections to this object.
-]=]
-function Class:New(ClassName:string)
-    return self:Extend({ClassName = ClassName; Connections = {};})
+function BaseClass:New(ClassName:string)
+    return self:Extend({ClassName = ClassName})
 end
 
 --[=[
-    Destroy the Class Object to clear up memory.
+    Destroy the BaseClass Object to clear up memory.
 ]=]
-function Class:Destroy(): nil
-    for Label, Connection in next, self.Connections do
-        Connection:Disconnect()
-        self.Connections[Label] = nil
-    end
-    self.Connections = nil
+function BaseClass:Destroy(): nil
     --warn(self.ClassName .. " has been Destroyed!")
     self.ClassName = nil
+    table.clear(self)
     self = nil
 end
 
-return Class
+return BaseClass
