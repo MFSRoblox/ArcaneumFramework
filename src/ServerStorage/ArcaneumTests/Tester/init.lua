@@ -73,7 +73,6 @@ function Tester:RunTests()
         end
     end)
     if not s then
-        output = {}
         warn(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
     end
     return output
