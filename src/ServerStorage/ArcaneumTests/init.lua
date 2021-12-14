@@ -104,7 +104,7 @@ function TestBot:Run()
         if Tester.RunTests then
             local DisplayName = Tester.DisplayName
             local TestName = Tester.Name
-            if Perspective == "Server" then
+            --if Perspective == "Server" then
                 print("\n\n"..Separator.."\n" .. DisplayName .. " will now start their tests (".. TestName ..").")
                 local TesterFeedback = Tester:RunTests()
                 print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
@@ -122,13 +122,13 @@ function TestBot:Run()
                     end
                 end
                 print(Separator .."\n\n")
-            elseif Perspective == "Client" then
+            --[[elseif Perspective == "Client" then
                 print("\n\n"..Separator.."\n" .. DisplayName .. " will now start their tests (".. TestName ..").")
                 local TesterFeedback = Tester:RunTests()
                 print("\n\n"..DisplayName.." has finished their tests! Here's their report:")
                 for j=1, #TesterFeedback do
                     local Result = TesterFeedback[j]
-                    if Result.IsSuccessful then
+                    if Result.Status == "Successful" then
                         print(Result)
                     else
                         warn(Result)
@@ -137,7 +137,7 @@ function TestBot:Run()
                 print(Separator .."\n\n")
             else
                 warn("Unknown Perspective: ", Perspective, Module)
-            end
+            end]]
         end
     end
     print(FailedCounter,"failed,", SkippedCounter, "skipped")
