@@ -94,7 +94,7 @@ function TestBot:Run()
     local FailedCounter, SkippedCounter = 0,0
     for i=1, #TestData.Positions do
         local TesterData = TestData.Tests[TestData.Positions[i]]
-        local Perspective = TesterData.Perspective
+        --local Perspective = TesterData.Perspective
         local Module = TesterData.Tester
         local Tester = require(Module)(self)
         if Tester == 3 then
