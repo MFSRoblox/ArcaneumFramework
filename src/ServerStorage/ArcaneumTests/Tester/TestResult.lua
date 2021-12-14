@@ -14,7 +14,7 @@ local TestResultClass = BaseClass:Extend({
     Object = script;
 })
 TestResultClass.__tostring = function(self)
-    return string.format("[%s] %s", self.Name, tostring(self.Result))
+    return string.format("[%s] [Status: %s] [Result: %s]", self.Name, tostring(self.Status), tostring(self.Result))
 end
 function TestResultClass:New(TestName: string, Status: string, Result: any)
     local NewTest = self:Extend(BaseClass:New("TestCase",TestName))
