@@ -8,7 +8,6 @@ local Utilities = {} do
     Utilities.__index = Utilities
     Utilities = setmetatable(Utilities,Utilities)
 end
-
 --[=[
     A pcall function with a prebuilt message in the format of "ErrorMsg: Result \n traceback"
 
@@ -134,6 +133,9 @@ function Utilities:ImportModule(Start: Instance, ...: string): any
     end
     return output
 end
-
+function Utilities.Setup(_output: table, _ArcaneumGlobals: table): table
+    _output = Utilities
+    return Utilities
+end
 
 return Utilities

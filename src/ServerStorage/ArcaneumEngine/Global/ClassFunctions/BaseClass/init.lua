@@ -23,7 +23,6 @@ local BaseClass = {
 function BaseClass:Extend(NewObject)
     NewObject = NewObject or {
         ClassName = "";
-        Connections = {}
     }
     self.__index = self
     local output = setmetatable(NewObject, self)
@@ -40,26 +39,28 @@ end
     @within BaseClass
     The name of the object's class.
 ]=]
---[=[
-    @prop Connections table
-    @within BaseClass
-    A table containing all existing connections to this object.
-]=]
 function BaseClass:New(ClassName:string)
-    return self:Extend({ClassName = ClassName; Connections = {};})
+    return self:NewFromTable({}, ClassName)
+end
+
+--[=[
+    Creates a new BaseClass object from a premade table with a ClassName of "ClassName".
+
+    @param ClassName string -- The name of the class being created.
+    @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
+]=]
+function BaseClass:NewFromTable(Table: table, ClassName:string)
+    Table.ClassName = ClassName or ""
+    return self:Extend(Table)
 end
 
 --[=[
     Destroy the BaseClass Object to clear up memory.
 ]=]
 function BaseClass:Destroy(): nil
-    for Label, Connection in next, self.Connections do
-        Connection:Disconnect()
-        self.Connections[Label] = nil
-    end
-    self.Connections = nil
     --warn(self.ClassName .. " has been Destroyed!")
     self.ClassName = nil
+    table.clear(self)
     self = nil
 end
 

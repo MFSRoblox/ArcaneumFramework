@@ -34,9 +34,19 @@ local InternalClass = BaseClass:Extend({
     A table containing all existing connections to this object.
 ]=]
 function InternalClass:New(ClassName:string, Name:string)
-    local NewClass = BaseClass:New(ClassName)
-    NewClass.Name = Name or ClassName
-    return self:Extend(NewClass)
+    return self:NewFromTable({},ClassName,Name)
+end
+
+--[=[
+    Creates a new Class object from a premade table with a ClassName of "ClassName".
+
+    @param ClassName string -- The name of the class being created.
+    @return NewClass -- Returns an object with the ClassName of "ClassName".
+]=]
+function InternalClass:NewFromTable(Table: table, ClassName:string, Name:string)
+    Table = BaseClass:NewFromTable(Table, ClassName)
+    Table.Name = Name or ClassName
+    return self:Extend(Table)
 end
 
 --[=[

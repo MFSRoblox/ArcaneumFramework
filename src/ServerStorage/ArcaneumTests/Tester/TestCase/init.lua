@@ -62,14 +62,14 @@ function TestCaseClass:Run()
         end
     end
     if Success and TestResult ~= nil then
-        print(initialString.." has executed flawless as expected. Result: " .. tostring(TestResult))
+        print(initialString.." has executed flawless as expected. Result:\n" .. tostring(TestResult))
         return true, TestResult
     else
         local outputMessage = initialString
         if Success then
             outputMessage ..= " didn't return a result!"
         else
-            outputMessage ..= " has failed to work correctly! Debug: ".. tostring(TestResult)
+            outputMessage ..= " has failed to work correctly! Debug:\n".. tostring(TestResult)
         end
         if self.StopOnFailure then
             assert(false, outputMessage)
