@@ -53,8 +53,8 @@ function Version.new(MajorVersion:number,MinorVersion:number,PatchVersion:number
 end
 
 function Version.fromString(String: string)
-    local VersionNumbers = string.split(String)
-    assert(#VersionNumbers == 3, "Inputted String does not have 3 numbers! Input: " .. tostring(String) .. "\n" .. debug.traceback())
+    local VersionNumbers = string.split(String,".")
+    assert(#VersionNumbers == 3, "Inputted String does not have 3 numbers! Input: " .. tostring(String) .. " Output: " .. #VersionNumbers .. "\n" .. debug.traceback())
     for i, StringNumber in next,VersionNumbers do
         local VersionNumber = tonumber(StringNumber)
         assert(VersionNumber ~= nil, "Can not convert inputted string to number! Input: " .. tostring(StringNumber) .. "\n" .. debug.traceback())
