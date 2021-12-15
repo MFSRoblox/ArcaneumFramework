@@ -1,6 +1,5 @@
 local BaseClass = require(script.Parent)
 local Version = BaseClass:NewClass("Version")
-
 Version.__tostring = function(self)
     return string.format("%i.%i.%i",self.MajorVersion,self.MinorVersion,self.PatchVersion)
 end;
