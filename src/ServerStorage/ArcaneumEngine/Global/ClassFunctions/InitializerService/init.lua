@@ -32,7 +32,6 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     local BootPriority = FileContents.BootPriority
     assert(BootPriority ~= nil, string.format("ModuleScript %s does not have a BootPriority! %s", ModuleScript, debug.traceback()))
     assert(type(BootPriority) == "number", string.format("ModuleScript %s BootPriority is not a number! %s", ModuleScript, debug.traceback()))
-    local Dependacies = FileContents.Dependacies
     local FileBootIndex = self.FilesToBoot[InitName]
     if FileBootIndex == nil then
         self.FilesToBoot[InitName] = {}
