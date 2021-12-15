@@ -15,7 +15,7 @@ function InitializerService:New()
     local NewService = setmetatable({
         FilesToBoot = {}; --A dictionary
         BootGroups = {};
-    },self)
+    },{__index = self})
     return NewService
 end
 
@@ -28,10 +28,10 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     local FileContents = require(ModuleScript)
     local InitName = FileContents.InitName or ModuleScript.Name
     FileContents.InitName = InitName
-    assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", ModuleScript, debug.traceback()))
-    local BootPriority = FileContents.BootPriority
-    assert(BootPriority ~= nil, string.format("ModuleScript %s does not have a BootPriority! %s", ModuleScript, debug.traceback()))
-    assert(type(BootPriority) == "number", string.format("ModuleScript %s BootPriority is not a number! %s", ModuleScript, debug.traceback()))
+    assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
+    local BootOrder = FileContents.BootOrder
+    assert(BootOrder ~= nil, string.format("ModuleScript %s does not have a BootOrder! %s", tostring(ModuleScript), debug.traceback()))
+    assert(type(BootOrder) == "number", string.format("ModuleScript %s BootOrder is not a number! %s", tostring(ModuleScript), debug.traceback()))
     local FileBootIndex = self.FilesToBoot[InitName]
     if FileBootIndex == nil then
         self.FilesToBoot[InitName] = {}
@@ -43,7 +43,7 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     table.insert(FileBootIndex,SingletonInitClass:NewFromDictionary(FileContents))
 end
 
-function InitializerService:Initialize()
+function InitializerService:Initialize(Globals: table?): table
     local FilesToBoot = self.FilesToBoot
     for FileName, FileContents in next, FilesToBoot do
         assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
@@ -75,14 +75,18 @@ function InitializerService:Initialize()
             return OrderA < OrderB
         end)
     end
+    Globals = Globals or {}
     for i=1, #BootOrders do
         local CurrentOrder = BootOrders[i]
         local CurrentGroup = BootGroups[CurrentOrder]
         for j=1, #CurrentGroup do
             local FileToBoot = CurrentGroup[j]
-            FileToBoot()
+            print("Initialing",FileToBoot.InitName)
+            Globals[FileToBoot.InitName] = FileToBoot(Globals)
+            
         end
     end
+    return Globals
 end
 
 function InitializerService:AddToBootGroup(SingletonInitObject: table)
