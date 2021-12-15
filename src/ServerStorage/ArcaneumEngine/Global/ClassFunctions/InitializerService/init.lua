@@ -25,7 +25,7 @@ end
 ]]
 function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
-    local FileContents = require(ModuleScript)
+    local FileContents = require(ModuleScript.ModuleInfo)
     local InitName = FileContents.InitName or ModuleScript.Name
     FileContents.InitName = InitName
     assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
