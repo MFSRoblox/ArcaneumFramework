@@ -43,12 +43,24 @@ Version.__le = function(self, value)
     return false
 end;
 
-function Version.new(MajorVersion:number,MinorVersion:number,PatchVersion:number)
+export type Version = typeof(Version.new(0,0,0))
+function Version.new(MajorVersion:number,MinorVersion:number,PatchVersion:number): Version
     return Version:Extend({
         MajorVersion = MajorVersion;
         MinorVersion = MinorVersion;
         PatchVersion = PatchVersion;
     })
+end
+
+function Version.fromString(String: string)
+    local VersionNumbers = string.split(String)
+    assert(#VersionNumbers == 3, "Inputted String does not have 3 numbers! Input: " .. tostring(String) .. "\n" .. debug.traceback())
+    for i, StringNumber in next,VersionNumbers do
+        local VersionNumber = tonumber(StringNumber)
+        assert(VersionNumber ~= nil, "Can not convert inputted string to number! Input: " .. tostring(StringNumber) .. "\n" .. debug.traceback())
+        VersionNumbers[i] = VersionNumber
+    end
+    return Version.new(table.unpack(VersionNumbers))
 end
 
 function Version:GetMajorVersion(): number
