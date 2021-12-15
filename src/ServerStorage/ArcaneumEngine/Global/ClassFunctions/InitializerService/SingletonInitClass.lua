@@ -10,6 +10,7 @@ local SingletonInitClass do
     },{__index = SingletonInitClass})
 end
 local VersionClass = require(script.Parent.Parent.BaseClass.DataTypes.Version)
+type Version = typeof(VersionClass.new(0,0,0))
 export type SingletonInitObject = typeof(SingletonInitClass:NewFromDictionary({__call = function() end}))
 --[=[
 
