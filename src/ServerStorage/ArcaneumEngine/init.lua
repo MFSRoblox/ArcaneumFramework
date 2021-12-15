@@ -12,8 +12,8 @@ GlobalsModule.Parent = ReplicatedStorage
 local ArcaneumGlobals = require(GlobalsModule)
 --ArcaneumGlobals.ClassFunctions.ClientConnector = ArcaneumGlobals.Utilities:ImportModule(GlobalsModule,"ClassFunctions","Class","Internal","ClientConnector")
 print("Arcaneum Globals:",ArcaneumGlobals)
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Class")
-local Arcaneum = BaseClass:Extend()
+local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("BaseClass")
+local Arcaneum = BaseClass:New("ArcaneumFramework")
 
 function Arcaneum:New()
     local Perspective = ArcaneumGlobals.Perspective
