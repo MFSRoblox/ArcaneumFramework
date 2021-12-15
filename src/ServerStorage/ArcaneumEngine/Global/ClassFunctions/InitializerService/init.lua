@@ -25,18 +25,18 @@ end
 ]]
 function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
-    local FileName = ModuleScript.Name
     local FileContents = require(ModuleScript)
-    FileContents.InitName = FileContents.InitName or FileName
+    local InitName = FileContents.InitName or ModuleScript.Name
+    FileContents.InitName = InitName
     assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", ModuleScript, debug.traceback()))
     local BootPriority = FileContents.BootPriority
     assert(BootPriority ~= nil, string.format("ModuleScript %s does not have a BootPriority! %s", ModuleScript, debug.traceback()))
     assert(type(BootPriority) == "number", string.format("ModuleScript %s BootPriority is not a number! %s", ModuleScript, debug.traceback()))
     local Dependacies = FileContents.Dependacies
-    local FileBootIndex = self.FilesToBoot[FileName]
+    local FileBootIndex = self.FilesToBoot[InitName]
     if FileBootIndex == nil then
-        self.FilesToBoot[FileName] = {}
-        FileBootIndex = self.FilesToBoot[FileName]
+        self.FilesToBoot[InitName] = {}
+        FileBootIndex = self.FilesToBoot[InitName]
     end
     --[[if FileBootIndex[Version] ~= nil then
         warn("The FileBootIndex of",ModuleScript,"with a Version of",Version,"already exists!")
