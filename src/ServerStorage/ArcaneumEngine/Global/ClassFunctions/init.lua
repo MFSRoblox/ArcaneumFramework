@@ -1,7 +1,9 @@
-local ClassService = {}
+local BaseClass = require(script.BaseClass)
+local ClassService = BaseClass:New("ClassService")
 function ClassService:AddClass(ClassName: string, ClassData: table)
     self[ClassName] = ClassData
 end
+ClassService:AddClass("BaseClass",BaseClass)
 function ClassService:GetClass(ClassName: string): any
     local RequestedClass = self[ClassName]
     if RequestedClass ~= nil then
@@ -10,10 +12,18 @@ function ClassService:GetClass(ClassName: string): any
         warn("ClassService was asked to return a class that doesn't exist!",ClassName,debug.traceback())
     end
 end
-function ClassService.Setup(_output: table, ArcaneumGlobals: table): table
-    local Utilities = ArcaneumGlobals.Utilities
-    local BaseClass = Utilities:ImportModule(script,"BaseClass")
-    ClassService = BaseClass:NewFromTable(ClassService,"ClassService")
+local InitialModules = {
+    script.BaseClass.Class;
+    script.BaseClass.DataTypes;
+    table.unpack(script.BaseClass.DataTypes:GetChildren());
+    script.InitializerService;
+    script.InitializerService.SingletonInitClass;
+}
+for i=1, #InitialModules do
+    local Module = InitialModules[i]
+    ClassService:AddClass(Module.Name, require(Module))
+end
+function ClassService.Setup(_output: table, _ArcaneumGlobals: table): table
     local function UnpackClasses(Parent: ModuleScript): table
         local PotentialModules = Parent:GetChildren()
         for i=1, #PotentialModules do
