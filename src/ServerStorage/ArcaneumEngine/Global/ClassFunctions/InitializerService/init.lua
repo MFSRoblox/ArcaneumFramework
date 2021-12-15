@@ -86,6 +86,7 @@ function InitializerService:Initialize(Globals: table?): table
             
         end
     end
+    self:Destory()
     return Globals
 end
 
@@ -108,7 +109,23 @@ function InitializerService:AddToBootGroup(SingletonInitObject: table)
 end
 
 function InitializerService:Destory()
-
+    for FileName, FileContents in next, self.FilesToBoot do
+        for i=1, #FileContents do
+            FileContents[i] = nil
+        end
+        FileContents = nil
+        self.FilesToBoot[FileName] = nil
+    end
+    self.FilesToBoot = nil
+    for BootOrderNumber, BootGroup in next, self.BootGroups do
+        for i=1, #BootGroup do
+            BootGroup[i] = nil
+        end
+        BootGroup = nil
+        self.BootGroups[BootOrderNumber] = nil
+    end
+    self.BootGroups = nil
+    self = nil
 end
 
 return InitializerService
