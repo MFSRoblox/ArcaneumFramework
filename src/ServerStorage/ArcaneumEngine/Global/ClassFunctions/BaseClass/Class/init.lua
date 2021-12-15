@@ -31,9 +31,19 @@ local Class = BaseClass:Extend({
     A table containing all existing connections to this object.
 ]=]
 function Class:New(ClassName:string)
-    local NewClass = BaseClass:New(ClassName)
-    NewClass.Connections = {}
-    return self:Extend(NewClass)
+    return self:NewFromTable({},ClassName)
+end
+
+--[=[
+    Creates a new Class object from a premade table with a ClassName of "ClassName".
+
+    @param ClassName string -- The name of the class being created.
+    @return NewClass -- Returns an object with the ClassName of "ClassName".
+]=]
+function Class:NewFromTable(Table: table, ClassName:string)
+    Table = BaseClass:NewFromTable(Table, ClassName)
+    Table.Connections = {}
+    return self:Extend(Table)
 end
 
 --[=[

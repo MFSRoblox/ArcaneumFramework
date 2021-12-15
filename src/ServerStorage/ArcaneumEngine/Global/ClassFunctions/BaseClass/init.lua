@@ -40,7 +40,18 @@ end
     The name of the object's class.
 ]=]
 function BaseClass:New(ClassName:string)
-    return self:Extend({ClassName = ClassName})
+    return self:NewFromTable({}, ClassName)
+end
+
+--[=[
+    Creates a new BaseClass object from a premade table with a ClassName of "ClassName".
+
+    @param ClassName string -- The name of the class being created.
+    @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
+]=]
+function BaseClass:NewFromTable(Table: table, ClassName:string)
+    Table.ClassName = ClassName or ""
+    return self:Extend(Table)
 end
 
 --[=[
