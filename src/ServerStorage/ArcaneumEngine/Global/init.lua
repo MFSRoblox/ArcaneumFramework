@@ -4,7 +4,7 @@ local UtilitiesModule = script.Utilities
 GlobalInit:AddModule(UtilitiesModule)
 local ClassFunctionsModule = script.ClassFunctions
 GlobalInit:AddModule(ClassFunctionsModule)
-local GlobalTable = GlobalInit:Initialize()
+local GlobalTable = GlobalInit:InitializeAll()
 local Utilities = GlobalTable.Utilities
 local ScriptChildren = script:GetChildren()
 GlobalTable.Utilities:RemoveFromTable(ScriptChildren,UtilitiesModule)
