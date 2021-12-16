@@ -18,7 +18,8 @@ local Arcaneum = BaseClass:New("ArcaneumFramework")
 function Arcaneum:New()
     local Perspective = ArcaneumGlobals.Perspective
     print("Arcaneum initializing on",Perspective)
-    local PerspectiveGlobals = require(script[Perspective].Shared)
+    local InitializerService = ArcaneumGlobals.ClassFunctions:GetClass("InitializerService")
+    local PerspectiveGlobals = InitializerService:InitializeModule(script[Perspective].Shared,ArcaneumGlobals)
     print("Arcaneum",Perspective,"Globals:",PerspectiveGlobals)
     for Name, Data in next, PerspectiveGlobals do
         if ArcaneumGlobals[Name] then
@@ -27,7 +28,7 @@ function Arcaneum:New()
         end
         ArcaneumGlobals[Name] = Data
     end
-    local Module = require(script[Perspective])(ArcaneumGlobals)
+    local Module = InitializerService:InitializeModule(script[Perspective],ArcaneumGlobals)
     return Module
 end
 
