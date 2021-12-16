@@ -15,9 +15,10 @@ export type SingletonInitObject = typeof(SingletonInitClass:NewFromDictionary({_
 --[=[
 
 @param InitName string
+@param Version string | Version
 @param InitCallback (table,...any) -> table
 @param InitTable table?
-@param InitPriority number?
+@param BootOrder number?
 
 @return SingletonInitObject
 ]=]

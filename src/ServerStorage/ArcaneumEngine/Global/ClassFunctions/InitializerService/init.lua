@@ -8,6 +8,13 @@ local InitializerService do
     InitializerService = setmetatable({},{__index = InitializerService})
 end
 local SingletonInitClass = require(script.SingletonInitClass)
+
+function InitializerService:InitializeModule(ModuleScript: ModuleScript, Globals: table?): any
+    local TempInitializer = self:New()
+    TempInitializer:AddModule(ModuleScript)
+    return TempInitializer:InitializeAll(Globals)[ModuleScript.Name]
+end
+
 --[=[
     @return InitializerObject
 ]=]
@@ -43,7 +50,7 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     table.insert(FileBootIndex,SingletonInitClass:NewFromDictionary(FileContents))
 end
 
-function InitializerService:Initialize(Globals: table?): table
+function InitializerService:InitializeAll(Globals: table?): Array<table>
     local FilesToBoot = self.FilesToBoot
     for FileName, FileContents in next, FilesToBoot do
         assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
@@ -75,18 +82,18 @@ function InitializerService:Initialize(Globals: table?): table
             return OrderA < OrderB
         end)
     end
-    Globals = Globals or {}
+    local Output = {}
     for i=1, #BootOrders do
         local CurrentOrder = BootOrders[i]
         local CurrentGroup = BootGroups[CurrentOrder]
         for j=1, #CurrentGroup do
             local FileToBoot = CurrentGroup[j]
             print("Initialing",FileToBoot.InitName)
-            Globals[FileToBoot.InitName] = FileToBoot(Globals)
-            
+            Output[FileToBoot.InitName] = FileToBoot(Globals)
         end
     end
-    return Globals
+    self:Destory()
+    return Output
 end
 
 function InitializerService:AddToBootGroup(SingletonInitObject: table)
@@ -108,7 +115,23 @@ function InitializerService:AddToBootGroup(SingletonInitObject: table)
 end
 
 function InitializerService:Destory()
-
+    for FileName, FileContents in next, self.FilesToBoot do
+        for i=1, #FileContents do
+            FileContents[i] = nil
+        end
+        FileContents = nil
+        self.FilesToBoot[FileName] = nil
+    end
+    self.FilesToBoot = nil
+    for BootOrderNumber, BootGroup in next, self.BootGroups do
+        for i=1, #BootGroup do
+            BootGroup[i] = nil
+        end
+        BootGroup = nil
+        self.BootGroups[BootOrderNumber] = nil
+    end
+    self.BootGroups = nil
+    self = nil
 end
 
 return InitializerService
