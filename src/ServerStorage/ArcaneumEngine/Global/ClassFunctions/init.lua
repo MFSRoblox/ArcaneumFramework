@@ -1,7 +1,8 @@
 local BaseClass = require(script.BaseClass)
 local ClassService = BaseClass:New("ClassService")
-function ClassService:AddClass(ClassName: string, ClassData: table)
+function ClassService:AddClass(ClassName: string, ClassData: table): any
     self[ClassName] = ClassData
+    return ClassData
 end
 --ClassService:AddClass("BaseClass",BaseClass)
 function ClassService:GetClass(ClassName: string): any
