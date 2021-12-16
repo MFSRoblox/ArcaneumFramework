@@ -31,7 +31,7 @@ end
     @param ThingToRemove any -- The object of which you want to remove from the table.
     @return boolean -- Returns if it actually removed the item.
 ]=]
-function Utilities:RemoveFromTable(TargetTable: table, ThingToRemove: any)
+function Utilities:RemoveFromTable(TargetTable: table, ThingToRemove: any): boolean
     local PositionOfThing = table.find(TargetTable,ThingToRemove)
     if PositionOfThing ~= nil then
         table.remove(TargetTable,PositionOfThing)
