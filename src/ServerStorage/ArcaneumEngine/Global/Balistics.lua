@@ -52,7 +52,7 @@ local BallisticsFunctions = {} do
     BallisticsFunctions.__index = BallisticsFunctions
     BallisticsFunctions = setmetatable(BallisticsFunctions,BallisticsFunctions)
 end
-local function SolvePolynomial(T0: number, T1: number, T2: number, T3: number, T4: number)
+function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number, T3: number, T4: number)
     T4 = T4 or 0
     T3 = T3 or 0
     T2 = T2 or 0
@@ -108,7 +108,7 @@ local function SolvePolynomial(T0: number, T1: number, T2: number, T3: number, T
         local r = -A*C/4 + 3*A*A*A*A/256 + A*A*B/16 + D
         --The resolvent cubic is then
         --z^3 - p/2z^2 - rz + rp/2 - q^2/8 = 0
-        local z1,z2,z3 = SolvePolynomial(1,p/2,r,r*p/2-q^2/8) --in theory it should only be z1
+        local z1,z2,z3 = self:SolvePolynomial(1,p/2,r,r*p/2-q^2/8) --in theory it should only be z1
         print(z1,z2,z3)
         if z2 or z3 then
             warn("Unexpected z2 and/or z3 in Quartic!")
@@ -249,6 +249,6 @@ function BallisticsFunctions:GetTargetTimes(ProjectileSpeed: number, ShooterPosi
             DeltaVelocity = DeltaVelocity or Vector3.new()
         end
     end
-    return SolvePolynomial(ProduceCoefficients(ProjectileSpeed, DeltaPosition, DeltaVelocity, DeltaAcceleration))
+    return self:SolvePolynomial(ProduceCoefficients(ProjectileSpeed, DeltaPosition, DeltaVelocity, DeltaAcceleration))
 end
 return BallisticsFunctions
