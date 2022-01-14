@@ -246,6 +246,7 @@ function BallisticsFunctions:GetTargetTimes(ProjectileSpeed: number, ShooterPosi
             TargetAcceleration = TargetAcceleration or Vector3.new()
             ShooterAcceleration = ShooterAcceleration or Vector3.new()
             DeltaAcceleration = TargetAcceleration - ShooterAcceleration
+            DeltaVelocity = DeltaVelocity or Vector3.new()
         end
     end
     return SolvePolynomial(ProduceCoefficients(ProjectileSpeed, DeltaPosition, DeltaVelocity, DeltaAcceleration))
