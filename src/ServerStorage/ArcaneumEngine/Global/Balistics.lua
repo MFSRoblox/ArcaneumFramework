@@ -1,19 +1,3 @@
---[[local TargetPosition = Vector3.new()
-local TargetVelocity = Vector3.new()
-local TargetAcceleration = Vector3.new()
-
-local ShooterPosition = Vector3.new()
-local ShooterVelocity = Vector3.new()
-local ShooterAcceleration = Vector3.new()
-
-local DeltaPosition = TargetPosition - ShooterPosition --p
-local DeltaVelocity = TargetVelocity - ShooterVelocity --v
-local DeltaAcceleration = TargetAcceleration - ShooterAcceleration--a
-
-local ProjectileSpeed: number --s]]
-
---math.abs(p + vt + 0.5*at^2) - st
-
 local function ProduceCoefficients(ProjectileSpeed: number, DeltaPosition:Vector3, DeltaVelocity:Vector3?, DeltaAcceleration:Vector3?): (number, number|nil, number|nil, number|nil, number|nil)
     local T0: number do
         local PSquare = DeltaPosition*DeltaPosition
@@ -47,7 +31,6 @@ local function ProduceCoefficients(ProjectileSpeed: number, DeltaPosition:Vector
     end
     return T0
 end
---ShooterLookVector = TargetPosition
 local BallisticsFunctions = {} do
     BallisticsFunctions.__index = BallisticsFunctions
     BallisticsFunctions = setmetatable(BallisticsFunctions,BallisticsFunctions)
