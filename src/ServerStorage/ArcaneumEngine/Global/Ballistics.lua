@@ -5,7 +5,6 @@ local function ProduceCoefficients(ProjectileSpeed: number, DeltaPosition:Vector
     end
     if DeltaVelocity ~= nil then
         local T1: number do
-            print(DeltaPosition:Dot(DeltaVelocity))
             T1 = 2*DeltaPosition:Dot(DeltaVelocity)
         end
         local T2: number do --(Vx^2 + Px*Ax + Vy^2 + Py*Ay + Vz^2 + Pz*Az - s^2)
@@ -31,11 +30,13 @@ local function ProduceCoefficients(ProjectileSpeed: number, DeltaPosition:Vector
     end
     return T0
 end
-local BallisticsFunctions = {} do
+local BallisticsFunctions = {
+    Precision = 1e-4
+} do
     BallisticsFunctions.__index = BallisticsFunctions
     BallisticsFunctions = setmetatable(BallisticsFunctions,BallisticsFunctions)
 end
-function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number, T3: number, T4: number)
+function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number, T3: number, T4: number): (number, number|nil, number|nil, number|nil)
     T4 = T4 or 0
     T3 = T3 or 0
     T2 = T2 or 0
@@ -92,11 +93,16 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
         local r = A*C/-4 + 3*A*A*A*A/256 + A*A*B/16 + D
         --The resolvent cubic is then
         --z^3 - p/2z^2 - rz + rp/2 - q^2/8 = 0
-        local z1,z2,z3 = self:SolvePolynomial(r*p/2-q*q/8,r,p/2,1) --in theory it should only be z1
-        print(z1,z2,z3)
-        if z2 or z3 then
-            warn("Unexpected z2 and/or z3 in Quartic!")
+        local z1,z2,z3 = self:SolvePolynomial(r*p/2-q*q/8,-1*r,p/-2,1) --in theory it should only be z1
+        if z1 <= 0 then
+            warn("Z is 0 or negative! This doesn't seem right...",debug.traceback())
         end
+        --[[
+            print(z1,z2,z3)
+            if z2 or z3 then
+                warn("Unexpected z2 and/or z3 in Quartic!")
+            end
+        ]]
         --With z being one root of the above equation, the roots of the quartic can
         --be obtained by solving the two quadratic equations
         --y^2 +- y*sqrt(2z-p) + z -+ sqrt(z^2-r) = 0
@@ -109,8 +115,7 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
         local Sqrt2ZP = math.sqrt(2*z1-p)
         local y1,y2 = self:SolvePolynomial(z1 - SqrtZ2R, Sqrt2ZP, 1)
         local y3,y4 = self:SolvePolynomial(z1 + SqrtZ2R, -1*Sqrt2ZP, 1)
-        --[[Resubstitution yields the correct values for x.
-        print("Pre-substitution:",y1,y2,y3,y4)
+        --Resubstitution yields the correct values for x.
         if y1 ~= nil then
             output1 = y1 - A/4
         end
@@ -122,10 +127,9 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
         end
         if y4 ~= nil then
             output4 = y4 - A/4
-        end]]
-        output1,output2,output3,output4 = y1,y2,y3,y4
+        end
+        --output1,output2,output3,output4 = y1,y2,y3,y4
     elseif T3 ~= 0 then --Cubic, Page 420, http://inis.jinr.ru/sl/vol1/CMC/Graphics_Gems_1,ed_A.Glassner.pdf
-        print("Solve Cubic with:",T0,T1,T2,T3)
         --A quartic equation, T3x^3 + T2x^2 + T1x + T0 = 0,
         --is divided by T3: x^3 + Ax^2 + Bx + C = 0
         local A,B,C = T2/T3,T1/T3,T0/T3
@@ -133,45 +137,47 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
         --eliminates the cubic term y^3 + 3py + 2q = 0
 
         --[[
-            (y - A/3)^3 = y^3/27 - Ay^2/9 + A^2*y/9 - A^3/27
-            (y - A/3)^2 = y^2/9 - 2Ay/9 + A^2/9
+            (y - A/3)^3 = y^3 - A*y^2 + A^2*y/3 - A^3/27
+            (y - A/3)^2 = y^2 - 2*Ay/3 + A^2/9
             (y - A/3) = (y - A/3)
             0
             
-            y^3/27 - Ay^2/9 + A^2*y/9 - A^3/27
-            + Ay^2/9 - 2A^2y/9 + A^3/9
-            + By - AB/3
+            y^3 - A*y^2 + A^2*y/3 - A^3/27
+            + A*y^2 - 2*A^2*y/3 + A^3/9
+            + B*y - A*B/3
             + C
 
-            y^3/27
-            - Ay^2/9 + Ay^2/9
-            + A^2*y/9 - 2A^2y/9 + By
-            - A^3/27 + A^3/9 - AB/3 + C
+            y^3
+            - A*y^2 + A*y^2
+            - 2*A^2*y/3 + A^2*y/3 + B*y
+            - A^3/27 + A^3/9 - A*B/3 + C
 
-            y^3/27
-            + (A^2/9 - 2A^2/9 + B)y
-            + (- A^3/27 + A^3/9 - AB/3 + C)
+            y^3
+            (-*A^2/3 + A^2/3 + B)*y
+            - A^3/27 + A^3/9 - A*B/3 + C
 
-            y^3/27
-            + (- A^2/9 + B)y
-            + (2A^3/27 - AB/3 + C)
+            y^3
+            (B - *A^2/3)*y
+            - A^3/27 + 3*A^3/27 - A*B/3 + C
 
-            y^3/27
-            + (- A^2/27 + B/6)3y
-            + (A^3/27 - AB/6 + C/2)2
+            y^3
+            (B - *A^2/3)*y
+            2*A^3/27 - A*B/3 + C
+
+            y^3
+            (B/3 - A^2/9)*y*3
+            (A^3/27 - A*B/6 + C/2)*2
         ]]
-        local p = -1*A*A/27 + B/6
-        print("p:", p)
+        local p = B/3 - A*A/9
         local q = A*A*A/27 - A*B/6 + C/2
-        print("q:", q)
         --Using Cardano's Formula (G. Cardano, 1501,1576), the determinant is
         -- D = q^2 + p^3
         --u,v = (-q +- sqrt(D))^(1/3)
         --and the roots are
         --y1 = u+v
         --y2,3 = -(u+v)/2 +- sqrt(3)/2*(u-v)i
-        local D = q*q + p*p*p
-        print("Determinant:",D)
+        local PCubed = p*p*p
+        local D = q*q + PCubed
         --[[Three cases can be distinguished:
             D > 0: one real (yl
             ), two conjugated complex values (y3, y3)
@@ -179,20 +185,23 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
             D < 0: three different real values.
         ]]
         local y1:number?,y2:number?,y3:number?
-        if D > 1e-6 then
+        if D > 1e-6 then --One root
             local u = (-q + math.sqrt(D))^(1/3)
             local v = (-q - math.sqrt(D))^(1/3)
             y1 = u+v
-        elseif D <= 1e-6 then --1e-6 is essentially 0 due to float errors
+        elseif D >= 0 then --1e-6 is essentially 0 due to float errors, two roots
             y1 = 2*q^(1/3)
             y2 = -(y1)/2
-        elseif D < 0 then --well, this is a pickle
-            --[[u = (-q + math.sqrt(D))^(1/3)
-            v = (-q - math.sqrt(D))^(1/3)
-            output2 = -(u+v)/2 + math.sqrt(3)/2*(u-v)i
-            if D < 0 then
-                output3 = -(u+v)/2 - math.sqrt(3)/2*(u-v)i
-            end]]
+        elseif D < 0 then --Three roots
+            --[[
+                Messy solution:
+                u = (-q + math.sqrt(D))^(1/3)
+                v = (-q - math.sqrt(D))^(1/3)
+                output2 = -(u+v)/2 + math.sqrt(3)/2*(u-v)i
+                if D < 0 then
+                    output3 = -(u+v)/2 - math.sqrt(3)/2*(u-v)i
+                end
+            ]]
             --[[
                 In the case of D < 0 (the so-called casus irreducibilis) trigonometric
                 substitution helps to find all three solutions without the need for complex
@@ -202,13 +211,13 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
             -- y1 = 2*sqrt(-p)*cos(R/3)
             -- y2,3 = -2*sqrt(-p)*cos((R+-pi)/3)
             
-            local R = math.acos(-1*q/math.sqrt(-1*p*p*p))
-            y1 = 2*math.sqrt(-1*p)*math.cos(R/3)
-            y2 = -2*math.sqrt(-1*p)*math.cos((R+math.pi)/3)
-            y3 = -2*math.sqrt(-1*p)*math.cos((R-math.pi)/3)
+            local R = math.acos(-1*q/math.sqrt(-1*PCubed))
+            local NSqrtP = math.sqrt(-1*p)
+            y1 = 2*NSqrtP*math.cos(R/3)
+            y2 = -2*NSqrtP*math.cos((R+math.pi)/3)
+            y3 = -2*NSqrtP*math.cos((R-math.pi)/3)
         end
-        --[[Resubstitution yields the correct values for x.
-        print("Pre-substitution:",y1,y2,y3)
+        --Resubstitution yields the correct values for x.
         if y1 ~= nil then
             output1 = y1 - A/3
         end
@@ -217,8 +226,8 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
         end
         if y3 ~= nil then
             output3 = y3 - A/3
-        end]]
-        output1,output2,output3 = y1,y2,y3
+        end
+        --output1,output2,output3 = y1,y2,y3
     elseif T2 ~= 0 then -- Quadratic Returns how many solutions there are, https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
         -- 0 = T0 + T1v + T2v^2
         if math.abs(T2)<1e-6 then
@@ -231,7 +240,6 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
             end
         else
             local D = T1^2-4*T2*T0
-            --print(D)
             local sqrtD = math.sqrt(D)
             if D >= 0 then
                 output1 = (-T1 + sqrtD) / (2*T2)
@@ -245,8 +253,8 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
     else
         output1 = T0
     end
-    print("SolvePolynomial Inputs:",T0,T1,T2,T3,T4)
-    print("SolvePolynomial Outputs:",output1,output2,output3,output4)
+    --print("SolvePolynomial Inputs:",T0,T1,T2,T3,T4)
+    --print("SolvePolynomial Outputs:",output1,output2,output3,output4)
     return output1,output2,output3,output4
 end
 function BallisticsFunctions:GetTargetTimes(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?)
@@ -267,7 +275,11 @@ function BallisticsFunctions:GetTargetTimes(ProjectileSpeed: number, ShooterPosi
         end
     end
     local output = table.pack(self:SolvePolynomial(ProduceCoefficients(ProjectileSpeed, DeltaPosition, DeltaVelocity, DeltaAcceleration)))
-    print("GetTargetTimes Output:",table.unpack(output))
+    --[[for i=1, #output do
+        local OriginalOutput = output[i]
+        output[i] = math.round(OriginalOutput/self.Precision)*self.Precision
+    end]]
+    --print("GetTargetTimes Output:",table.unpack(output))
     return table.unpack(output)
 end
 return BallisticsFunctions
