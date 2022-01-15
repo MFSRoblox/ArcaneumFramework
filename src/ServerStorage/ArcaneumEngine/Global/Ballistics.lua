@@ -104,9 +104,23 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
             y^2 + y*sqrt(2z-p) + z - sqrt(z^2-r) = 0
             y^2 - y*sqrt(2z-p) + z + sqrt(z^2-r) = 0
         ]]
-
+        local SqrtZ2R = math.sqrt(z1^2-r)
+        local Sqrt2ZP = math.sqrt(2*z1-p)
+        local y1,y2 = self:SolvePolynomial(z1 - SqrtZ2R, Sqrt2ZP, 1)
+        local y3,y4 = self:SolvePolynomial(z1 + SqrtZ2R, -1*Sqrt2ZP, 1)
         --Resubstitution yields the correct values for x.
-        
+        if y1 ~= nil then
+            output1 = y1 - A/4
+        end
+        if y2 ~= nil then
+            output2 = y2 - A/4
+        end
+        if y3 ~= nil then
+            output3 = y3 - A/4
+        end
+        if y4 ~= nil then
+            output4 = y4 - A/4
+        end
     elseif T3 ~= 0 then --Cubic, Page 420, http://inis.jinr.ru/sl/vol1/CMC/Graphics_Gems_1,ed_A.Glassner.pdf
         --A quartic equation, T3x^3 + T2x^2 + T1x + T0 = 0,
         --is divided by T3: x^3 + Ax^2 + Bx + C = 0
@@ -157,14 +171,14 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
             D = 0: two real values, y2 = y3
             D < 0: three different real values.
         ]]
-        
+        local y1:number?,y2:number?,y3:number?
         if D > 0 then
             local u = (-q + math.sqrt(D))^(1/3)
             local v = (-q - math.sqrt(D))^(1/3)
-            output1 = u+v
+            y1 = u+v
         elseif D == 0 then
-            output1 = 2*q^(1/3)
-            output2 = -(output1)/2
+            y1 = 2*q^(1/3)
+            y2 = -(y1)/2
         elseif D < 0 then --well, this is a pickle
             --[[u = (-q + math.sqrt(D))^(1/3)
             v = (-q - math.sqrt(D))^(1/3)
@@ -182,38 +196,47 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
             -- y2,3 = -2*sqrt(-p)*cos((R+-pi)/3)
             
             local R = math.acos(-1*q/math.sqrt(-1*p*p*p))
-            output1 = 2*math.sqrt(-1*p)*math.cos(R/3)
-            output2 = -2*math.sqrt(-1*p)*math.cos((R+math.pi)/3)
-            output3 = -2*math.sqrt(-1*p)*math.cos((R-math.pi)/3)
+            y1 = 2*math.sqrt(-1*p)*math.cos(R/3)
+            y2 = -2*math.sqrt(-1*p)*math.cos((R+math.pi)/3)
+            y3 = -2*math.sqrt(-1*p)*math.cos((R-math.pi)/3)
         end
         --Resubstitution yields the correct values for x.
-        return output1,output2,output3
+        if y1 ~= nil then
+            output1 = y1 - A/3
+        end
+        if y2 ~= nil then
+            output2 = y2 - A/3
+        end
+        if y3 ~= nil then
+            output3 = y3 - A/3
+        end
     elseif T2 ~= 0 then -- Quadratic Returns how many solutions there are, https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
         -- 0 = T0 + T1v + T2v^2
         if math.abs(T2)<1e-6 then
             if math.abs(T1)<1e-6 then
                 if math.abs(T0)<1e-6 then
-                    return 0
+                    output1 = 0
                 end
-                return nil
+            else
+                output1 = -T0/T1
             end
-            return -T0/T1
-        end
-        local D = T1^2-4*T2*T0
-        --print(D)
-        local sqrtD = math.sqrt(D)
-        if D >= 0 then
-            output1 = (-T1 + sqrtD) / (2*T2)
-            if D > 0 then
-                output2 = (-T1 - sqrtD) / (2*T2)
+        else
+            local D = T1^2-4*T2*T0
+            --print(D)
+            local sqrtD = math.sqrt(D)
+            if D >= 0 then
+                output1 = (-T1 + sqrtD) / (2*T2)
+                if D > 0 then
+                    output2 = (-T1 - sqrtD) / (2*T2)
+                end
             end
         end
-        return output1, output2
     elseif T1 ~= 0 then
-        return -T0/T1
+        output1 = -T0/T1
     else
-        return T0
+        output1 = T0
     end
+    return output1,output2,output3,output4
 end
 function BallisticsFunctions:GetTargetTimes(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?)
     local DeltaPosition = TargetPosition - ShooterPosition --p
