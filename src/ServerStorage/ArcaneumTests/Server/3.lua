@@ -1,12 +1,23 @@
 return function(self)
     local ArcaneumGlobals = self.ArcaneumGlobals
     local BalisticsFunctions = ArcaneumGlobals.Ballistics
-    local DesiredPrecision = 1e-4/2
+    local DesiredPrecision = BalisticsFunctions.Precision*2
     local PrecisionVector = Vector3.new(1,1,1)*DesiredPrecision
     local function CompareVectors(V1: Vector3, V2: Vector3)
+        if V1 == V2 then
+            return true
+        end
         local V1L = V1 - PrecisionVector
         local V1G = V1 + PrecisionVector
         return (V1L.X <= V2.X and V2.X <= V1G.X) and (V1L.Y <= V2.Y and V2.Y <= V1G.Y) and (V1L.Z <= V2.Z and V2.Z <= V1G.Z)
+    end
+    local function CompareNumbers(N1: number, N2: number)
+        if N1 == N2 then
+            return true
+        end
+        local N1L = N1 - DesiredPrecision
+        local N1G = N1 + DesiredPrecision
+        return (N1L <= N2 and N2 <= N1G)
     end
     local ThisTest = self.TesterClass:New("Balistics Functions")
     ThisTest:AddTest("Simple Linear Hitable Check", false, function()
@@ -42,6 +53,47 @@ return function(self)
         --assert(SimulatedHitPosition - PrecisionVector <= ProjectedHitPosition and ProjectedHitPosition <= SimulatedHitPosition + PrecisionVector, "Target Intercept and Simulated Hit don't equal each other!")
         return true
     end)
+    local CubicTestData = {
+        {
+            Coefficients = {-6,-11,3,2};
+            Solutions = {2, -.5, -3};
+        };
+        {
+            Coefficients = {12,4,-7,1};
+            Solutions = {-1, 2, 6};
+        };
+        {
+            Coefficients = {-1,3,-3,1};
+            Solutions = {1}
+        }
+    }
+    local function RemoveDuplicatesFromTable(InputTable: table)
+        local output = {}
+        for i=1, #InputTable do
+            local v = InputTable[i]
+            if not table.find(output,v) then
+                table.insert(output,v)
+            end
+        end
+        return output
+    end
+    ThisTest:AddTest("Cubic Polynomial Check", false, function()
+        for DataNumber,TestData in pairs(CubicTestData) do
+            local Coefficients = TestData.Coefficients
+            local Solutions = TestData.Solutions
+            print(string.format("Find the roots of f(x) = %d + %dx + %dx^2 + %dx^3.",table.unpack(Coefficients)))
+            local GeneratedSolutions = RemoveDuplicatesFromTable(table.pack(BalisticsFunctions:SolvePolynomial(table.unpack(Coefficients))))
+            print("Generated Solutions:",table.unpack(GeneratedSolutions))
+            print("Actual Solutions:",table.unpack(Solutions))
+            assert(#Solutions == #GeneratedSolutions, "Number of Generated Solutions don't match Actual Solutions of Test " .. tostring(DataNumber) .."!")
+            table.sort(Solutions)
+            table.sort(GeneratedSolutions)
+            for i=1, #Solutions do
+                assert(CompareNumbers(GeneratedSolutions[i],Solutions[i]), "Generated Solutions don't match Actual Solutions of Test " .. tostring(DataNumber) .."!")
+            end
+        end
+        return true
+    end)
     ThisTest:AddTest("Intercept Accelerating Object Check", false, function()
         local ProjecitleSpeed = 100
         local ShooterPosition = Vector3.new()
@@ -50,7 +102,7 @@ return function(self)
         local TargetAcceleration = Vector3.new(0,0,1)
         local results = table.pack(BalisticsFunctions:GetTargetTimes(ProjecitleSpeed, ShooterPosition, nil, nil, TargetPosition, TargetVelocity, TargetAcceleration))
         print("Hitable Check Results:", table.unpack(results))
-        print("What it should be close to:", 101.531, 19698.469)
+        print("What it should be close to:", 1.01531, 196.98469)
         assert(#results > 0, "Hitable Check failure! Not enough numbers were returned!")
         table.sort(results,function(a,b)
             if a >= 0 then
