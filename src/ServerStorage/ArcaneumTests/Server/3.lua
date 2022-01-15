@@ -1,6 +1,6 @@
 return function(self)
     local ArcaneumGlobals = self.ArcaneumGlobals
-    local BalisticsFunctions = ArcaneumGlobals.Balistics
+    local BalisticsFunctions = ArcaneumGlobals.Ballistics
     local DesiredPrecision = 1e-4/2
     local PrecisionVector = Vector3.new(1,1,1)*DesiredPrecision
     local function CompareVectors(V1: Vector3, V2: Vector3)
@@ -50,6 +50,7 @@ return function(self)
         local TargetAcceleration = Vector3.new(0,0,1)
         local results = table.pack(BalisticsFunctions:GetTargetTimes(ProjecitleSpeed, ShooterPosition, nil, nil, TargetPosition, TargetVelocity, TargetAcceleration))
         print("Hitable Check Results:", table.unpack(results))
+        print("What it should be close to:", 101.531, 19698.469)
         assert(#results > 0, "Hitable Check failure! Not enough numbers were returned!")
         table.sort(results,function(a,b)
             if a >= 0 then
