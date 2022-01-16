@@ -54,6 +54,10 @@ return function(self)
         return true
     end)
     local CubicTestData = {
+        --[[
+            Coefficients = {T0,T1,T2,T3}; --such that 0 = T0 + T1x + T2x^2 + T3x^3
+            Solutions = {S0,S1,S2}; --order doesn't matter, NaN should not be included, avoid duplicate numbers
+        ]]
         {
             Coefficients = {-6,-11,3,2};
             Solutions = {2, -.5, -3};
@@ -63,9 +67,21 @@ return function(self)
             Solutions = {-1, 2, 6};
         };
         {
+            Coefficients = {-6,11,-6,1};
+            Solutions = {1,2,3};
+        };
+        {
+            Coefficients = {-4,8,-5,1};
+            Solutions = {1,2}
+        };
+        {
             Coefficients = {-1,3,-3,1};
             Solutions = {1}
-        }
+        };
+        {
+            Coefficients = {-3,1,1,1};
+            Solutions = {1}
+        };
     }
     local function RemoveDuplicatesFromTable(InputTable: table)
         local output = {}
@@ -83,11 +99,11 @@ return function(self)
             local Solutions = TestData.Solutions
             print(string.format("Find the roots of f(x) = %d + %dx + %dx^2 + %dx^3.",table.unpack(Coefficients)))
             local GeneratedSolutions = RemoveDuplicatesFromTable(table.pack(BalisticsFunctions:SolvePolynomial(table.unpack(Coefficients))))
+            table.sort(Solutions)
+            table.sort(GeneratedSolutions)
             print("Generated Solutions:",table.unpack(GeneratedSolutions))
             print("Actual Solutions:",table.unpack(Solutions))
             assert(#Solutions == #GeneratedSolutions, "Number of Generated Solutions don't match Actual Solutions of Test " .. tostring(DataNumber) .."!")
-            table.sort(Solutions)
-            table.sort(GeneratedSolutions)
             for i=1, #Solutions do
                 assert(CompareNumbers(GeneratedSolutions[i],Solutions[i]), "Generated Solutions don't match Actual Solutions of Test " .. tostring(DataNumber) .."!")
             end
