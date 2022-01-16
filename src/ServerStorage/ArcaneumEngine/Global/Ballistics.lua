@@ -106,12 +106,12 @@ function BallisticsFunctions:SolvePolynomial(T0: number, T1: number, T2: number,
         local r = A*C/-4 + 3*A*A*A*A/256 + A*A*B/16 + D
         --The resolvent cubic is then
         --z^3 - p/2z^2 - rz + rp/2 - q^2/8 = 0
-        local z1,z2,z3 = self:SolvePolynomial(r*p/2-q*q/8,-1*r,p/-2,1) --in theory it should only be z1
+        local z1,_z2,_z3 = self:SolvePolynomial(r*p/2-q*q/8,-1*r,p/-2,1) --in theory it should only be z1
         if z1 <= 0 then
             warn("Z is 0 or negative! This doesn't seem right...",debug.traceback())
         end
         --[[
-            print(z1,z2,z3)
+            print(z1,_z2,_z3)
             if z2 or z3 then
                 warn("Unexpected z2 and/or z3 in Quartic!")
             end
