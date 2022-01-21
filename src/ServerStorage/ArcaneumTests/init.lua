@@ -91,7 +91,7 @@ end
 
 function TestBot:Run()
     local TestData = self.TestData
-    local FailedCounter, SkippedCounter = 0,0
+    local FailedCounter, WarnCounter, SkippedCounter = 0,0,0
     for i=1, #TestData.Positions do
         local TesterData = TestData.Tests[TestData.Positions[i]]
         --local Perspective = TesterData.Perspective
@@ -115,8 +115,12 @@ function TestBot:Run()
                     elseif Result.Status == "Skipped" then
                         SkippedCounter += 1
                         warn("Test was skipped!")
-                    elseif Result.Status == "Failed" then
+                    elseif Result.Status == "Failure" then
                         warn(Result)
+                        WarnCounter += 1
+                    elseif Result.Status == "Critical Failure" then
+                        ArcaneumGlobals.Utilities:error(Result)
+                        FailedCounter += 1
                     else
                         warn("Test did not have a Status!")
                     end
@@ -140,7 +144,7 @@ function TestBot:Run()
             end]]
         end
     end
-    print(FailedCounter,"failed,", SkippedCounter, "skipped")
+    print(FailedCounter,"failed,", WarnCounter, "issue(s),", SkippedCounter, "skipped")
     return true
 end
 
