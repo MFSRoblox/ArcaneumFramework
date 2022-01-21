@@ -7,6 +7,10 @@
 local Utilities = {} do
     Utilities.__index = Utilities
     Utilities = setmetatable(Utilities,Utilities)
+    Utilities.ErrorEvent = Instance.new("BindableEvent")
+    Utilities.ErrorEvent.Event:Connect(function(ErrorMsg:string)
+        error(ErrorMsg,0)
+    end)
 end
 --[=[
     A pcall function with a prebuilt message in the format of "ErrorMsg: Result \n traceback"
@@ -23,6 +27,15 @@ function Utilities:pcall(callback: (...any) -> any, ErrorMsg:string, ...:any): b
         warn(warnMessage)
     end
     return Success, Result
+end
+--[=[
+    An error function that creates an error message without killing the thread it was called in
+
+    @param ErrorMsg string -- The Error message that will be displayed.
+    @return nil
+]=]
+function Utilities:error(ErrorMsg:string): nil
+    self.ErrorEvent:Fire(tostring(ErrorMsg))
 end
 --[=[
     A quick table.remove(table.find) method that would try to find your object in the TargetTable and remove it, if it exists.
