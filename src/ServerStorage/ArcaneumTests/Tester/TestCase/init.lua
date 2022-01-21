@@ -45,6 +45,7 @@ end
 
 function TestCaseClass:Run()
     local initialString = "TestCase " .. self.Name
+    print("Running",initialString)
     local Success, TestResult
     local Steps = self.Steps
     for i=1, #Steps do
@@ -62,19 +63,19 @@ function TestCaseClass:Run()
         end
     end
     if Success and TestResult ~= nil then
-        print(initialString.." has executed flawless as expected. Result:\n" .. tostring(TestResult))
+        print(initialString.." has executed flawless as expected. Result:\n" .. tostring(TestResult) .. "\n")
         return true, TestResult
     else
         local outputMessage = initialString
         if Success then
-            outputMessage ..= " didn't return a result!"
+            outputMessage ..= " didn't return a result!\n"
         else
             outputMessage ..= " has failed to work correctly! Debug:\n".. tostring(TestResult)
         end
         if self.StopOnFailure then
-            assert(false, outputMessage)
+            assert(false, outputMessage .. "\n")
         else
-            warn(outputMessage)
+            warn(outputMessage .. "\n")
         end
         return false, TestResult
     end
