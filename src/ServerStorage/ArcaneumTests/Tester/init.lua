@@ -47,33 +47,39 @@ end
 
 local TestStatuses = {
     "Successful",
-    "Failure",
+    "Critical Failure",
     "Skipped",
+    "Failure",
     "Unassigned"
 }
 
 function Tester:RunTests()
     local output = {}
+    local LatestTestName:string
     local s, v = pcall(function()
         local Tests = self.Tests
         for i = 1, #Tests do
             local Test = Tests[i]
-            print(Test.Name, Test)
+            LatestTestName = Test.Name
+            print(LatestTestName, Test)
             local Success, Result = Test:Run()
-            local Status = TestStatuses[4] do
+            local Status = TestStatuses[5] do
                 if Success then
                     Status = TestStatuses[1]
                 elseif Result == 3 then
                     Status = TestStatuses[3]
-                elseif Result ~= nil then
+                elseif Test.StopOnFailure == false then
+                    Status = TestStatuses[4]
+                else
                     Status = TestStatuses[2]
                 end
             end
-            table.insert(output,TestResultClass:New(Test.Name, Status, Result))
+            table.insert(output,TestResultClass:New(LatestTestName, Status, Result))
         end
     end)
     if not s then
-        warn(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
+        ScriptUtilities:error(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
+        table.insert(output,TestResultClass:New(LatestTestName, TestStatuses[2], tostring(v)))
     end
     return output
 end
