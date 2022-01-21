@@ -1,7 +1,7 @@
 return function(self)
     local ArcaneumGlobals = self.ArcaneumGlobals
     local BalisticsFunctions = ArcaneumGlobals.Ballistics
-    local DesiredPrecision = BalisticsFunctions.Precision*2
+    local DesiredPrecision = 1
     local PrecisionVector = Vector3.new(1,1,1)*DesiredPrecision
     local function CompareVectors(V1: Vector3, V2: Vector3)
         if V1 == V2 then
