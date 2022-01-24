@@ -163,7 +163,7 @@ return function(self)
         --MinimalTime = tonumber(string.format(PrecisionString,MinimalTime))
         print("Minimal Time to hit the target:",MinimalTime)
         assert(MinimalTime ~= nil and MinimalTime >= 0, "Minimal Time is negative or doesn't exist!")
-        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + 0.5 * TargetAcceleration * MinimalTime*MinimalTime
+        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + 0.5 * TargetAcceleration * MinimalTime*MinimalTime + TargetJerk * MinimalTime*MinimalTime*MinimalTime / 3
         print("Target Intercept Position:", ProjectedHitPosition)
         local SimulationLookVector = (ProjectedHitPosition - ShooterPosition).Unit
         print("Simulated Look Vector to hit target:", SimulationLookVector)
@@ -200,7 +200,7 @@ return function(self)
         --MinimalTime = tonumber(string.format(PrecisionString,MinimalTime))
         print("Minimal Time to hit the target:",MinimalTime)
         assert(MinimalTime ~= nil and MinimalTime >= 0, "Minimal Time is negative or doesn't exist!")
-        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + 0.5 * TargetAcceleration * MinimalTime*MinimalTime
+        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + TargetAcceleration * MinimalTime*MinimalTime / 2 + TargetJerk * MinimalTime*MinimalTime*MinimalTime / 3
         print("Target Intercept Position:", ProjectedHitPosition)
         local SimulationLookVector = (ProjectedHitPosition - ShooterPosition).Unit
         print("Simulated Look Vector to hit target:", SimulationLookVector)
@@ -237,7 +237,7 @@ return function(self)
         --MinimalTime = tonumber(string.format(PrecisionString,MinimalTime))
         print("Minimal Time to hit the target:",MinimalTime)
         assert(MinimalTime ~= nil and MinimalTime >= 0, "Minimal Time is negative or doesn't exist!")
-        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + 0.5 * TargetAcceleration * MinimalTime*MinimalTime
+        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + 0.5 * TargetAcceleration * MinimalTime*MinimalTime + TargetJerk * MinimalTime*MinimalTime*MinimalTime / 3
         print("Target Intercept Position:", ProjectedHitPosition)
         local SimulationLookVector = (ProjectedHitPosition - ShooterPosition).Unit
         print("Simulated Look Vector to hit target:", SimulationLookVector)
