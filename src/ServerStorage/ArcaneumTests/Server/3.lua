@@ -15,8 +15,8 @@ return function(self)
         local V1G = V1 + PrecisionVector/2
         return (V1L.X <= V2.X and V2.X <= V1G.X) and (V1L.Y <= V2.Y and V2.Y <= V1G.Y) and (V1L.Z <= V2.Z and V2.Z <= V1G.Z)
     end
-    local function RemoveDuplicatesFromTable(InputTable: table)
-        return Utilities:RemoveDuplicatesFromTable(InputTable)
+    local function RemoveDuplicatesFromArray(InputArray: Array<any>)
+        return Utilities:RemoveDuplicatesFromArray(InputArray)
     end
     local ThisTest = self.TesterClass:New("Balistics Functions")
     ThisTest:AddTest("Simple Linear Hitable Check", false, function()
@@ -88,7 +88,7 @@ return function(self)
             local Coefficients = TestData.Coefficients
             local Solutions = TestData.Solutions
             print(string.format("Find the roots of f(x) = %d + %dx + %dx^2 + %dx^3.",table.unpack(Coefficients)))
-            local GeneratedSolutions = RemoveDuplicatesFromTable(table.pack(Utilities:SolvePolynomial(table.unpack(Coefficients))))
+            local GeneratedSolutions = RemoveDuplicatesFromArray(table.pack(Utilities:SolvePolynomial(table.unpack(Coefficients))))
             table.sort(Solutions)
             table.sort(GeneratedSolutions)
             print("Generated Solutions:",table.unpack(GeneratedSolutions))
