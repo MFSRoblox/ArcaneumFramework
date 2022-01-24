@@ -465,6 +465,73 @@ local BallisticsFunctions = {
     BallisticsFunctions.__index = BallisticsFunctions
     BallisticsFunctions = setmetatable(BallisticsFunctions,BallisticsFunctions)
 end
+local function ReturnHitInfo(results: Array<number>, ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, ShooterJerk: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?, TargetJerk: Vector3?): (Vector3, Vector3, number, Vector3, Vector3)
+    if #results > 0 then
+        --print("Hitable Check Results:", table.unpack(results))
+        table.sort(results,function(a,b)
+            if a >= 0 then
+                if b >= 0 then
+                    return a < b
+                else
+                    return true
+                end
+            else
+                return false
+            end
+        end)
+        local MinimalTime = results[1]
+        --print("Minimal Time to hit the target:",MinimalTime)
+        assert(MinimalTime ~= nil and MinimalTime >= 0, "Minimal Time is negative or doesn't exist!")
+        local ProjectedHitPosition = TargetPosition + TargetVelocity * MinimalTime + TargetAcceleration * MinimalTime*MinimalTime / 2 + TargetJerk * MinimalTime*MinimalTime*MinimalTime / 3
+        --print("Target Intercept Position:", ProjectedHitPosition)
+        local SimulationLookVector = (ProjectedHitPosition - ShooterPosition).Unit
+        --print("Simulated Look Vector to hit target:", SimulationLookVector)
+        local SimulatedNetVelocity = SimulationLookVector * ProjectileSpeed * MinimalTime + ShooterVelocity
+        local SimulatedHitPosition = ShooterPosition + SimulatedNetVelocity + ShooterAcceleration * MinimalTime*MinimalTime / 2 + ShooterJerk * MinimalTime*MinimalTime*MinimalTime / 3
+        --print("Simulated Hit Position:", SimulatedHitPosition)
+        local AverageHitPosition = (SimulatedHitPosition + ProjectedHitPosition)/2
+        local LargestMagnitudeVector:Vector3 do
+            local ProjectedMagnitude = ProjectedHitPosition.Magnitude
+            local SimulatedMagnitude = SimulatedHitPosition.Magnitude
+            if ProjectedMagnitude > SimulatedMagnitude then
+                LargestMagnitudeVector = ProjectedHitPosition
+            else
+                LargestMagnitudeVector = SimulatedHitPosition
+            end
+        end
+        local PositionAccuracy = LargestMagnitudeVector-AverageHitPosition
+        return SimulationLookVector, AverageHitPosition, PositionAccuracy, SimulatedHitPosition, ProjectedHitPosition
+    else
+        --warn("Hitable Check failure! Not enough numbers were returned!")
+        return nil
+    end
+end
+function BallisticsFunctions:GetHitInfo(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?): (Vector3, Vector3, number, Vector3, Vector3)
+    local results = table.pack(self:GetHitTimes(ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, TargetPosition, TargetVelocity, TargetAcceleration))
+    return ReturnHitInfo(results, ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, nil, TargetPosition, TargetVelocity, TargetAcceleration, nil)
+end
+function BallisticsFunctions:GetHitInfoWithJerk(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, ShooterJerk: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?, TargetJerk: Vector3?): (Vector3, Vector3, number, Vector3, Vector3)
+    local results = table.pack(self:GetHitTimesWithJerk(ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, ShooterJerk, TargetPosition, TargetVelocity, TargetAcceleration, TargetJerk))
+    return ReturnHitInfo(results, ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, ShooterJerk, TargetPosition, TargetVelocity, TargetAcceleration, TargetJerk)
+end
+--[[function BallisticsFunctions:GetHitTimesWithDictionary(Input: Dictionary<any>)
+    local ProjectileSpeed: number? = Input.ProjectileSpeed
+    assert(type(ProjectileSpeed) == "number", "Input.ProjectileSpeed is not a number! Debug:"..debug.traceback())
+    local ConserveMomentum: boolean? = Input.ConserveMomentum or false
+    local ShooterPosition: Vector3? = Input.ShooterPosition
+    assert(typeof(ShooterPosition) == "Vector3", "Input.ShooterPosition is not a Vector3! Debug:"..debug.traceback())
+    local ShooterVelocity: Vector3?,ShooterAcceleration: Vector3?
+    if ConserveMomentum then
+        ShooterVelocity = Input.ShooterVelocity
+        ShooterAcceleration = Input.ShooterAcceleration
+    else
+        ShooterVelocity = Vector3.new()
+        ShooterAcceleration = Vector3.new()
+    end
+    local TargetPosition: Vector3? = Input.TargetPosition
+    local TargetVelocity: Vector3? = Input.TargetVelocity
+    local TargetAcceleration: Vector3? = Input.TargetAcceleration
+end]]
 function BallisticsFunctions:GetHitTimes(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?)
     local DeltaPosition = self.Utilities:ProduceDeltas(TargetPosition, ShooterPosition) --p
     local DeltaVelocity = self.Utilities:ProduceDeltas(TargetVelocity, ShooterVelocity) --v
