@@ -1,11 +1,44 @@
+--[=[
+    @class Config
+
+    The Dictionary that contains configurable information that will be used in the Utilities and BallisticsFunctions classes.
+]=]
+--[=[
+    @prop Precision number
+    @within Config
+    The target precision used to compare numbers and measure simularity in [Utilities:CompareNumbers]. Set to 1e-3 (or 0.001) by default.
+]=]
+--[=[
+    @prop MaxNumber number
+    @within Config
+    The MaxNumber used to replace infinity (or math.huge) during [Utilities:ProduceEstimate]. Set to 2147483646 by default.
+]=]
 local Config = {
     Precision = 1e-3;
     MaxNumber = 2147483646;
 }
+--[=[
+    @class Utilities
+
+    The class that contains the internal processing functions to produce the right numbers for the BallisticsFunctions class. This can be accessed through BallisticsFunctions via BallisticsFunctions.Utilities.
+]=]
 local Utilities = {} do
     Utilities.__index = Utilities
     Utilities = setmetatable(Utilities,Utilities)
 end
+--[=[
+    A function that returns the values of coefficients required to identify the polynomials of an equation
+    and find the solutions to said polynomials.
+    
+    Process found here: https://docs.google.com/document/d/1TKhiXzLMHVjDPX3a3U0uMvaiW1jWQWUmYpICjIDeMSA/edit
+    
+    @param ProjectileSpeed -- The speed that the projectile will have when fired.
+    @param DeltaPosition -- The overall position where the shooter's at (0,0,0).
+    @param DeltaVelocity -- The overall velocity where the shooter's at (0,0,0).
+    @param DeltaAcceleration -- The overall acceleration where the shooter's at (0,0,0).
+    @param DeltaJerk -- The overall jerk where the shooter's at (0,0,0).
+    @return number, number?, number?, number?, number?, number?, number? -- Returns the coefficients in the format of T0, T1, T2, T3, T4, T5, T6, where: T0 + T1x + T2x^2 + T3x^3 + T4x^4 + T5x^5 + T6x^6 = 0
+]=]
 function Utilities:ProduceCoefficients(ProjectileSpeed: number, DeltaPosition:Vector3, DeltaVelocity:Vector3?, DeltaAcceleration:Vector3?, DeltaJerk:Vector3?): (number, number|nil, number|nil, number|nil, number|nil, number|nil, number|nil) --https://docs.google.com/document/d/1TKhiXzLMHVjDPX3a3U0uMvaiW1jWQWUmYpICjIDeMSA/edit
     local T0: number do
         local PSquare = DeltaPosition*DeltaPosition
@@ -53,6 +86,13 @@ function Utilities:ProduceCoefficients(ProjectileSpeed: number, DeltaPosition:Ve
     end
     return T0
 end
+--[=[
+    A workaround function to address how odd roots of a negative returns NaN when they should be returning a negative odd-rooted number.
+    
+    @param n -- The number of which the root will be applied to (n^root).
+    @param root -- The number of the root (n^root). By default is equal to 2.
+    @return number -- Returns the result of n^root. Returns NaN if the root is even and n is negative.
+]=]
 function Utilities:GetRoot(n: number, root: number?): number
     root = root or 2
     local NSign = math.sign(n)
@@ -66,6 +106,16 @@ function Utilities:GetRoot(n: number, root: number?): number
         return tonumber("nan")
     end
 end
+--[=[
+    A function that solves a polynomial given its coefficients up to the fourth power (T0 + T1x + T2x^2 + T3x^3 + T4x^4 = 0).
+    
+    @param T0 -- The first coefficient of the polynomial. T0 in T0 + T1x + T2x^2 + T3x^3 + T4x^4 = 0
+    @param T1 -- The second coefficient of the polynomial. T1 in T0 + T1x + T2x^2 + T3x^3 + T4x^4 = 0
+    @param T2 -- The third coefficient of the polynomial. T2 in T0 + T1x + T2x^2 + T3x^3 + T4x^4 = 0
+    @param T3 -- The fourth coefficient of the polynomial. T3 in T0 + T1x + T2x^2 + T3x^3 + T4x^4 = 0
+    @param T4 -- The fifth coefficient of the polynomial. T4 in T0 + T1x + T2x^2 + T3x^3 + T4x^4 = 0
+    @return number, number?, number?, number? -- Returns all possible solutions of the given polynomial, up to four solutions.
+]=]
 function Utilities:SolvePolynomial(T0: number, T1: number, T2: number, T3: number, T4: number): (number, number|nil, number|nil, number|nil)
     T4 = T4 or 0
     T3 = T3 or 0
@@ -294,6 +344,13 @@ function Utilities:SolvePolynomial(T0: number, T1: number, T2: number, T3: numbe
     --print("SolvePolynomial Outputs:",output1,output2,output3,output4)
     return output1,output2,output3,output4
 end
+--[=[
+    A short function that finds the overall vector between two Vector3s (Final Vector - Initial Vector).
+    
+    @param Target -- The vector3 of the target. By default Vector3.new(0,0,0).
+    @param Shooter -- The vector3 of the shooter. By default Vector3.new(0,0,0).
+    @return Vector3 -- The resulting Vector3 of (Target - Shooter).
+]=]
 function Utilities:ProduceDeltas(Target: Vector3?, Shooter: Vector3?): Vector3
     if Target or Shooter then
         Target = Target or Vector3.new()
@@ -301,6 +358,12 @@ function Utilities:ProduceDeltas(Target: Vector3?, Shooter: Vector3?): Vector3
         return Target - Shooter
     end
 end
+--[=[
+    A function that returns the derivative of a polynomial, given its coefficients.
+    
+    @param ... -- The coefficients of the polynomial. T0, T1, T2, T3, T4, ..., Tn, where: T0 + T1x + T2x^2 + T3x^3 + T4x^4 + ... + Tn^n = 0
+    @return ...number -- The coefficients of the derviative polynomial from the initial polynomial.
+]=]
 function Utilities:ProduceDerivative(...:number): ...number
     local Coefficients: Array<number> = table.pack(...)
     local NewCoefficients = {}
@@ -311,7 +374,14 @@ function Utilities:ProduceDerivative(...:number): ...number
     end
     return table.unpack(NewCoefficients)
 end
-function Utilities:InputPolynomial(Input: number, ...:number)
+--[=[
+    A function that returns the result of pluging in Input into a polynomial, given its coefficients. It can also evaluate the limit of positive and negative math.huge (infinity) if the Input is set to be that.
+    
+    @param Input -- The number that will be put into the given polynomial. Can be math.huge (infinity).
+    @param ... -- The coefficients of the polynomial. T0, T1, T2, T3, T4, ..., Tn, where: T0 + T1x + T2x^2 + T3x^3 + T4x^4 + ... + Tn^n = 0
+    @return number -- The result of plugging in Input into the given polynomial.
+]=]
+function Utilities:InputPolynomial(Input: number, ...:number): number
     local Coefficients: Array<number> = table.pack(...)
     if math.abs(Input) == math.huge then
         --task.wait(0.1)
@@ -332,7 +402,15 @@ function Utilities:InputPolynomial(Input: number, ...:number)
     end
     return Sum
 end
-function Utilities:CompareNumbers(N1: number, N2: number, Precision: number?)
+--[=[
+    A function that returnsif two numbers are within a given range of precision.
+    
+    @param N1 -- The first number.
+    @param N2 -- The second number.
+    @param Precision -- The desired range of precision that the numbers should be in. This number will be divided by 2 and added/subtracted to the first number to check to see if the second number is inbetween it. By default is set to [Config.Precision].
+    @return boolean -- The result of plugging in Input into the given polynomial.
+]=]
+function Utilities:CompareNumbers(N1: number, N2: number, Precision: number?): boolean
     Precision = Precision or Config.Precision
     if N1 == N2 then
         return true
@@ -341,7 +419,15 @@ function Utilities:CompareNumbers(N1: number, N2: number, Precision: number?)
     local N1G = N1 + Precision/2
     return (N1L <= N2 and N2 <= N1G)
 end
-function Utilities:ProduceEstimate(Point1: number, Point2: number, ...:number)
+--[=[
+    A function that recursively calls itself to figure out where inbetween Point1 and Point2 it equals 0 within the range of Config.Precision. It performs the Bisection method to do this. If either point is equal to math.huge (infinity), it will replace it with [Config.MaxNumber].
+    
+    @param Point1 -- One critical point of which should be a min/max.
+    @param Point2 -- Another critical poit of which should be a min/max.
+    @param ... -- The coefficients of the polynomial. T0, T1, T2, T3, T4, ..., Tn, where: T0 + T1x + T2x^2 + T3x^3 + T4x^4 + ... + Tn^n = 0
+    @return number -- The result of plugging in Input into the given polynomial.
+]=]
+function Utilities:ProduceEstimate(Point1: number, Point2: number, ...:number): number
     --print("Produce Estimate Between", Point1, "and", Point2, "for",...)
     local Midpoint: number
     local Point1Estimate,Point2Estimate = self:InputPolynomial(Point1,...),self:InputPolynomial(Point2,...)
@@ -407,16 +493,30 @@ function Utilities:ProduceEstimate(Point1: number, Point2: number, ...:number)
         end
     end
 end
-function Utilities:RemoveDuplicatesFromTable(InputTable: table)
+--[=[
+    A function that creates a new array which only contains unique values.
+    
+    @param InputArray -- The array of which should be pruned of duplicates.
+    @return Array<any> -- The result of plugging in Input into the given polynomial.
+]=]
+function Utilities:RemoveDuplicatesFromArray(InputArray: Array<any>): Array<any>
     local output = {}
-    for i=1, #InputTable do
-        local v = InputTable[i]
+    for i=1, #InputArray do
+        local v = InputArray[i]
         if not table.find(output,v) then
             table.insert(output,v)
         end
     end
     return output
 end
+--[=[
+    A function that finds and returns the values where a relative/absolute max/min occurs in the polynomial.
+    If the polynomial is a quartic or lower, it will use the general formula in SolvePolynomial.
+    Otherwise, it will perform the bisection method via ProduceEstimate.
+    
+    @param ... -- The coefficients of the polynomial. T0, T1, T2, T3, T4, ..., Tn, where: T0 + T1x + T2x^2 + T3x^3 + T4x^4 + ... + Tn^n = 0
+    @return ...number -- The critical points of the given polynomial.
+]=]
 function Utilities:ProduceCriticalPoints(...:number): ...number
     print("Produce Critical Points for",...)
     local Coefficients: Array<number> = table.pack(...)
@@ -424,7 +524,7 @@ function Utilities:ProduceCriticalPoints(...:number): ...number
     local CriticalPoints: Array<number>
     if HighestPower > 4 then --needs a check to see if enough solutions are given, if not, go deeper for derivatives
         local DerivativeCriticalPoints = table.pack(self:ProduceCriticalPoints(self:ProduceDerivative(...)))
-        DerivativeCriticalPoints = self:RemoveDuplicatesFromTable(DerivativeCriticalPoints)
+        DerivativeCriticalPoints = self:RemoveDuplicatesFromArray(DerivativeCriticalPoints)
         table.sort(DerivativeCriticalPoints,function(a,b)
             return a < b
         end)
@@ -447,6 +547,12 @@ function Utilities:ProduceCriticalPoints(...:number): ...number
     print("Critical Points for",...,":",table.unpack(CriticalPoints))
     return table.unpack(CriticalPoints,1,#CriticalPoints)
 end
+--[=[
+    A function that finds and returns the solutions to the inputted polynomial which doesn't have a general formula with critical points and the bisection method.
+    
+    @param ... -- The coefficients of the polynomial that needs to be solved. T0, T1, T2, T3, T4, ..., Tn, where: T0 + T1x + T2x^2 + T3x^3 + T4x^4 + ... + Tn^n = 0
+    @return ...number -- The solutions of the given polynomial.
+]=]
 function Utilities:GetEstimate(...:number): ...number
     local PotentialSolutions = table.pack(self:ProduceCriticalPoints(...))
     local ActualSolutions = {}
@@ -459,12 +565,64 @@ function Utilities:GetEstimate(...:number): ...number
     end
     return table.unpack(ActualSolutions,1,#ActualSolutions)
 end
+--[=[
+    @class BallisticsFunctions
+
+    The public table that contains the functions for finding the points of collision between two projectiles.
+]=]
+--[=[
+    @prop Utilities Utilities
+    @within BallisticsFunctions
+    The Utilities class of which contains all of the nessessary functions used to create the right data.
+]=]
 local BallisticsFunctions = {
     Utilities = Utilities;
 } do
     BallisticsFunctions.__index = BallisticsFunctions
     BallisticsFunctions = setmetatable(BallisticsFunctions,BallisticsFunctions)
 end
+--[=[
+    @within BallisticsFunctions
+    @type LookVector Vector3
+    A unit Vector3 that is equivalent to CFrame.LookVector.
+]=]
+--[=[
+    @within BallisticsFunctions
+    @type AverageHitPosition Vector3
+    A Vector3 where the projectile and the target will collide.
+]=]
+--[=[
+    @within BallisticsFunctions
+    @type PositionAccuracy number
+    A number that shows how far off the average is from the projected target collision positions due to calculation incaccuracies.
+]=]
+--[=[
+    @within BallisticsFunctions
+    @type SimulatedHitPosition Vector3
+    The projected target collision position via: HitPosition = TargetInitialPosition + TargetVelocity*TravelTime + TargetAcceleration/2*TravelTime^2 + TargetJerk/3*TravelTime^3.
+]=]
+--[=[
+    @within BallisticsFunctions
+    @type ProjectedHitPosition Vector3
+    The projected projectile collision position via: HitPosition = ShooterInitialPosition + ((SimulationLookVector*ProjectileSpeed + ShooterVelocity)*TravelTime) + ShooterAcceleration/2*TravelTime^2 + ShooterJerk/3*TravelTime^3.
+]=]
+--[=[
+    @private
+    @within BallisticsFunctions
+    An internal function that computes the LookVector and HitPosition from the given results and variables.
+    
+    @param results -- An array that contains solutions from either GetHitTimes or GetHitTimesWithJerk.
+    @param ProjectileSpeed -- The initial speed of the projectile.
+    @param ShooterPosition -- The (initial) position of the projectile/shooter.
+    @param ShooterVelocity -- The (initial) velocity of the projectile/shooter.
+    @param ShooterAcceleration -- The (initial) acceleration of the projectile/shooter.
+    @param ShooterJerk -- The jerk (rate of change of acceleration) of the projectile/shooter.
+    @param TargetPosition -- The (initial) position of the target.
+    @param TargetVelocity -- The (initial) velocity of the target.
+    @param TargetAcceleration -- The (initial) velocity of the target.
+    @param TargetJerk -- The jerk (rate of change of acceleration) of the target.
+    @return LookVector?, AverageHitPosition?, PositionAccuracy?, SimulatedHitPosition?, ProjectedHitPosition? -- Returns nil if there isn't a valid hit direction.
+]=]
 local function ReturnHitInfo(results: Array<number>, ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, ShooterJerk: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?, TargetJerk: Vector3?): (Vector3, Vector3, number, Vector3, Vector3)
     if #results > 0 then
         --print("Hitable Check Results:", table.unpack(results))
@@ -486,7 +644,7 @@ local function ReturnHitInfo(results: Array<number>, ProjectileSpeed: number, Sh
         --print("Target Intercept Position:", ProjectedHitPosition)
         local SimulationLookVector = (ProjectedHitPosition - ShooterPosition).Unit
         --print("Simulated Look Vector to hit target:", SimulationLookVector)
-        local SimulatedNetVelocity = SimulationLookVector * ProjectileSpeed * MinimalTime + ShooterVelocity
+        local SimulatedNetVelocity = (SimulationLookVector * ProjectileSpeed + ShooterVelocity) * MinimalTime
         local SimulatedHitPosition = ShooterPosition + SimulatedNetVelocity + ShooterAcceleration * MinimalTime*MinimalTime / 2 + ShooterJerk * MinimalTime*MinimalTime*MinimalTime / 3
         --print("Simulated Hit Position:", SimulatedHitPosition)
         local AverageHitPosition = (SimulatedHitPosition + ProjectedHitPosition)/2
@@ -506,15 +664,45 @@ local function ReturnHitInfo(results: Array<number>, ProjectileSpeed: number, Sh
         return nil
     end
 end
+--[=[
+    @tag Untested
+    A function that computes the LookVector and HitPosition from ProjectileSpeed, Positions, Velocities, and Acceleration. Refer to [BallisticsFunctions:GetHitInfoWithJerk] to compute with Jerk.
+    
+    @param ProjectileSpeed -- The initial speed of the projectile.
+    @param ShooterPosition -- The (initial) position of the projectile/shooter.
+    @param ShooterVelocity -- The (initial) velocity of the projectile/shooter.
+    @param ShooterAcceleration -- The (initial) acceleration of the projectile/shooter.
+    @param TargetPosition -- The (initial) position of the target.
+    @param TargetVelocity -- The (initial) velocity of the target.
+    @param TargetAcceleration -- The (initial) velocity of the target.
+    @return LookVector?, AverageHitPosition?, PositionAccuracy?, SimulatedHitPosition?, ProjectedHitPosition? -- Returns nil if there isn't a valid hit direction.
+]=]
 function BallisticsFunctions:GetHitInfo(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?): (Vector3, Vector3, number, Vector3, Vector3)
     local results = table.pack(self:GetHitTimes(ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, TargetPosition, TargetVelocity, TargetAcceleration))
     return ReturnHitInfo(results, ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, nil, TargetPosition, TargetVelocity, TargetAcceleration, nil)
 end
+--[=[
+    @tag Untested
+    A function that computes the LookVector and HitPosition from ProjectileSpeed, Positions, Velocities, Acceleration, and Jerk.
+    
+    @param ProjectileSpeed -- The initial speed of the projectile.
+    @param ShooterPosition -- The (initial) position of the projectile/shooter.
+    @param ShooterVelocity -- The (initial) velocity of the projectile/shooter.
+    @param ShooterAcceleration -- The (initial) acceleration of the projectile/shooter.
+    @param ShooterJerk -- The jerk (rate of change of acceleration) of the projectile/shooter.
+    @param TargetPosition -- The (initial) position of the target.
+    @param TargetVelocity -- The (initial) velocity of the target.
+    @param TargetAcceleration -- The (initial) velocity of the target.
+    @param TargetJerk -- The jerk (rate of change of acceleration) of the target.
+    @return LookVector?, AverageHitPosition?, PositionAccuracy?, SimulatedHitPosition?, ProjectedHitPosition? -- Returns nil if there isn't a valid hit direction.
+]=]
 function BallisticsFunctions:GetHitInfoWithJerk(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, ShooterJerk: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?, TargetJerk: Vector3?): (Vector3, Vector3, number, Vector3, Vector3)
     local results = table.pack(self:GetHitTimesWithJerk(ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, ShooterJerk, TargetPosition, TargetVelocity, TargetAcceleration, TargetJerk))
     return ReturnHitInfo(results, ProjectileSpeed, ShooterPosition, ShooterVelocity, ShooterAcceleration, ShooterJerk, TargetPosition, TargetVelocity, TargetAcceleration, TargetJerk)
 end
---[[function BallisticsFunctions:GetHitTimesWithDictionary(Input: Dictionary<any>)
+
+--[[
+function BallisticsFunctions:GetHitTimesWithDictionary(Input: Dictionary<any>)
     local ProjectileSpeed: number? = Input.ProjectileSpeed
     assert(type(ProjectileSpeed) == "number", "Input.ProjectileSpeed is not a number! Debug:"..debug.traceback())
     local ConserveMomentum: boolean? = Input.ConserveMomentum or false
@@ -531,7 +719,21 @@ end
     local TargetPosition: Vector3? = Input.TargetPosition
     local TargetVelocity: Vector3? = Input.TargetVelocity
     local TargetAcceleration: Vector3? = Input.TargetAcceleration
-end]]
+end
+]]
+
+--[=[
+    A function that computes the times of collision from ProjectileSpeed, Positions, Velocities, and Acceleration. Refer to [BallisticsFunctions:GetHitTimesWithJerk] to compute with Jerk.
+    
+    @param ProjectileSpeed -- The initial speed of the projectile.
+    @param ShooterPosition -- The (initial) position of the projectile/shooter.
+    @param ShooterVelocity -- The (initial) velocity of the projectile/shooter.
+    @param ShooterAcceleration -- The (initial) acceleration of the projectile/shooter.
+    @param TargetPosition -- The (initial) position of the target.
+    @param TargetVelocity -- The (initial) velocity of the target.
+    @param TargetAcceleration -- The (initial) velocity of the target.
+    @return ...number -- The times of when the projectile and target can collide.
+]=]
 function BallisticsFunctions:GetHitTimes(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?)
     local DeltaPosition = self.Utilities:ProduceDeltas(TargetPosition, ShooterPosition) --p
     local DeltaVelocity = self.Utilities:ProduceDeltas(TargetVelocity, ShooterVelocity) --v
@@ -548,6 +750,20 @@ function BallisticsFunctions:GetHitTimes(ProjectileSpeed: number, ShooterPositio
     --print("GetHitTimes Output:",table.unpack(output))
     return table.unpack(output)
 end
+--[=[
+    A function that computes the times of collision from ProjectileSpeed, Positions, Velocities, Acceleration, and Jerk.
+    
+    @param ProjectileSpeed -- The initial speed of the projectile.
+    @param ShooterPosition -- The (initial) position of the projectile/shooter.
+    @param ShooterVelocity -- The (initial) velocity of the projectile/shooter.
+    @param ShooterAcceleration -- The (initial) acceleration of the projectile/shooter.
+    @param ShooterJerk -- The jerk (rate of change of acceleration) of the projectile/shooter.
+    @param TargetPosition -- The (initial) position of the target.
+    @param TargetVelocity -- The (initial) velocity of the target.
+    @param TargetAcceleration -- The (initial) velocity of the target.
+    @param TargetJerk -- The jerk (rate of change of acceleration) of the target.
+    @return ...number -- The times of when the projectile and target can collide.
+]=]
 function BallisticsFunctions:GetHitTimesWithJerk(ProjectileSpeed: number, ShooterPosition: Vector3, ShooterVelocity: Vector3?, ShooterAcceleration: Vector3?, ShooterJerk: Vector3?, TargetPosition: Vector3, TargetVelocity: Vector3?, TargetAcceleration: Vector3?, TargetJerk: Vector3?)
     local DeltaPosition = self.Utilities:ProduceDeltas(TargetPosition, ShooterPosition) --p
     local DeltaVelocity = self.Utilities:ProduceDeltas(TargetVelocity, ShooterVelocity) --v
