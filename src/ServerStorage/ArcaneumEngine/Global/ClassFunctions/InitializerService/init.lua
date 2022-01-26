@@ -55,10 +55,6 @@ function InitializerService:New(): InitializerObject
     return NewService
 end
 
---[=[
-    Adds a ModuleScript to self.FilesToBoot[ModuleScript.Name]. All modules will be added here will be initialized once InitializeAll() is called.
-    @param ModuleScript ModuleScript
-]=]
 type ModuleInfo = {
     InitName: string,
     BootOrder: number,
@@ -68,6 +64,10 @@ type ModuleInfo = {
     },
     __call: (table, table) -> table
 }
+--[=[
+    Adds a ModuleScript to self.FilesToBoot[ModuleScript.Name]. All modules will be added here will be initialized once InitializeAll() is called.
+    @param ModuleScript ModuleScript
+]=]
 function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
     local FileContents: ModuleInfo = require(ModuleScript.ModuleInfo)
