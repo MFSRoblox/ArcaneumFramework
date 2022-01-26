@@ -179,12 +179,6 @@ function InitializerService:CheckDependacies(_Globals: table?)
         end
     end
 end
-function InitializerService:ForEachFileInFilesToBoot(callback: (FileName: string, FileContents: Array<SingletonInitClass>) -> any): nil
-    local FilesToBoot: FilesToBoot = self.FilesToBoot
-    for FileName, FileContents in next, FilesToBoot do
-        callback(FileName, FileContents)
-    end
-end
 
 function InitializerService:SetupBootGroups(_Globals: table?)
 
