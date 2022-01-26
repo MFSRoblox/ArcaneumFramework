@@ -71,7 +71,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update NPM
-      - run: npm update
+        run: npm update
 
       - name: Install Moonwave
         run: npm i -g moonwave
