@@ -43,15 +43,22 @@ Version.__le = function(self, value)
 end;
 
 export type Version = typeof(Version.new(0,0,0))
-function Version.new(MajorVersion:number,MinorVersion:number,PatchVersion:number): Version
+function Version.new(MajorVersion:number | string,MinorVersion:number,PatchVersion:number): Version
+    if type(MajorVersion) == "string" then
+        return Version.fromString(MajorVersion)
+    end
     return Version:Extend({
-        MajorVersion = MajorVersion;
-        MinorVersion = MinorVersion;
-        PatchVersion = PatchVersion;
+        MajorVersion = MajorVersion :: number;
+        MinorVersion = MinorVersion :: number;
+        PatchVersion = PatchVersion :: number;
     })
 end
 
-function Version.fromString(String: string)
+function Version.fromString(String: string): Version
+    return Version.new(Version.getNumbersFromString(String))
+end
+
+function Version.getNumbersFromString(String: string): (number,number,number)
     local VersionNumbers = string.split(String,".")
     assert(#VersionNumbers == 3, "Inputted String does not have 3 numbers! Input: " .. tostring(String) .. " Output: " .. #VersionNumbers .. "\n" .. debug.traceback())
     for i, StringNumber in next,VersionNumbers do
@@ -59,7 +66,7 @@ function Version.fromString(String: string)
         assert(VersionNumber ~= nil, "Can not convert inputted string to number! Input: " .. tostring(StringNumber) .. "\n" .. debug.traceback())
         VersionNumbers[i] = VersionNumber
     end
-    return Version.new(table.unpack(VersionNumbers))
+    return table.unpack(VersionNumbers)
 end
 
 function Version:GetMajorVersion(): number
@@ -73,5 +80,4 @@ end
 function Version:GetPatchVersion(): number
     return self.PatchVersion
 end
-
 return Version

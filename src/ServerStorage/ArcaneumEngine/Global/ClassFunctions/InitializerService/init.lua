@@ -3,39 +3,77 @@
     @server
     @client
     A service that sets up the order of initialization of module scripts and the actual initialization of those scripts.
+    It takes into consideration the BootOrder of said scripts, alongside the dependacies required to initialize the scripts.
+    The metadata of the script initialization occurs in the "ModuleInfo" module that is childed to the script.
 ]=]
 local InitializerService do
     InitializerService = setmetatable({},{__index = InitializerService})
 end
+type FileName = string
+type FilesToBoot = {[FileName]: Array<SingletonInitClass>}
+type FilesWillBoot = {}
+type BootOrder = number
+type BootGroup = Array<SingletonInitClass>
+type BootGroups = {[BootOrder]: BootGroup}
+type InitializerProperties = {FilesToBoot:FilesToBoot, FilesWillBoot:FilesWillBoot, BootGroups:BootGroups}
+type InitializerObject = typeof(InitializerService:New()) & InitializerProperties
+local DataTypesFolder = script.Parent.BaseClass.DataTypes
+local VersionClass = require(DataTypesFolder.Version)
+type VersionProperties = {
+    MajorVersion : number;
+    MinorVersion : number;
+    PatchVersion : number;
+}
+type Version = typeof(VersionClass.new(0,0,0)) & VersionProperties
+local DependacyClass = require(DataTypesFolder.DependacyObject)
+type DependacyProperties = {FileName: FileName, Version: Version}
+type DependacyObject = typeof(DependacyClass.new("",VersionClass.new())) & DependacyProperties
 local SingletonInitClass = require(script.SingletonInitClass)
+type SingletonInitClass = typeof(SingletonInitClass:New("","0.0.0",{},function() end,{},0))
+--[=[
+    A quick initialize module method that returns the module's contents with dependacies initialized, too.
 
+    @param ModuleScript ModuleScript
+    @param Globals table?
+    @return module
+]=]
 function InitializerService:InitializeModule(ModuleScript: ModuleScript, Globals: table?): any
     local TempInitializer = self:New()
     TempInitializer:AddModule(ModuleScript)
     return TempInitializer:InitializeAll(Globals)[ModuleScript.Name]
 end
-
 --[=[
+    Creates a new Initializer object. This is used to manage the inputted modules that need to be booted.
     @return InitializerObject
 ]=]
-function InitializerService:New()
+function InitializerService:New(): InitializerObject
     local NewService = setmetatable({
-        FilesToBoot = {}; --A dictionary
-        BootGroups = {};
+        FilesToBoot = {} :: {[FileName]: Array<SingletonInitClass>}; --A dictionary
+        FilesWillBoot = {};
+        BootGroups = {} :: {[BootOrder]: BootGroup};
     },{__index = self})
     return NewService
 end
 
---[[
-    Adds a ModuleScript to self.FilesToBoot[ModuleScript.Name].
+--[=[
+    Adds a ModuleScript to self.FilesToBoot[ModuleScript.Name]. All modules will be added here will be initialized once InitializeAll() is called.
     @param ModuleScript ModuleScript
-]]
+]=]
+type ModuleInfo = {
+    InitName: string,
+    BootOrder: number,
+    Version: string,
+    Dependacies: {
+        [string]:string
+    },
+    __call: (table, table) -> table
+}
 function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
-    local FileContents = require(ModuleScript.ModuleInfo)
+    local FileContents: ModuleInfo = require(ModuleScript.ModuleInfo)
+    assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
     local InitName = FileContents.InitName or ModuleScript.Name
     FileContents.InitName = InitName
-    assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
     local BootOrder = FileContents.BootOrder
     assert(BootOrder ~= nil, string.format("ModuleScript %s does not have a BootOrder! %s", tostring(ModuleScript), debug.traceback()))
     assert(type(BootOrder) == "number", string.format("ModuleScript %s BootOrder is not a number! %s", tostring(ModuleScript), debug.traceback()))
@@ -50,28 +88,16 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     table.insert(FileBootIndex,SingletonInitClass:NewFromDictionary(FileContents))
 end
 
-function InitializerService:InitializeAll(Globals: table?): Array<table>
-    local FilesToBoot = self.FilesToBoot
-    for FileName, FileContents in next, FilesToBoot do
-        assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
-        assert(#FileContents > 0, "FileContents table of " .. FileName .." doesn't have at least one module! " .. debug.traceback())
-        local FileToBoot = FileContents[1] do
-            local FileToBootVersion = FileToBoot.Version
-            for i=2, #FileContents do
-                local Content = FileContents[i]
-                local ContentVersion = Content.Version
-                if Content.Version > FileToBootVersion then
-                    FileToBoot = Content
-                    FileToBootVersion = ContentVersion
-                elseif ContentVersion == FileToBootVersion then
-                    warn("A duplicate version was found when sorting through "..FileName.."! This should be checked, especially if it's the latest version! Duplicate version:",ContentVersion,debug.traceback())
-                end
-            end
-        end
-        self:AddToBootGroup(FileToBoot)
-    end
-    local BootGroups = self.BootGroups
-    local BootOrders = {} do
+--[=[
+    The method that tells the Initializer to launch all of the requested modules and their dependacies. It returns a dictionary under the format of {"ModuleName" = ModuleContents}.
+
+    @param Globals table?
+    @return Dictionary<Modules>
+]=]
+function InitializerService:InitializeAll(Globals: table?): {[string]: any}
+    self:CheckDependacies(Globals)
+    local BootGroups:BootGroups = self.BootGroups --Get current BootGroups dictionary
+    local BootOrders: Array<BootOrder> = {} do --Grab all of the BootOrder keys from BootGroups and sort them
         for BootOrder, _ in next, BootGroups do
             local PreviousOrder = table.find(BootOrders,BootOrder)
             if PreviousOrder == nil then
@@ -92,29 +118,98 @@ function InitializerService:InitializeAll(Globals: table?): Array<table>
             Output[FileToBoot.InitName] = FileToBoot(Globals)
         end
     end
-    self:Destory()
+    self:Destroy()
     return Output
 end
 
-function InitializerService:AddToBootGroup(SingletonInitObject: table)
-    local BootGroups = self.BootGroups
+--[=[
+    @param _Globals table?
+    @return nil
+]=]
+function InitializerService:CheckDependacies(_Globals: table?)
+    local Dependacies:{[FileName]: Array<Version>} = {}
+    local FilesToBoot: FilesToBoot = self.FilesToBoot
+    for FileName, FileContents in next, FilesToBoot do --initial setup and add to group, get dependacies
+        assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
+        assert(#FileContents > 0, "FileContents table of " .. FileName .." doesn't have at least one module! " .. debug.traceback())
+        local FileToBoot = FileContents[1] do
+            local FileToBootVersion = FileToBoot.Version
+            for i=2, #FileContents do --Check to see if there are more up-to-date versions
+                local Content = FileContents[i]
+                local ContentVersion = Content.Version
+                if Content.Version > FileToBootVersion then
+                    FileToBoot = Content
+                    FileToBootVersion = ContentVersion
+                elseif ContentVersion == FileToBootVersion then
+                    warn("A duplicate version was found when sorting through "..FileName.."! This should be checked, especially if it's the latest version! Duplicate version:",ContentVersion,debug.traceback())
+                end
+            end
+        end
+        local ThisFileDependacies: Array<DependacyObject> = FileToBoot.Dependacies
+        for _, Dependacy in next, ThisFileDependacies do
+            local DependacyFileName: FileName = Dependacy:GetFileName()
+            local DependacyVersion: Version = Dependacy:GetVersion()
+            local DependacyCluster = Dependacies[DependacyFileName]
+            if not DependacyCluster then
+                Dependacies[DependacyFileName] = {DependacyVersion}
+            elseif not table.find(DependacyCluster,DependacyVersion) then
+                warn("Alternative Version for " .. DependacyFileName .. " requested by " .. FileName .."!".. debug.traceback())
+                table.insert(DependacyCluster,DependacyVersion)
+            end
+        end
+        self:AddToBootGroup(FileToBoot)
+    end
+    for DependacyName, DependacyVersion in next, Dependacies do
+        local PotentialDependacyFiles = FilesToBoot[DependacyName]
+        if PotentialDependacyFiles then
+            local Success = false
+            for i=1, #PotentialDependacyFiles do
+                local ThisInitObject = PotentialDependacyFiles[i]
+                if ThisInitObject.Version == DependacyVersion then
+                    self:AddToBootGroup(ThisInitObject)
+                    Success = true
+                    break
+                end
+            end
+            if Success == false then
+                warn("Could not find",DependacyName,DependacyVersion,"! Potential errors will likely occur! Debug:",debug.traceback())
+            end
+        else
+            warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
+        end
+    end
+end
+function InitializerService:ForEachFileInFilesToBoot(callback: (FileName: string, FileContents: Array<SingletonInitClass>) -> any): nil
+    local FilesToBoot: FilesToBoot = self.FilesToBoot
+    for FileName, FileContents in next, FilesToBoot do
+        callback(FileName, FileContents)
+    end
+end
+
+function InitializerService:SetupBootGroups(_Globals: table?)
+
+end
+
+function InitializerService:AddToBootGroup(SingletonInitObject: SingletonInitClass)
+    local BootGroups: BootGroups = self.BootGroups
     local BootOrder = SingletonInitObject.BootOrder
     local BootGroup = BootGroups[BootOrder]
     if BootGroup == nil then
-        BootGroup = {}
+        BootGroup = {} :: BootGroup --empty bootgroup
     end
     local CurrentInitName = SingletonInitObject.InitName
     for i=1, #BootGroup do
         local InitObject = BootGroup[i]
         if InitObject.InitName == CurrentInitName then
-            warn("Duplicate InitGroup found!",debug.traceback())
+            warn("Duplicate InitGroup found! Not inserting duplicate! Debug:",debug.traceback())
+            return
         end
     end
     table.insert(BootGroup,SingletonInitObject)
     BootGroups[BootOrder] = BootGroup
 end
 
-function InitializerService:Destory()
+function InitializerService:Destroy()
     for FileName, FileContents in next, self.FilesToBoot do
         for i=1, #FileContents do
             FileContents[i] = nil
