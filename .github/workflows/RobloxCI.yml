@@ -43,7 +43,7 @@ jobs:
       - name: Install Roblox Studio
         uses: OrbitalOwen/roblox-win-installer-action@1.1
         with:
-          cookie: ${{ secrets.ROBLOSECURITY }}, {{ secrets.RBXID }}, {{ secrets.RBXIDCHECK }}
+          cookie: ${{ secrets.ROBLOSECURITY }}, {{ secrets.RBXID }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Foreman
