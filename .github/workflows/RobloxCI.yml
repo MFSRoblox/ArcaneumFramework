@@ -1,3 +1,4 @@
+# https://github.com/vocksel/flipbook/blob/main/.github/workflows/ci.yml#L12
 # This is a basic workflow to help you get started with Actions
 
 name: Roblox Tests
@@ -40,19 +41,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Roblox Studio
-        uses: OrbitalOwen/roblox-win-installer-action@1.1
+      - name: Check for ROBLOSECURITY token
+        shell: bash
+        run: ./.github/workflows/validate-secret.sh ROBLOSECURITY "${{ secrets.ROBLOSECURITY }}"
+
+      - name: Check for RBXID token
+        shell: bash
+        run: ./.github/workflows/validate-secret.sh RBXID "${{ secrets.RBXID }}"
+
+      - name: Install toolchain
+        uses: Roblox/setup-foreman@v1
         with:
-          cookie: ${{ secrets.ROBLOSECURITY }}, {{ secrets.RBXID }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Foreman
-        uses: rojo-rbx/setup-foreman@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install dependencies
+        run: wally install
 
       - name: Build Test Place
         run: rojo build default.project.json -o test.rbxl
+
+      - name: Add RBXID to the Windows registry
+        run: REG ADD HKCU\Software\RobloxStudioBrowser\roblox.com /t REG_SZ /v .RBXID /d "${{ secrets.RBXID }}"
+
+      - name: Install Roblox Studio
+        uses: OrbitalOwen/roblox-win-installer-action@1.1
+        with:
+          cookie: ${{ secrets.ROBLOSECURITY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Tests
         shell: bash
