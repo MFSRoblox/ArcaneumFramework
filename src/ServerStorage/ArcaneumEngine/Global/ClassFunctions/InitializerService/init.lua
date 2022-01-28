@@ -8,7 +8,7 @@
 ]=]
 local InitializerService do
     InitializerService = setmetatable({
-        InitializedModules = {} :: {[ModuleScript]: any}
+        InitializedModules = {} :: {[string]: SingletonInitClass}
     },{__index = InitializerService})
 end
 type FileName = string
@@ -67,11 +67,14 @@ type ModuleInfo = {
     __call: (table, table) -> table
 }
 --[=[
-    Adds a ModuleScript to self.FilesToBoot[ModuleScript.Name]. All modules will be added here will be initialized once InitializeAll() is called.
+    Adds a ModuleScript to self.FilesToBoot[ModuleScript.Name]. All modules will be added here will be initialized once [InitializerService:InitializeAll] is called.
     @param ModuleScript ModuleScript
 ]=]
 function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
+    if self.InitializedModules[ModuleScript] ~= nil then
+        return
+    end
     local FileContents: ModuleInfo = require(ModuleScript.ModuleInfo)
     assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
     local InitName = FileContents.InitName or ModuleScript.Name
@@ -185,7 +188,12 @@ function InitializerService:CheckDependacies(_Globals: table?)
                 end
             end
         else
-            warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
+            local InitializedModule = self.InitializedModules[DependacyName]
+            if InitializedModule then
+                --stuff
+            else
+                warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
+            end
         end
     end
 end
