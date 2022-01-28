@@ -7,7 +7,9 @@
     The metadata of the script initialization occurs in the "ModuleInfo" module that is childed to the script.
 ]=]
 local InitializerService do
-    InitializerService = setmetatable({},{__index = InitializerService})
+    InitializerService = setmetatable({
+        InitializedModules = {} :: {[ModuleScript]: any}
+    },{__index = InitializerService})
 end
 type FileName = string
 type FilesToBoot = {[FileName]: Array<SingletonInitClass>}
@@ -79,8 +81,8 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(type(BootOrder) == "number", string.format("ModuleScript %s BootOrder is not a number! %s", tostring(ModuleScript), debug.traceback()))
     local FileBootIndex = self.FilesToBoot[InitName]
     if FileBootIndex == nil then
-        self.FilesToBoot[InitName] = {}
-        FileBootIndex = self.FilesToBoot[InitName]
+        FileBootIndex = {}
+        self.FilesToBoot[InitName] = FileBootIndex
     end
     --[[if FileBootIndex[Version] ~= nil then
         warn("The FileBootIndex of",ModuleScript,"with a Version of",Version,"already exists!")
@@ -123,6 +125,7 @@ function InitializerService:InitializeAll(Globals: table?): {[string]: any}
 end
 
 --[=[
+    A helper function used to verify all of the required dependacies, and then set the order of the boot groups according to the dependacies.
     @param _Globals table?
     @return nil
 ]=]
@@ -145,6 +148,8 @@ function InitializerService:CheckDependacies(_Globals: table?)
                 end
             end
         end
+        print("FileToBoot.Name:",FileToBoot.InitName)
+        print("FileToBoot.Dependacies:",FileToBoot.Dependacies)
         local ThisFileDependacies: Array<DependacyObject> = FileToBoot.Dependacies
         for _, Dependacy in next, ThisFileDependacies do
             local DependacyFileName: FileName = Dependacy:GetFileName()
@@ -159,29 +164,30 @@ function InitializerService:CheckDependacies(_Globals: table?)
         end
         self:AddToBootGroup(FileToBoot)
     end
-    for DependacyName, DependacyVersion in next, Dependacies do
+    for DependacyName, DependacyVersions in next, Dependacies do
         local PotentialDependacyFiles = FilesToBoot[DependacyName]
         if PotentialDependacyFiles then
-            local Success = false
-            for i=1, #PotentialDependacyFiles do
-                local ThisInitObject = PotentialDependacyFiles[i]
-                if ThisInitObject.Version == DependacyVersion then
-                    self:AddToBootGroup(ThisInitObject)
-                    Success = true
-                    break
+            for i=1, #DependacyVersions do
+                local DependacyVersion = DependacyVersions[i]
+                local Success = false
+                print("DependacyVersion:",DependacyVersion)
+                for j=1, #PotentialDependacyFiles do
+                    local ThisInitObject = PotentialDependacyFiles[j]
+                    print("ThisInitObject.Version:",ThisInitObject.Version)
+                    if ThisInitObject.Version == DependacyVersion then
+                        self:AddToBootGroup(ThisInitObject)
+                        Success = true
+                        break
+                    end
                 end
-            end
-            if Success == false then
-                warn("Could not find",DependacyName,DependacyVersion,"! Potential errors will likely occur! Debug:",debug.traceback())
+                if Success == false then
+                    warn("Could not find",DependacyName,DependacyVersions,"! Potential errors will likely occur! Debug:",debug.traceback())
+                end
             end
         else
             warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
         end
     end
-end
-
-function InitializerService:SetupBootGroups(_Globals: table?)
-
 end
 
 function InitializerService:AddToBootGroup(SingletonInitObject: SingletonInitClass)
