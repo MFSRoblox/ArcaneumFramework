@@ -1,19 +1,19 @@
 local BaseClass = require(script.Parent)
 local Version = BaseClass:NewClass("Version")
-Version.__tostring = function(self)
+function Version:__tostring(): string
     return string.format("%i.%i.%i",self.MajorVersion,self.MinorVersion,self.PatchVersion)
 end;
-Version.__concat = function(value1: any,value2: any)
+function Version.__concat(value1: any,value2: any): string
     return string.format("%s%s",tostring(value1),tostring(value2))
 end;
-Version.__eq = function(self,value)
+function Version:__eq(value: Version): boolean
     assert(type(value) == "table", "Attempt to compare Version with a non-table." .. debug.traceback())
     assert(value.ClassName == "Version", "Attempt to compare Version with "..value.ClassName..debug.traceback())
     return self.MajorVersion == value.MajorVersion and
     self.MinorVersion == value.MinorVersion and
     self.PatchVersion == value.PatchVersion
 end;
-Version.__lt = function(self, value)
+function Version:__lt(value: Version): boolean
     assert(type(value) == "table", "Attempt to compare Version with a non-table." .. debug.traceback())
     assert(value.ClassName == "Version", "Attempt to compare Version with "..value.ClassName..debug.traceback())
     if self:GetMajorVersion() < value:GetMajorVersion() then
@@ -27,7 +27,7 @@ Version.__lt = function(self, value)
     end
     return false
 end;
-Version.__le = function(self, value)
+function Version:__le(value: Version): boolean
     assert(type(value) == "table", "Attempt to compare Version with a non-table." .. debug.traceback())
     assert(value.ClassName == "Version", "Attempt to compare Version with "..value.ClassName..debug.traceback())
     if self:GetMajorVersion() < value:GetMajorVersion() then
@@ -80,4 +80,12 @@ end
 function Version:GetPatchVersion(): number
     return self.PatchVersion
 end
+
+function Version:Destroy(): nil
+    self.MajorVersion = nil
+    self.MinorVersion = nil
+    self.PatchVersion = nil
+    return self.BaseClass.Destroy(self)
+end
+
 return Version
