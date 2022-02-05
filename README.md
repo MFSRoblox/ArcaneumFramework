@@ -12,5 +12,7 @@ If you have any questions, contact Skilled#4839 on Discord or SkilledSniper1 in 
 More info later.
 
 ## Quick testing
+```
 rojo build -o test.rbxl
 run-in-roblox --place ./test.rbxl --script ./src/ServerScriptService/ServerScriptsLoader/init.server.lua
+```
