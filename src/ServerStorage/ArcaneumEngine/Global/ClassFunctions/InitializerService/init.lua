@@ -53,6 +53,7 @@ function InitializerService:New(): InitializerObject
         FilesToBoot = {} :: {[FileName]: Array<SingletonInitClass>}; --A dictionary
         FilesWillBoot = {};
         BootGroups = {} :: {[BootOrder]: BootGroup};
+        Output = {};
     },{__index = self})
     return NewService
 end
@@ -113,14 +114,24 @@ function InitializerService:InitializeAll(Globals: table?): {[string]: any}
             return OrderA < OrderB
         end)
     end
-    local Output = {}
+    local Output = self.Output
+    local InitializedModules = self.InitializedModules
     for i=1, #BootOrders do
         local CurrentOrder = BootOrders[i]
         local CurrentGroup = BootGroups[CurrentOrder]
         for j=1, #CurrentGroup do
             local FileToBoot = CurrentGroup[j]
+            local FileName = FileToBoot.InitName
+            local FileContents = FileToBoot(Globals)
             print("Initialing",FileToBoot.InitName)
-            Output[FileToBoot.InitName] = FileToBoot(Globals)
+            if Output[FileName] ~= nil then
+                warn(FileName,"was found in Boot! Potential Output override!")
+            end
+            Output[FileName] = FileContents
+            if InitializedModules[FileName] ~= nil then
+                warn(FileName,"was found in InitializedModules! Potential InitializedModules override!")
+            end
+            InitializedModules[FileName] = FileContents
         end
     end
     self:Destroy()
@@ -190,9 +201,9 @@ function InitializerService:CheckDependacies(_Globals: table?)
         else
             local InitializedModule = self.InitializedModules[DependacyName]
             if InitializedModule then
-                --stuff
+                self.Output[DependacyName] = InitializedModule
             else
-                warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
+                warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nInitializedModules:",self.InitializedModules,"\nDebug:",debug.traceback())
             end
         end
     end
