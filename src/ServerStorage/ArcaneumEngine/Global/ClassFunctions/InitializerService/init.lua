@@ -88,7 +88,7 @@ function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
     local InitName = FileContents.InitName or ModuleScript.Name
     FileContents.InitName = InitName
-    if self.InitializedModules[InitName][FileContents.Version] ~= nil then
+    if self.InitializedModules[InitName] and self.InitializedModules[InitName][FileContents.Version] ~= nil then
         return
     end
     local BootOrder = FileContents.BootOrder
