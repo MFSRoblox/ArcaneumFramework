@@ -129,19 +129,20 @@ function InitializerService:InitializeAll(Globals: table?): {[string]: any}
     local InitializedModules = self.InitializedModules
     for i=1, #BootOrders do
         local CurrentOrder = BootOrders[i]
+        print("Initializing BootGroup",i)
         local CurrentGroup = BootGroups[CurrentOrder]
         for j=1, #CurrentGroup do
             local FileToBoot = CurrentGroup[j]
             local FileName = FileToBoot.InitName
             print("Initialing",FileName)
+            if Output[FileName] ~= nil then
+                warn(FileName,"was found in Boot! Potential Output override!")
+            end
             Output[FileName] = FileToBoot(Globals)
             if InitializedModules[FileName] ~= nil then
                 warn(FileName,"was found in InitializedModules! Potential InitializedModules override!")
             end
             InitializedModules[FileName] = {tostring(FileToBoot.Version)}
-            if Output[FileName] ~= nil then
-                warn(FileName,"was found in Boot! Potential Output override!")
-            end
         end
     end
     self:Destroy()
@@ -155,6 +156,9 @@ end
 ]=]
 function InitializerService:CheckDependacies(_Globals: table?)
     local Dependacies:{[FileName]: Array<Version>} = {}
+    --[=[
+        Generally, if a module needs another to function, the other file needs to be initialized first. Thus, if we track the modules that are depended upon, then we can sort the order they should launch in. 
+    ]=]
     local FilesToBoot: FilesToBoot = self.FilesToBoot
     for FileName, FileContents in next, FilesToBoot do --initial setup and add to group, get dependacies
         assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
@@ -189,12 +193,13 @@ function InitializerService:CheckDependacies(_Globals: table?)
         self:AddToBootGroup(FileToBoot)
     end
     for DependacyName, DependacyVersions in next, Dependacies do
+        print("Getting Dependacy:",DependacyName)
         local PotentialDependacyFiles = FilesToBoot[DependacyName]
         if PotentialDependacyFiles then
             for i=1, #DependacyVersions do
                 local DependacyVersion = DependacyVersions[i]
                 local Success = false
-                print("DependacyVersion:",DependacyVersion)
+                print("Requested Dependacy Version:",DependacyVersion)
                 for j=1, #PotentialDependacyFiles do
                     local ThisInitObject = PotentialDependacyFiles[j]
                     print("ThisInitObject.Version:",ThisInitObject.Version)
@@ -236,7 +241,7 @@ function InitializerService:AddToBootGroup(SingletonInitObject: SingletonInitCla
     for i=1, #BootGroup do
         local InitObject = BootGroup[i]
         if InitObject.InitName == CurrentInitName then
-            warn("Duplicate InitGroup found! Not inserting duplicate! Debug:",debug.traceback())
+            --warn("Duplicate InitGroup of",CurrentInitName,"found! Not inserting duplicate! Debug:",debug.traceback())
             return
         end
     end
