@@ -3,19 +3,19 @@ local VersionClass = require(script.Parent.Version)
 type Version = typeof(VersionClass.new(0,0,0))
 local ClassName = "DependacyObject"
 local DependacyObject = BaseClass:NewClass(ClassName)
-DependacyObject.__tostring = function(self)
+function DependacyObject:__tostring(): string
     return string.format("%s %s",self:GetFileName(),tostring(self:GetVersion()))
 end;
-DependacyObject.__concat = function(value1: any,value2: any)
+function DependacyObject.__concat(value1: any,value2: any): string
     return string.format("%s%s",tostring(value1),tostring(value2))
 end;
-DependacyObject.__eq = function(self,value)
+function DependacyObject:__eq(value): boolean
     assert(type(value) == "table", "Attempt to compare " .. ClassName .. " with a non-table." .. debug.traceback())
     assert(value.ClassName == ClassName, "Attempt to compare  " .. ClassName .. "  with "..value.ClassName..debug.traceback())
     return self:GetFileName() == value:GetFileName() and
     self:GetVersion() == value:GetVersion()
 end;
-DependacyObject.__lt = function(self, value)
+function DependacyObject:__lt(value): boolean
     assert(type(value) == "table", "Attempt to compare  " .. ClassName .. "  with a non-table." .. debug.traceback())
     assert(value.ClassName == ClassName, "Attempt to compare  " .. ClassName .. "  with "..value.ClassName..debug.traceback())
     if self:GetFileName() < value:GetFileName() then
@@ -25,7 +25,7 @@ DependacyObject.__lt = function(self, value)
     end
     return false
 end;
-DependacyObject.__le = function(self, value)
+function DependacyObject:__le(value): boolean
     assert(type(value) == "table", "Attempt to compare  " .. ClassName .. "  with a non-table." .. debug.traceback())
     assert(value.ClassName == ClassName, "Attempt to compare  " .. ClassName .. "  with "..value.ClassName..debug.traceback())
     if self:GetFileName() < value:GetFileName() then

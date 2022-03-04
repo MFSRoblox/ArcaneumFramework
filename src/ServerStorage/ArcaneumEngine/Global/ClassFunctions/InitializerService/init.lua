@@ -59,6 +59,7 @@ function InitializerService:New(): InitializerObject
         FilesToBoot = {} :: {[FileName]: Array<SingletonInitClass>}; --A dictionary
         FilesWillBoot = {};
         BootGroups = {} :: {[BootOrder]: BootGroup};
+        Output = {};
     },{__index = self})
     return NewService
 end
@@ -124,7 +125,8 @@ function InitializerService:InitializeAll(Globals: table?): {[string]: any}
             return OrderA < OrderB
         end)
     end
-    local Output = {}
+    local Output = self.Output
+    local InitializedModules = self.InitializedModules
     for i=1, #BootOrders do
         local CurrentOrder = BootOrders[i]
         local CurrentGroup = BootGroups[CurrentOrder]
@@ -133,8 +135,12 @@ function InitializerService:InitializeAll(Globals: table?): {[string]: any}
             local FileName = FileToBoot.InitName
             print("Initialing",FileName)
             Output[FileName] = FileToBoot(Globals)
-            if self.InitializedModules[FileName] == nil then
-                self.InitializedModules[FileName] = {tostring(FileToBoot.Version)}
+            if InitializedModules[FileName] ~= nil then
+                warn(FileName,"was found in InitializedModules! Potential InitializedModules override!")
+            end
+            InitializedModules[FileName] = {tostring(FileToBoot.Version)}
+            if Output[FileName] ~= nil then
+                warn(FileName,"was found in Boot! Potential Output override!")
             end
         end
     end
@@ -213,7 +219,7 @@ function InitializerService:CheckDependacies(_Globals: table?)
                     end
                 end
             else
-                warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
+                warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nInitializedModules:",self.InitializedModules,"\nDebug:",debug.traceback())
             end
         end
     end
