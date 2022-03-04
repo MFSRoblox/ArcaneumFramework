@@ -155,24 +155,25 @@ end
     @return nil
 ]=]
 function InitializerService:CheckDependacies(_Globals: table?)
-    local Dependacies:{[FileName]: Array<Version>} = {}
+    type FileNameVersion = string
+    local Dependacies:{[FileNameVersion]: {Object: DependacyObject; Dependants: Array<SingletonInitClass>}} = {}
     --[=[
-        Generally, if a module needs another to function, the other file needs to be initialized first. Thus, if we track the modules that are depended upon, then we can sort the order they should launch in. 
+        Generally, if a module needs another to function, the other file needs to be initialized first. Thus, if we track the modules that are depended upon, then we can sort the order they should launch in.
     ]=]
     local FilesToBoot: FilesToBoot = self.FilesToBoot
-    for FileName, FileContents in next, FilesToBoot do --initial setup and add to group, get dependacies
-        assert(type(FileContents) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
-        assert(#FileContents > 0, "FileContents table of " .. FileName .." doesn't have at least one module! " .. debug.traceback())
-        local FileToBoot = FileContents[1] do
+    for FileName, FileInits in next, FilesToBoot do --initial setup and add to group, get dependacies
+        assert(type(FileInits) == "table", "FileContents of " .. FileName .." is not a table! " .. debug.traceback())
+        assert(#FileInits > 0, "FileContents table of " .. FileName .." doesn't have at least one module! " .. debug.traceback())
+        local FileToBoot = FileInits[1] do
             local FileToBootVersion = FileToBoot.Version
-            for i=2, #FileContents do --Check to see if there are more up-to-date versions
-                local Content = FileContents[i]
-                local ContentVersion = Content.Version
-                if Content.Version > FileToBootVersion then
-                    FileToBoot = Content
-                    FileToBootVersion = ContentVersion
-                elseif ContentVersion == FileToBootVersion then
-                    warn("A duplicate version was found when sorting through "..FileName.."! This should be checked, especially if it's the latest version! Duplicate version:",ContentVersion,debug.traceback())
+            for i=2, #FileInits do --Check to see if there are more up-to-date versions
+                local InitInfo = FileInits[i]
+                local FileVersion = InitInfo.Version
+                if InitInfo.Version > FileToBootVersion then
+                    FileToBoot = InitInfo
+                    FileToBootVersion = FileVersion
+                elseif FileVersion == FileToBootVersion then
+                    warn("A duplicate version was found when sorting through "..FileName.."! This should be checked, especially if it's the latest version! Duplicate version:",FileVersion,debug.traceback())
                 end
             end
         end
@@ -180,24 +181,29 @@ function InitializerService:CheckDependacies(_Globals: table?)
         print("FileToBoot.Dependacies:",FileToBoot.Dependacies)
         local ThisFileDependacies: Array<DependacyObject> = FileToBoot.Dependacies
         for _, Dependacy in next, ThisFileDependacies do
-            local DependacyFileName: FileName = Dependacy:GetFileName()
-            local DependacyVersion: Version = Dependacy:GetVersion()
-            local DependacyCluster = Dependacies[DependacyFileName]
+            local DependacyKey = tostring(Dependacy)
+            local DependacyCluster = Dependacies[DependacyKey]
             if not DependacyCluster then
-                Dependacies[DependacyFileName] = {DependacyVersion}
-            elseif not table.find(DependacyCluster,DependacyVersion) then
+                DependacyCluster = {
+                    Object = Dependacy;
+                    Dependants = {}
+                }
+                Dependacies[DependacyKey] = DependacyCluster
+            --[[elseif not table.find(DependacyCluster,DependacyVersion) then
                 warn("Alternative Version for " .. DependacyFileName .. " requested by " .. FileName .."!".. debug.traceback())
-                table.insert(DependacyCluster,DependacyVersion)
+                table.insert(DependacyCluster,DependacyVersion)]]
             end
+            table.insert(DependacyCluster.Dependants,FileToBoot)
         end
         self:AddToBootGroup(FileToBoot)
     end
-    for DependacyName, DependacyVersions in next, Dependacies do
-        print("Getting Dependacy:",DependacyName)
+    for DependacyNameVersion, DependacyInfo in next, Dependacies do
+        print("Getting Dependacy:",DependacyNameVersion)
+        local DependacyName = DependacyInfo.Object.FileName
         local PotentialDependacyFiles = FilesToBoot[DependacyName]
         if PotentialDependacyFiles then
-            for i=1, #DependacyVersions do
-                local DependacyVersion = DependacyVersions[i]
+            for i=1, #DependacyInfo do
+                local DependacyVersion = DependacyInfo[i]
                 local Success = false
                 print("Requested Dependacy Version:",DependacyVersion)
                 for j=1, #PotentialDependacyFiles do
@@ -210,21 +216,21 @@ function InitializerService:CheckDependacies(_Globals: table?)
                     end
                 end
                 if Success == false then
-                    warn("Could not find",DependacyName,DependacyVersions,"! Potential errors will likely occur! Debug:",debug.traceback())
+                    warn("Could not find",DependacyNameVersion,"! Potential errors will likely occur! Debug:",debug.traceback())
                 end
             end
         else
             local InitializedModule = self.InitializedModules[DependacyName]
             if InitializedModule then
-                for i=1, #DependacyVersions do
-                    local DependacyVersion = DependacyVersions[i]
+                for i=1, #DependacyInfo do
+                    local DependacyVersion = DependacyInfo[i]
                     if InitializedModule[tostring(DependacyVersion)] ~= nil then
-                        print("Environment already has",DependacyName,"initialized. Next!")
+                        print("Environment already has",DependacyNameVersion,"initialized. Next!")
                         continue
                     end
                 end
             else
-                warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nInitializedModules:",self.InitializedModules,"\nDebug:",debug.traceback())
+                warn(DependacyNameVersion,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nInitializedModules:",self.InitializedModules,"\nDebug:",debug.traceback())
             end
         end
     end
