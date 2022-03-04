@@ -27,19 +27,19 @@ end
 function DataTypeInterface.new()
     error("DataType didn't set a .new() function!")-- .. debug.traceback())
 end
-DataTypeInterface.__tostring = function(_self)
+--[[function DataTypeInterface:__tostring()
     error("Attempt to convert unset datatype to string.")
 end;
-DataTypeInterface.__concat = function(value1: any,value2: any)
+function DataTypeInterface.__concat(value1: any,value2: any)
     return string.format("%s%s",tostring(value1),tostring(value2))
 end;
-DataTypeInterface.__eq = function(_self,_value)
+function DataTypeInterface:__eq(_value)
     error("Attempt to compare unset datatype another object.")
 end;
-DataTypeInterface.__lt = function(_self, _value)
+function DataTypeInterface:__lt(_value)
     error("Attempt to compare unset datatype another object.")
 end;
-DataTypeInterface.__le = function(_self, _value)
+function DataTypeInterface:__le(_value)
     error("Attempt to compare unset datatype another object.")
-end;
+end;]]
 return DataTypeInterface
