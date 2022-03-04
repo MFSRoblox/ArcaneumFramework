@@ -45,6 +45,12 @@ function InitializerService:InitializeModule(ModuleScript: ModuleScript, Globals
     return TempInitializer:InitializeAll(Globals)[ModuleScript.Name]
 end
 --[=[
+    @type InitializerObject {FilesToBoot: {[FileName]: Array<SingletonInitClass>}, FilesWillBoot: {}, BootGroups: {[BootOrder]: BootGroup},}
+    @within InitializerService
+
+    The object created by [InitializerService:New] to initialize a batch of modules
+]=]
+--[=[
     Creates a new Initializer object. This is used to manage the inputted modules that need to be booted.
     @return InitializerObject
 ]=]
@@ -56,7 +62,12 @@ function InitializerService:New(): InitializerObject
     },{__index = self})
     return NewService
 end
+--[=[
+    @type ModuleInfo {InitName: string,BootOrder: number,Version: string,Dependacies: {[string]:string},__call: (table, table) -> table}
+    @within InitializerService
 
+    A ModuleScript that contains the metadata of the parent ModuleScript that's initialized.
+]=]
 type ModuleInfo = {
     InitName: string,
     BootOrder: number,
@@ -72,13 +83,13 @@ type ModuleInfo = {
 ]=]
 function InitializerService:AddModule(ModuleScript: ModuleScript)
     assert(ModuleScript ~= nil, "No ModuleScript passed in for InitializerService!" .. debug.traceback())
-    if self.InitializedModules[ModuleScript] ~= nil then
-        return
-    end
     local FileContents: ModuleInfo = require(ModuleScript.ModuleInfo)
     assert(type(FileContents) == "table", string.format("ModuleScript %s either was already initialized or is not a table! %s", tostring(ModuleScript), debug.traceback()))
     local InitName = FileContents.InitName or ModuleScript.Name
     FileContents.InitName = InitName
+    if self.InitializedModules[InitName][FileContents.Version] ~= nil then
+        return
+    end
     local BootOrder = FileContents.BootOrder
     assert(BootOrder ~= nil, string.format("ModuleScript %s does not have a BootOrder! %s", tostring(ModuleScript), debug.traceback()))
     assert(type(BootOrder) == "number", string.format("ModuleScript %s BootOrder is not a number! %s", tostring(ModuleScript), debug.traceback()))
@@ -119,8 +130,12 @@ function InitializerService:InitializeAll(Globals: table?): {[string]: any}
         local CurrentGroup = BootGroups[CurrentOrder]
         for j=1, #CurrentGroup do
             local FileToBoot = CurrentGroup[j]
-            print("Initialing",FileToBoot.InitName)
-            Output[FileToBoot.InitName] = FileToBoot(Globals)
+            local FileName = FileToBoot.InitName
+            print("Initialing",FileName)
+            Output[FileName] = FileToBoot(Globals)
+            if self.InitializedModules[FileName] == nil then
+                self.InitializedModules[FileName] = {tostring(FileToBoot.Version)}
+            end
         end
     end
     self:Destroy()
@@ -190,7 +205,13 @@ function InitializerService:CheckDependacies(_Globals: table?)
         else
             local InitializedModule = self.InitializedModules[DependacyName]
             if InitializedModule then
-                --stuff
+                for i=1, #DependacyVersions do
+                    local DependacyVersion = DependacyVersions[i]
+                    if InitializedModule[tostring(DependacyVersion)] ~= nil then
+                        print("Environment already has",DependacyName,"initialized. Next!")
+                        continue
+                    end
+                end
             else
                 warn(DependacyName,"is needed, but was never found in FilesToBoot!\nFilesToBoot:",FilesToBoot,"\nDebug:",debug.traceback())
             end
