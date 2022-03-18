@@ -8,7 +8,8 @@ local Roact = require(RoactModule)
 
     The frame that holds all of the skill trees.
 ]]
-local SkillTreesFrame = Roact.Component:extend("SkillTreesFrame")
+type RoactComponent = typeof(Roact.Component:extend())
+local SkillTreesFrame: RoactComponent = Roact.Component:extend("SkillTreesFrame")
 
 --[[
     The initialization of the frame's state.
@@ -17,7 +18,8 @@ function SkillTreesFrame:init()
     self.ref = Roact.createRef();
 end
 
-function SkillTreesFrame:render()
+type RoactElement = typeof(Roact.createElement())
+function SkillTreesFrame:render(): RoactElement
     return Roact.createElement(
         "Frame",
         {--Properties of the frame
@@ -28,7 +30,14 @@ function SkillTreesFrame:render()
             Size = UDim2.fromScale(0.5,0.5);
         },
         {--Children
-            
+            UIListLayout = Roact.createElement("UIListLayout",
+                {
+                    FillDirection = Enum.FillDirection.Horizontal;
+                    HorizontalAlignment = Enum.HorizontalAlignment.Center;
+                    VerticalAlignment = Enum.VerticalAlignment.Center;
+                    Padding = UDim.new(0,2)
+                }
+            )
         }
     )
 end
@@ -38,7 +47,9 @@ end
 ]=]
 function SkillTreesFrame:didMount()
     --Initialize the sub-trees.
-    --Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame")
+    Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame1")
+    Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame2")
+    Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame3")
 end
 
 return SkillTreesFrame
