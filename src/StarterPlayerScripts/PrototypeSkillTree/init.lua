@@ -8,7 +8,8 @@ local Roact = require(RoactModule)
 
     The ScreenGui that holds all of the skill trees.
 ]]
-local SkillTreesGui = Roact.Component:extend("SkillTreesGui")
+type RoactComponent = typeof(Roact.Component:extend())
+local SkillTreesGui: RoactComponent = Roact.Component:extend("SkillTreesGui")
 
 --[=[
     The initialization of the Gui's state.
@@ -22,10 +23,11 @@ end
 
 --[=[
     Setup the element that should be rendered
+
+    @return RoactElement
 ]=]
-function SkillTreesGui:render()
-    print(self.ref)
-    print(self.WindowType)
+type RoactElement = typeof(Roact.createElement())
+function SkillTreesGui:render(): RoactElement
     return Roact.createElement(
         "ScreenGui",
         {
@@ -39,11 +41,10 @@ function SkillTreesGui:render()
 end
 
 --[=[
-    Initialize the frame for the Skill Tree
+    Initialize the frame for the Skill Tree.
 ]=]
 function SkillTreesGui:didMount()
-    --Initialize the sub-trees.
-    print("dit mount trigger",self.ref)
+    --Initialize the frame.
     local _FrameHandle = Roact.mount(Roact.createElement(require(script.SkillTreesFrame)),self.ref:getValue(),"SkillTreesGui")
 
 end
