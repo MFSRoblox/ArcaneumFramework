@@ -14,7 +14,7 @@ local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local PlayerSupervisor = BaseClass:Extend(
     {
         Version = 1;
-        Object = script
+        Object = script;
     }
 )
 
