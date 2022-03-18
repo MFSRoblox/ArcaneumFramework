@@ -534,7 +534,7 @@ end
     @return ...number -- The critical points of the given polynomial.
 ]=]
 function BallisticUtilities:ProduceCriticalPoints(...:number): ...number
-    print("Produce Critical Points for",...)
+    --print("Produce Critical Points for",...)
     local Coefficients: Array<number> = table.pack(...)
     local HighestPower = #Coefficients-1
     local CriticalPoints: Array<number>
@@ -560,7 +560,7 @@ function BallisticUtilities:ProduceCriticalPoints(...:number): ...number
     table.sort(CriticalPoints, function(a:number,b:number)
         return a < b
     end)
-    print("Critical Points for",...,":",table.unpack(CriticalPoints))
+    --print("Critical Points for",...,":",table.unpack(CriticalPoints))
     return table.unpack(CriticalPoints,1,#CriticalPoints)
 end
 --[=[
