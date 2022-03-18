@@ -10,7 +10,7 @@ local ArcaneumGlobals repeat
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 
-local Scripts = script.Scripts
+local _Scripts = script.Scripts
 
 local ClientModule = BaseClass:Extend({
     Version = 2;
@@ -19,6 +19,7 @@ local ClientModule = BaseClass:Extend({
 
 function ClientModule:New()
 	local this = self:Extend(BaseClass:New("ClientSoul", "ClientSoul"))
+    print("Created Client's Soul")
 	return this
 end
 
