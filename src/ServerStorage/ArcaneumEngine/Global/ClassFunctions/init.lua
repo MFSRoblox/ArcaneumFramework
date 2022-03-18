@@ -1,3 +1,11 @@
+local ModuleInfo = {
+    InitName = script.Name;
+    BootOrder = 1;
+    Version = "1.0.0";
+    Dependacies = {
+        Utilities = "1.0.0"
+    };
+}
 local BaseClass = require(script.BaseClass)
 local ClassService = BaseClass:New("ClassService")
 function ClassService:AddClass(ClassName: string, ClassData: table): any
@@ -38,4 +46,5 @@ function ClassService.Setup(_output: table, _ArcaneumGlobals: table): table
     UnpackClasses(script)
     return ClassService
 end;
-return ClassService
+ModuleInfo.__call = ClassService.Setup
+return ModuleInfo
