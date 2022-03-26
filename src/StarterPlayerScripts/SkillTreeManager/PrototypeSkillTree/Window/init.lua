@@ -1,10 +1,11 @@
 --[[local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer]]
+local UserInputService = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
 local DebugConfig = {
-    InputEventOutput = true;
+    InputEventOutput = false;
 }
 local ColorableKeys = {
     "Content";
@@ -47,6 +48,7 @@ local Window: RoactComponent = Roact.Component:extend("GeneralWindow")
 ]=]
 function Window:init(userProps: {[string]: any})
     self.ref = Roact.createRef();
+    self.Dragged = false;
     for PropName, PropValue in pairs(DefaultWindowProps) do -- Set property to default value if none was put in.
         if userProps[PropName] == nil then
             userProps[PropName] = PropValue
@@ -63,7 +65,28 @@ function Window:init(userProps: {[string]: any})
         end
     end
 end
-
+function Window:ToggleDrag(Toggle: boolean)
+    if Toggle == nil then
+        self.Dragging = not self.Dragging
+    else
+        self.Dragging = Toggle
+    end
+    if self.Dragging == true then
+        print("True Mouse")
+        UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+    else
+        print("False Mouse")
+        UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+    end
+end
+function Window:Drag(MouseDelta: Vector3)
+    if self.Dragged then
+        local GUIInstance:Frame = self.ref:getValue()
+        print(GUIInstance)
+        GUIInstance.AnchorPoint = Vector2.new()
+        GUIInstance.Position += UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
+    end
+end
 type RoactElement = typeof(Roact.createElement())
 function Window:render(): RoactElement
     return Roact.createElement(
@@ -71,7 +94,6 @@ function Window:render(): RoactElement
         {--Properties of the frame
             [Roact.Ref] = self.ref;
             Name = "GeneralWindow";
-            
             Position = UDim2.fromScale(0.5,0.5);
             AnchorPoint = Vector2.new(0.5,0.5);
             Size = UDim2.fromScale(0.5,0.5);
@@ -87,6 +109,9 @@ function Window:render(): RoactElement
                         Triggers:
                         Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        self:ToggleDrag(true)
+                    end
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Began")
                         print(
@@ -103,6 +128,7 @@ function Window:render(): RoactElement
                         Triggers:
                         Mouse move (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
+                    self:Drag(input.Delta)
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Changed")
                         print(
@@ -119,6 +145,9 @@ function Window:render(): RoactElement
                         Triggers:
                         Mouse exit (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        self:ToggleDrag(false)
+                    end
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Ended")
                         print(
