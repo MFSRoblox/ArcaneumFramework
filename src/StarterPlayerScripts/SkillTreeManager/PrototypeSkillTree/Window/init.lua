@@ -85,7 +85,7 @@ function Window:render(): RoactElement
                 [Roact.Event.InputBegan] = function(selfFrame: Frame, input: InputObject)
                     --[[
                         Triggers:
-                        Mouse enter
+                        Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Began")
@@ -101,7 +101,7 @@ function Window:render(): RoactElement
                 [Roact.Event.InputChanged] = function(selfFrame: Frame, input: InputObject)
                     --[[
                         Triggers:
-                        Mouse move
+                        Mouse move (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Changed")
@@ -117,7 +117,7 @@ function Window:render(): RoactElement
                 [Roact.Event.InputEnded] = function(selfFrame: Frame, input: InputObject)
                     --[[
                         Triggers:
-                        Mouse exit
+                        Mouse exit (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Ended")
