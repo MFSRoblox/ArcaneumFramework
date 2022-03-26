@@ -3,12 +3,12 @@ local LocalPlayer = Players.LocalPlayer]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
---[[
-    @class SkillTreesGui
-
-    The ScreenGui that holds all of the skill trees.
-]]
 type RoactComponent = typeof(Roact.Component:extend())
+--[=[
+    @client
+    @class SkillTreesGui
+    The ScreenGui that holds all of the skill trees.
+]=]
 local SkillTreesGui: RoactComponent = Roact.Component:extend("SkillTreesGui")
 
 --[=[
@@ -21,12 +21,12 @@ function SkillTreesGui:init()
     --})
 end
 
+type RoactElement = typeof(Roact.createElement())
 --[=[
     Setup the element that should be rendered
 
     @return RoactElement
 ]=]
-type RoactElement = typeof(Roact.createElement())
 function SkillTreesGui:render(): RoactElement
     return Roact.createElement(
         "ScreenGui",
@@ -45,7 +45,9 @@ end
 ]=]
 function SkillTreesGui:didMount()
     --Initialize the frame.
-    local _FrameHandle = Roact.mount(Roact.createElement(require(script.SkillTreesFrame)),self.ref:getValue(),"SkillTreesGui")
+    local _FrameHandle = Roact.mount(Roact.createElement(require(script.Window),{
+        TitleBarColor3 = Color3.new(0,1,0)
+    }),self.ref:getValue(),"SkillTreesGui")
 
 end
 

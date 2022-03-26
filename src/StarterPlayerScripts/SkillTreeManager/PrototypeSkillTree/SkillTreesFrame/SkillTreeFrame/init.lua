@@ -3,17 +3,17 @@ local LocalPlayer = Players.LocalPlayer]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
---[[
+--[=[
     @class SkillTreeFrame
 
     The frame that represents a Skill Tree and holds all of the skills.
-]]
+]=]
 type RoactComponent = typeof(Roact.Component:extend())
 local SkillTreeFrame: RoactComponent = Roact.Component:extend("SkillTreeFrame")
 
---[[
+--[=[
     The initialization of the frame's state.
-]]
+]=]
 function SkillTreeFrame:init()
     self.ref = Roact.createRef();
 end
