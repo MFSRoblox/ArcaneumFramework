@@ -1,6 +1,5 @@
 --[[local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer]]
-local UserInputService = game:GetService("UserInputService")
 local DragWatcherClass = require(script.DragWatcher)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
@@ -73,14 +72,12 @@ function Window:ToggleDrag(Toggle: boolean, Input: InputObject)
     end
     if ToDrag == true then
         self.DragWatcher = DragWatcherClass.new(Input, Enum.UserInputType.MouseMovement)
-        self.DragWatcher:BindToDragged(function(Input: InputObject, ActualDelta: Vector3)
+        self.DragWatcher:BindToDragged(function(_Input: InputObject, ActualDelta: Vector3)
             self:Drag(ActualDelta)
         end)
-        --UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
     else
         self.DragWatcher:Destroy()
         print(self.DragWatcher)
-        --UserInputService.MouseBehavior = Enum.MouseBehavior.Default
     end
 end
 function Window:Drag(MouseDelta: Vector3)

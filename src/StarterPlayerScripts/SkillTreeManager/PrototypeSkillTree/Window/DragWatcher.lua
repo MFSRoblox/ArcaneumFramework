@@ -3,7 +3,7 @@ local DragWatcher = {} do
     DragWatcher.__index = DragWatcher
 end
 
-function DragWatcher.new(InitialInput: InputObject,InputTypeForUpdate: Enum.UserInputType, InputTypeForStop: Enum.UserInputType)
+function DragWatcher.new(InitialInput: InputObject,InputTypeForUpdate: Enum.UserInputType)
     local NewWatcher = setmetatable({},DragWatcher)
     NewWatcher.StopEvent = UserInputService.InputEnded:Connect(function(input: InputObject, _gameProcessedEvent: boolean)
         if input.UserInputType == InitialInput.UserInputType then
