@@ -46,7 +46,7 @@ end
 function SkillTreesGui:didMount()
     --Initialize the frame.
     local _FrameHandle = Roact.mount(Roact.createElement(require(script.Window),{
-        TitleBarColor3 = Color3.new(0,1,0)
+        --TitleBarColor3 = Color3.new(0,1,0)
     }),self.ref:getValue(),"SkillTreesGui")
 
 end
