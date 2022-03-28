@@ -1,6 +1,7 @@
 --[[local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer]]
 local UserInputService = game:GetService("UserInputService")
+local DragWatcherClass = require(script.DragWatcher)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
@@ -48,7 +49,7 @@ local Window: RoactComponent = Roact.Component:extend("GeneralWindow")
 ]=]
 function Window:init(userProps: {[string]: any})
     self.ref = Roact.createRef();
-    self.Dragged = false;
+    self.DragWatcher = nil;
     for PropName, PropValue in pairs(DefaultWindowProps) do -- Set property to default value if none was put in.
         if userProps[PropName] == nil then
             userProps[PropName] = PropValue
@@ -65,27 +66,27 @@ function Window:init(userProps: {[string]: any})
         end
     end
 end
-function Window:ToggleDrag(Toggle: boolean)
-    if Toggle == nil then
-        self.Dragging = not self.Dragging
-    else
-        self.Dragging = Toggle
+function Window:ToggleDrag(Toggle: boolean, Input: InputObject)
+    local ToDrag = Toggle
+    if ToDrag == nil then
+        ToDrag = not self.DragWatcher
     end
-    if self.Dragging == true then
-        print("True Mouse")
-        UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+    if ToDrag == true then
+        self.DragWatcher = DragWatcherClass.new(Input, Enum.UserInputType.MouseMovement)
+        self.DragWatcher:BindToDragged(function(Input: InputObject, ActualDelta: Vector3)
+            self:Drag(ActualDelta)
+        end)
+        --UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
     else
-        print("False Mouse")
-        UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+        self.DragWatcher:Destroy()
+        print(self.DragWatcher)
+        --UserInputService.MouseBehavior = Enum.MouseBehavior.Default
     end
 end
 function Window:Drag(MouseDelta: Vector3)
-    if self.Dragged then
-        local GUIInstance:Frame = self.ref:getValue()
-        print(GUIInstance)
-        GUIInstance.AnchorPoint = Vector2.new()
-        GUIInstance.Position += UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
-    end
+    local GUIInstance:Frame = self.ref:getValue()
+    --GUIInstance.AnchorPoint = Vector2.new()
+    GUIInstance.Position += UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
 end
 type RoactElement = typeof(Roact.createElement())
 function Window:render(): RoactElement
@@ -110,7 +111,7 @@ function Window:render(): RoactElement
                         Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
                     if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        self:ToggleDrag(true)
+                        self:ToggleDrag(true, input)
                     end
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Began")
@@ -128,7 +129,7 @@ function Window:render(): RoactElement
                         Triggers:
                         Mouse move (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
-                    self:Drag(input.Delta)
+                    --self:Drag(input.Delta)
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Changed")
                         print(

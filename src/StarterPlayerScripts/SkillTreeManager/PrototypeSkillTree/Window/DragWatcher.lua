@@ -6,13 +6,14 @@ end
 function DragWatcher.new(InitialInput: InputObject,InputTypeForUpdate: Enum.UserInputType, InputTypeForStop: Enum.UserInputType)
     local NewWatcher = setmetatable({},DragWatcher)
     NewWatcher.StopEvent = UserInputService.InputEnded:Connect(function(input: InputObject, _gameProcessedEvent: boolean)
-        if input.UserInputType == InputTypeForStop then
+        if input.UserInputType == InitialInput.UserInputType then
             NewWatcher:Destroy()
         end
     end)
     NewWatcher.LatestDelta = InitialInput.Delta
     NewWatcher.LatestPosition = InitialInput.Position
     NewWatcher.UpdateBinded = {}
+    NewWatcher:Dragged(InitialInput)
     NewWatcher.UpdateEvent = UserInputService.InputChanged:Connect(function(input, _gameProcessedEvent)
         if input.UserInputType == InputTypeForUpdate then
             NewWatcher:Dragged(input)
@@ -29,14 +30,14 @@ function DragWatcher:Dragged(input:InputObject)
     local BindedFunctions = self.UpdateBinded
     for i=1, #BindedFunctions do
         local ThisFunction = BindedFunctions[i]
-        ThisFunction(ActualDelta)
+        ThisFunction(input, ActualDelta)
     end
     return ActualDelta
 end
-function DragWatcher:BindToDragged(callback: (Vector3) -> ())
+function DragWatcher:BindToDragged(callback: (InputObject, Vector3) -> ())
     table.insert(self.UpdateBinded,callback)
 end
-function DragWatcher:Destroy()
+function DragWatcher:Destroy(): nil
     if self.StopEvent ~= nil then
         self.StopEvent:Disconnect()
         self.StopEvent = nil
@@ -45,5 +46,9 @@ function DragWatcher:Destroy()
         self.UpdateEvent:Disconnect()
         self.UpdateEvent = nil
     end
+    table.clear(self.UpdateBinded)
+    table.clear(self)
+    self = nil
+    return nil
 end
 return DragWatcher
