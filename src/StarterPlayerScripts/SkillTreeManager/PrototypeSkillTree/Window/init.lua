@@ -1,5 +1,6 @@
---[[local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer]]
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
 local DragWatcherClass = require(script.DragWatcher)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
@@ -7,12 +8,30 @@ local Roact = require(RoactModule)
 local DebugConfig = {
     InputEventOutput = false;
 }
+local RobloxTopBarSize = 36
 local ColorableKeys = {
     "Content";
     "TitleBar";
     "CloseButton";
 }
-local DefaultWindowProps = {
+--[=[
+    @type WindowProps
+    @within Window
+    @private
+    The expected dictionary format of the properties passed into the Window constructor. Refer to [[Window.DefaultWindowProps]] for more documentation.
+]=]
+type WindowProps = {
+    ContentColor3:Color3 | false;
+    ContentTransparency:number;
+    TitleBarColor3:Color3 | false;
+    TitleBarTransparency:number;
+    CloseButtonColor3:Color3 | false;
+    CloseButtonTransparency:number;
+    TitleTextSize:number;
+    Draggable:boolean;
+    RestrictDragToWindow:boolean;
+}
+local DefaultWindowProps: WindowProps = {
     ContentColor3 = Color3.fromRGB(60,60,60);
     ContentTransparency = 0;
     TitleBarColor3 = Color3.fromRGB(45,45,45);
@@ -20,6 +39,7 @@ local DefaultWindowProps = {
     CloseButtonColor3 = Color3.new(1,0,0);
     CloseButtonTransparency = 0;
     TitleTextSize = 25;
+    Draggable = true;
     RestrictDragToWindow = true;
 }
 --[=[
@@ -38,16 +58,17 @@ local DefaultWindowProps = {
     .TitleTextSize Integer -- The size of the TitleBar text. By default 25
     .CloseButtonColor3 Color3 | false -- The color of the CloseButton. If "false" is put in, it will make the background transparent. By default RGB(255,0,0)
     .CloseButtonTransparency number -- The transparency of the CloseButton's background. By default 0 unless overrided by CloseButtonColor3
-
+    .Draggable boolean -- Whether the window can be dragged by the user. By default true
+    .RestrictDragToWindow boolean -- Whether the window can be dragged outside of the game's window. By default true
     The allowed properties to be passed into the component on creation.
 ]=]
 type RoactComponent = typeof(Roact.Component:extend())
 local Window: RoactComponent = Roact.Component:extend("GeneralWindow")
 
 --[=[
-    The initialization of the frame's state.
+    The initialization of the frame's state from inputted properties.
 ]=]
-function Window:init(userProps: {[string]: any})
+function Window:init(userProps:WindowProps)
     self.ref = Roact.createRef();
     self.DragWatcher = nil;
     for PropName, PropValue in pairs(DefaultWindowProps) do -- Set property to default value if none was put in.
@@ -85,7 +106,36 @@ function Window:Drag(MouseDelta: Vector3)
     local ToRestrictDrag = self.props.RestrictDragToWindow
     local GUIInstance:Frame = self.ref:getValue()
     --GUIInstance.AnchorPoint = Vector2.new()
-    GUIInstance.Position += UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
+    local NewPosition = GUIInstance.Position + UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
+    GUIInstance.Position = NewPosition
+    if ToRestrictDrag == true then
+        local CurrentGuiSize = GUIInstance.AbsoluteSize
+        local CurrentPosition = GUIInstance.AbsolutePosition + Vector2.new(0,RobloxTopBarSize)-- CurrentGuiSize*GUIInstance.AnchorPoint -- Aligned to Top Left
+        local CurrentScreenSize = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY + RobloxTopBarSize*2) --For some reason ViewSizeY doesn't count the top bar, and has an increased size on the bottom too.
+        local MaxPosition = CurrentScreenSize - CurrentGuiSize
+        --[[print(
+            --"CurrentMousePos:",Vector2.new(Mouse.X,Mouse.Y),
+            "CurrentPosition:",CurrentPosition,
+            "\nCurrentGuiSize:",CurrentGuiSize,
+            "\nCurrentScreenSize:",CurrentScreenSize,
+            "\nMaxPosition:", MaxPosition
+        )]]
+        --Check if it's out of bounds on bottom or right
+        local Difference = MaxPosition - CurrentPosition
+        if CurrentPosition.X > MaxPosition.X then
+            GUIInstance.Position += UDim2.new(0,Difference.X,0,0)
+        end
+        if CurrentPosition.Y > MaxPosition.Y then
+            GUIInstance.Position += UDim2.new(0,0,0,Difference.Y)
+        end
+        --Check if it's out of bounds on top or left
+        if CurrentPosition.X < 0 then
+            GUIInstance.Position -= UDim2.new(0,CurrentPosition.X,0,0)
+        end
+        if CurrentPosition.Y < 0 then
+            GUIInstance.Position -= UDim2.new(0,0,0,CurrentPosition.Y)
+        end
+    end
 end
 type RoactElement = typeof(Roact.createElement())
 function Window:render(): RoactElement
