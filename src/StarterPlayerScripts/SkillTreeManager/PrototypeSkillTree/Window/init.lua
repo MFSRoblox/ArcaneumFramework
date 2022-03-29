@@ -100,7 +100,9 @@ function Window:ToggleDrag(Toggle: boolean, Input: InputObject)
             self:Drag(ActualDelta)
         end)
     else
-        self.DragWatcher = self.DragWatcher:Destroy()
+        if self.DragWatcher ~= nil then
+            self.DragWatcher = self.DragWatcher:Destroy()
+        end
     end
 end
 function Window:Drag(MouseDelta: Vector3)
