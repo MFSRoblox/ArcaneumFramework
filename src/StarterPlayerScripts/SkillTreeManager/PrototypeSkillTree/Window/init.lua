@@ -27,6 +27,8 @@ type WindowProps = {
     CloseButtonTransparency:number;
     Draggable:boolean;
     RestrictDragToWindow:boolean;
+    RestrictDragWithTopRobloxBar:boolean;
+    RestrictDragWithBottomRobloxBar:boolean;
 }
 local DefaultWindowProps: WindowProps = {
     ContentColor3 = Color3.fromRGB(60,60,60);
@@ -40,6 +42,8 @@ local DefaultWindowProps: WindowProps = {
     CloseButtonTransparency = 0;
     Draggable = true;
     RestrictDragToWindow = true;
+    RestrictDragWithTopRobloxBar = false;
+    RestrictDragWithBottomRobloxBar = false;
 }
 --[=[
     @client
@@ -61,7 +65,9 @@ local DefaultWindowProps: WindowProps = {
     .CloseButtonTransparency number -- The transparency of the CloseButton's background. By default 0 unless overrided by CloseButtonColor3
     .Draggable boolean -- Whether the window can be dragged by the user. By default true
     .RestrictDragToWindow boolean -- Whether the window can be dragged outside of the game's window. By default true
-    
+    .RestrictDragWithTopRobloxBar boolean -- Whether the window can be dragged beyond the top roblox bar. By default false
+    .RestrictDragWithBottomRobloxBar boolean -- Whether the window can be dragged beyond the bottom(?) roblox bar. By default false
+
     The allowed properties to be passed into the component on creation.
 ]=]
 type RoactComponent = typeof(Roact.Component:extend())
@@ -114,16 +120,25 @@ function Window:Drag(MouseDelta: Vector3)
     GUIInstance.Position = NewPosition
     if ToRestrictDrag == true then
         local CurrentGuiSize = GUIInstance.AbsoluteSize
-        local CurrentPosition = GUIInstance.AbsolutePosition + Vector2.new(0,RobloxTopBarSize)-- CurrentGuiSize*GUIInstance.AnchorPoint -- Aligned to Top Left
-        local CurrentScreenSize = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY + RobloxTopBarSize*2) --For some reason ViewSizeY doesn't count the top bar, and has an increased size on the bottom too.
+        local CurrentPosition = GUIInstance.AbsolutePosition
+        local CurrentScreenSize = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY)
+        if props.RestrictDragWithTopRobloxBar == false then
+            CurrentPosition += Vector2.new(0,RobloxTopBarSize) -- Aligned to Top Left
+            CurrentScreenSize += Vector2.new(0, RobloxTopBarSize) --For some reason ViewSizeY doesn't count the top bar, and has an increased size on the bottom too.
+        end
+        if props.RestrictDragWithBottomRobloxBar == false then
+            CurrentScreenSize += Vector2.new(0, RobloxTopBarSize) --For some reason ViewSizeY doesn't count the top bar, and has an increased size on the bottom too.
+        end
+        --local CameraScreenSize = workspace.CurrentCamera.ViewportSize
         local MaxPosition = CurrentScreenSize - CurrentGuiSize
-        --[[print(
+        print(
             --"CurrentMousePos:",Vector2.new(Mouse.X,Mouse.Y),
             "CurrentPosition:",CurrentPosition,
             "\nCurrentGuiSize:",CurrentGuiSize,
+            --"\nCameraScreenSize:",CameraScreenSize,
             "\nCurrentScreenSize:",CurrentScreenSize,
             "\nMaxPosition:", MaxPosition
-        )]]
+        )
         --Check if it's out of bounds on bottom or right
         local Difference = MaxPosition - CurrentPosition
         if CurrentPosition.X > MaxPosition.X then
