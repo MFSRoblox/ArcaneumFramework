@@ -95,28 +95,39 @@ function Window:init(userProps:WindowProps)
         end
     end
 end
-function Window:ToggleDrag(Toggle: boolean, Input: InputObject)
-    local ToDrag = Toggle
-    if ToDrag == nil then
-        ToDrag = not self.DragWatcher
-    end
-    if ToDrag == true then
-        self.DragWatcher = DragWatcherClass.new(Input, Enum.UserInputType.MouseMovement)
-        self.DragWatcher:BindToDragged(function(_Input: InputObject, ActualDelta: Vector3)
-            self:Drag(ActualDelta)
-        end)
-    else
-        if self.DragWatcher ~= nil then
-            self.DragWatcher = self.DragWatcher:Destroy()
+--[=[
+    Sets a [DragWatcher] to listen to the InputObject.UserInputType and binds [Window:Drag] to it.
+]=]
+function Window:ToggleDrag(Toggle: boolean?, Input: InputObject)
+    if self.props.Draggable then
+        local ToDrag = Toggle
+        if ToDrag == nil then
+            ToDrag = not self.DragWatcher
+        end
+        if ToDrag == true then
+            self.DragWatcher = DragWatcherClass.new(Input, Enum.UserInputType.MouseMovement)
+            self.DragWatcher:BindToDragged(function(_Input: InputObject, ActualDelta: Vector3)
+                self:Drag(ActualDelta)
+            end)
+        else
+            if self.DragWatcher ~= nil then
+                self.DragWatcher = self.DragWatcher:Destroy()
+            end
         end
     end
 end
-function Window:Drag(MouseDelta: Vector3)
+--[=[
+    Moves the window by the inputted delta. Affected by the following:
+    - RestrictDragToWindow
+    - RestrictDragWithTopRobloxBar
+    - RestrictDragWithBottomRobloxBar
+]=]
+function Window:Drag(Delta: Vector3)
     local props:WindowProps = self.props
     local ToRestrictDrag = props.RestrictDragToWindow
     local GUIInstance:Frame = self.ref:getValue()
     --GUIInstance.AnchorPoint = Vector2.new()
-    local NewPosition = GUIInstance.Position + UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
+    local NewPosition = GUIInstance.Position + UDim2.new(0,Delta.X,0,Delta.Y)
     GUIInstance.Position = NewPosition
     if ToRestrictDrag == true then
         local CurrentGuiSize = GUIInstance.AbsoluteSize
@@ -131,14 +142,14 @@ function Window:Drag(MouseDelta: Vector3)
         end
         --local CameraScreenSize = workspace.CurrentCamera.ViewportSize
         local MaxPosition = CurrentScreenSize - CurrentGuiSize
-        print(
+        --[[print(
             --"CurrentMousePos:",Vector2.new(Mouse.X,Mouse.Y),
             "CurrentPosition:",CurrentPosition,
             "\nCurrentGuiSize:",CurrentGuiSize,
             --"\nCameraScreenSize:",CameraScreenSize,
             "\nCurrentScreenSize:",CurrentScreenSize,
             "\nMaxPosition:", MaxPosition
-        )
+        )]]
         --Check if it's out of bounds on bottom or right
         local Difference = MaxPosition - CurrentPosition
         if CurrentPosition.X > MaxPosition.X then
