@@ -15,17 +15,18 @@ local ColorableKeys = {
     "CloseButton";
 }
 --[=[
-    @type WindowProps
+    @type WindowProps {ContentColor3:Color3 | false; ContentTransparency:number | false; TitleBarColor3:Color3; TitleBarTransparency:number; CloseButtonColor3:Color3 | false; CloseButtonTransparency:number; TitleTextSize:number; Draggable:boolean; RestrictDragToWindow:boolean;}
     @within Window
     @private
-    The expected dictionary format of the properties passed into the Window constructor. Refer to [[Window.DefaultWindowProps]] for more documentation.
+    The expected dictionary format of the properties passed into the Window constructor. Refer to [Window.DefaultWindowProps] for more documentation.
 ]=]
+type False = boolean
 type WindowProps = {
-    ContentColor3:Color3 | false;
-    ContentTransparency:number;
-    TitleBarColor3:Color3 | false;
+    ContentColor3:Color3 | False;
+    ContentTransparency:number | False;
+    TitleBarColor3:Color3;
     TitleBarTransparency:number;
-    CloseButtonColor3:Color3 | false;
+    CloseButtonColor3:Color3 | False;
     CloseButtonTransparency:number;
     TitleTextSize:number;
     Draggable:boolean;
