@@ -14,32 +14,30 @@ local ColorableKeys = {
     "TitleBar";
     "CloseButton";
 }
---[=[
-    @type WindowProps {ContentColor3:Color3 | false; ContentTransparency:number | false; TitleBarColor3:Color3; TitleBarTransparency:number; CloseButtonColor3:Color3 | false; CloseButtonTransparency:number; TitleTextSize:number; Draggable:boolean; RestrictDragToWindow:boolean;}
-    @within Window
-    @private
-    The expected dictionary format of the properties passed into the Window constructor. Refer to [Window.DefaultWindowProps] for more documentation.
-]=]
 type False = boolean
 type WindowProps = {
-    ContentColor3:Color3 | False;
-    ContentTransparency:number | False;
+    ContentColor3:Color3;
+    ContentTransparency:number;
+    TitleBarHeight:number;
     TitleBarColor3:Color3;
     TitleBarTransparency:number;
-    CloseButtonColor3:Color3 | False;
+    CloseButtonColor3:Color3;
     CloseButtonTransparency:number;
     TitleTextSize:number;
+    TitleTextColor3: Color3;
     Draggable:boolean;
     RestrictDragToWindow:boolean;
 }
 local DefaultWindowProps: WindowProps = {
     ContentColor3 = Color3.fromRGB(60,60,60);
     ContentTransparency = 0;
+    TitleBarHeight = 25;
     TitleBarColor3 = Color3.fromRGB(45,45,45);
     TitleBarTransparency = 0;
     CloseButtonColor3 = Color3.new(1,0,0);
     CloseButtonTransparency = 0;
-    TitleTextSize = 25;
+    TitleTextSize = 20;
+    TitleTextColor3 = Color3.new(1,1,1);
     Draggable = true;
     RestrictDragToWindow = true;
 }
@@ -99,12 +97,12 @@ function Window:ToggleDrag(Toggle: boolean, Input: InputObject)
             self:Drag(ActualDelta)
         end)
     else
-        self.DragWatcher:Destroy()
-        print(self.DragWatcher)
+        self.DragWatcher = self.DragWatcher:Destroy()
     end
 end
 function Window:Drag(MouseDelta: Vector3)
-    local ToRestrictDrag = self.props.RestrictDragToWindow
+    local props:WindowProps = self.props
+    local ToRestrictDrag = props.RestrictDragToWindow
     local GUIInstance:Frame = self.ref:getValue()
     --GUIInstance.AnchorPoint = Vector2.new()
     local NewPosition = GUIInstance.Position + UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
@@ -140,6 +138,7 @@ function Window:Drag(MouseDelta: Vector3)
 end
 type RoactElement = typeof(Roact.createElement())
 function Window:render(): RoactElement
+    local props: WindowProps = self.props
     return Roact.createElement(
         "Frame",
         {--Properties of the frame
@@ -151,9 +150,9 @@ function Window:render(): RoactElement
         },
         {--Children
             TitleBar = Roact.createElement("Frame",{
-                BackgroundTransparency = self.props.TitleBarTransparency;
-                BackgroundColor3 = self.props.TitleBarColor3;
-                Size = UDim2.new(1,0,0,25);
+                BackgroundTransparency = props.TitleBarTransparency;
+                BackgroundColor3 = props.TitleBarColor3;
+                Size = UDim2.new(1,0,0,props.TitleBarHeight);
                 --Dragging events
                 [Roact.Event.InputBegan] = function(selfFrame: Frame, input: InputObject)
                     --[[
@@ -215,8 +214,9 @@ function Window:render(): RoactElement
                     TitleText = Roact.createElement("TextLabel",
                         {
                             ZIndex = 1;
-                            Text = self.props.TitleText;
-                            TextSize = self.props.TitleTextSize;
+                            Text = props.TitleText;
+                            TextColor3 = props.TitleTextColor3;
+                            TextSize = props.TitleTextSize;
                             Size = UDim2.new(1,0,1,0);
                             BackgroundTransparency = 1;
                         }
@@ -227,8 +227,8 @@ function Window:render(): RoactElement
                             ZIndex = 2;
                             AnchorPoint = Vector2.new(1,0.5);
                             Size = UDim2.new(1,-1,1,-1);
-                            BackgroundTransparency = self.props.CloseButtonTransparency;
-                            BackgroundColor3 = self.props.CloseButtonColor3;
+                            BackgroundTransparency = props.CloseButtonTransparency;
+                            BackgroundColor3 = props.CloseButtonColor3;
                             Position = UDim2.new(1,-1,0.5,0);
                             Text = "X";
                             TextScaled = true;
