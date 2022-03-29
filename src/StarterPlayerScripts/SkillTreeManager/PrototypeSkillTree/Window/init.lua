@@ -21,6 +21,7 @@ type WindowProps = {
     TitleBarHeight:number;
     TitleBarColor3:Color3;
     TitleBarTransparency:number;
+    TitleText:string;
     TitleTextSize:number;
     TitleTextColor3: Color3;
     CloseButtonColor3:Color3;
@@ -36,6 +37,7 @@ local DefaultWindowProps: WindowProps = {
     TitleBarHeight = 25;
     TitleBarColor3 = Color3.fromRGB(45,45,45);
     TitleBarTransparency = 0;
+    TitleText = "Unnamed Window";
     TitleTextSize = 20;
     TitleTextColor3 = Color3.new(1,1,1);
     CloseButtonColor3 = Color3.new(1,0,0);
@@ -52,21 +54,93 @@ local DefaultWindowProps: WindowProps = {
     A general frame that has the ability to open, close, and be dragable. A staple for PC users.
 ]=]
 --[=[
-    @interface DefaultWindowProps
+    @prop ContentColor3 Color3
     @within Window
-    .ContentColor3 Color3 | false -- The background color of the Content section. If "false" is put in, it will make the background transparent. By default RGB(60,60,60)
-    .ContentTransparency number -- The transparency of the Content section's background. By default 0 unless overrided by ContentColor3
-    .TitleBarHeight Integer -- The height of the title bar (in pixels). By default 25
-    .TitleBarColor3 Color3 | false -- The color of the TitleBar. If "false" is put in, it will make the background transparent. By default RGB(45,45,45)
-    .TitleBarTransparency number -- The transparency of the TitleBar's background. By default 0 unless overrided by TitleBarColor3
-    .TitleTextSize Integer -- The size of the TitleBar text. By default 20
-    .TitleTextColor3 Color3 -- The color of the TitleBar text. By default RGB(255,255,255)
-    .CloseButtonColor3 Color3 | false -- The color of the CloseButton. If "false" is put in, it will make the background transparent. By default RGB(255,0,0)
-    .CloseButtonTransparency number -- The transparency of the CloseButton's background. By default 0 unless overrided by CloseButtonColor3
-    .Draggable boolean -- Whether the window can be dragged by the user. By default true
-    .RestrictDragToWindow boolean -- Whether the window can be dragged outside of the game's window. By default true
-    .RestrictDragWithTopRobloxBar boolean -- Whether the window can be dragged beyond the top roblox bar. By default false
-    .RestrictDragWithBottomRobloxBar boolean -- Whether the window can be dragged beyond the bottom(?) roblox bar. By default false
+    The background color of the Content section. If "false" is put in, it will make the background transparent. By default RGB(60,60,60)
+]=]
+--[=[
+    @prop ContentTransparency number
+    @within Window
+    The transparency of the Content section's background. By default 0 unless overrided by ContentColor3
+]=]
+--[=[
+    @prop TitleBarHeight Integer
+    @within Window
+    The height of the title bar (in pixels). By default 25
+]=]
+--[=[
+    @prop TitleBarColor3 Color3 | false
+    @within Window
+    The color of the TitleBar. If "false" is put in, it will make the background transparent. By default RGB(45,45,45)
+]=]
+--[=[
+    @prop TitleBarTransparency number
+    @within Window
+    The transparency of the TitleBar's background. By default 0 unless overrided by [Window.TitleBarColor3]
+]=]
+--[=[
+    @prop TitleText string
+    @within Window
+    The text of the window that will be displayed. By default "Unnamed Window"
+]=]
+--[=[
+    @prop TitleTextSize Integer
+    @within Window
+    The size of the TitleBar text. By default 20
+]=]
+--[=[
+    @prop TitleTextColor3 Color3
+    @within Window
+    The color of the TitleBar text. By default RGB(255,255,255)
+]=]
+--[=[
+    @prop CloseButtonColor3 Color3 | false
+    @within Window
+    The color of the CloseButton. If "false" is put in, it will make the background transparent. By default RGB(255,0,0)
+]=]
+--[=[
+    @prop CloseButtonTransparency number
+    @within Window
+    The transparency of the CloseButton's background. By default 0 unless overrided by CloseButtonColor3
+]=]
+--[=[
+    @prop Draggable boolean
+    @within Window
+    Whether the window can be dragged by the user. By default true
+]=]
+--[=[
+    @prop RestrictDragToWindow boolean
+    @within Window
+    Whether the window can be dragged outside of the game's window. By default true
+]=]
+--[=[
+    @prop RestrictDragWithTopRobloxBar boolean
+    @within Window
+    Whether the window can be dragged beyond the top roblox bar. By default false
+]=]
+--[=[
+    @prop RestrictDragWithBottomRobloxBar boolean
+    @within Window
+    Whether the window can be dragged beyond the bottom(?) roblox bar. By default false
+]=]
+--[=[
+    @interface WindowProps
+    @private
+    @within Window
+    .ContentColor3 Color3 | false -- [Window.ContentColor3]
+    .ContentTransparency number -- [Window.ContentTransparency]
+    .TitleBarHeight Integer -- [Window.TitleBarHeight]
+    .TitleBarColor3 Color3 | false -- [Window.TitleBarColor3]
+    .TitleBarTransparency number -- [Window.TitleBarTransparency]
+    .TitleText string -- [Window.TitleText]
+    .TitleTextSize Integer -- [Window.TitleTextSize]
+    .TitleTextColor3 Color3 -- [Window.TitleTextColor3]
+    .CloseButtonColor3 Color3 | false -- [Window.CloseButtonColor3]
+    .CloseButtonTransparency number -- [Window.CloseButtonTransparency]
+    .Draggable boolean -- [Window.Draggable]
+    .RestrictDragToWindow boolean -- [Window.RestrictDragToWindow]
+    .RestrictDragWithTopRobloxBar boolean -- [Window.RestrictDragWithTopRobloxBar]
+    .RestrictDragWithBottomRobloxBar boolean -- [Window.RestrictDragWithBottomRobloxBar]
 
     The allowed properties to be passed into the component on creation.
 ]=]
