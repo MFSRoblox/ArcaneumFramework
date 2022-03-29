@@ -20,6 +20,7 @@ local DefaultWindowProps = {
     CloseButtonColor3 = Color3.new(1,0,0);
     CloseButtonTransparency = 0;
     TitleTextSize = 25;
+    RestrictDragToWindow = true;
 }
 --[=[
     @client
@@ -81,6 +82,7 @@ function Window:ToggleDrag(Toggle: boolean, Input: InputObject)
     end
 end
 function Window:Drag(MouseDelta: Vector3)
+    local ToRestrictDrag = self.props.RestrictDragToWindow
     local GUIInstance:Frame = self.ref:getValue()
     --GUIInstance.AnchorPoint = Vector2.new()
     GUIInstance.Position += UDim2.new(0,MouseDelta.X,0,MouseDelta.Y)
