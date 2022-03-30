@@ -1,8 +1,8 @@
-local Players = game:GetService("Players")
+--[[local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
-local Roact = require(RoactModule)
+local Roact = require(RoactModule)]]
 local ModuleOfWindow = script.Parent:WaitForChild("SkillTreeManager")
 local SkillTreeManager = require(ModuleOfWindow)
 SkillTreeManager:OpenGui()
