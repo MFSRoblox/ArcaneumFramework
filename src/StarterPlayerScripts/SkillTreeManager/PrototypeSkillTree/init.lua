@@ -35,7 +35,9 @@ function SkillTreesGui:render(): RoactElement
             Name = "SkillTreesUI"
         },
         {--Children
-            
+            Window = Roact.createElement(require(script.Window),{
+                OnCloseEvent = self.props.OnCloseEvent;
+            });
         }
     )
 end
@@ -45,10 +47,9 @@ end
 ]=]
 function SkillTreesGui:didMount()
     --Initialize the frame.
-    local _FrameHandle = Roact.mount(Roact.createElement(require(script.Window),{
+    --[[local _FrameHandle = Roact.mount(Roact.createElement(require(script.Window),{
         --TitleBarColor3 = Color3.new(0,1,0)
-    }),self.ref:getValue(),"SkillTreesGui")
-
+    }),self.ref:getValue(),"SkillTreesGui")]]
 end
 
 return SkillTreesGui

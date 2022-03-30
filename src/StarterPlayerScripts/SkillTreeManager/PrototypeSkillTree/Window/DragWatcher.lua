@@ -1,4 +1,9 @@
 local UserInputService = game:GetService("UserInputService")
+--[=[
+    @client
+    @class DragWatcher
+    
+]=]
 local DragWatcher = {} do
     DragWatcher.__index = DragWatcher
 end

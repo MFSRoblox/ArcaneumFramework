@@ -68,7 +68,12 @@ end
 function SkillTreeManager:OpenGui()
     if self.ActiveGui == nil then
         print(self.GuiInfo)
-        self.ActiveGui = Roact.mount(Roact.createElement(self.GuiInfo), PlayerGui, "SkillTreeGui") -- PlayerGui temp location
+        self.ActiveGui = Roact.mount(Roact.createElement(self.GuiInfo,
+        {
+            OnCloseEvent = function(_Button:GuiButton, _InputObject: InputObject, _ClickCount: number)
+                self:ToggleGui(false)
+            end;
+        }), PlayerGui, "SkillTreeGui") -- PlayerGui temp location
     else
         warn("Attempted to mount an already active Gui! Trackback:",debug.traceback())
     end

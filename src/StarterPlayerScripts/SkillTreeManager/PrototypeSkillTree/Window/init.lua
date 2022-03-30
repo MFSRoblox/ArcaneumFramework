@@ -5,6 +5,7 @@ local DragWatcherClass = require(script.DragWatcher)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
+local TitleBarComponent = require(script.TitleBar)
 local DebugConfig = {
     InputEventOutput = false;
 }
@@ -124,6 +125,11 @@ local DefaultWindowProps: WindowProps = {
     Whether the window can be dragged beyond the bottom(?) roblox bar. By default false
 ]=]
 --[=[
+    @prop OnCloseEvent function
+    @within Window
+    The function that is called when the window's close button is activated.
+]=]
+--[=[
     @interface WindowProps
     @private
     @within Window
@@ -151,8 +157,10 @@ local Window: RoactComponent = Roact.Component:extend("GeneralWindow")
     The initialization of the frame's state from inputted properties.
 ]=]
 function Window:init(userProps:WindowProps)
+    self:setState({
+        DragWatcher = nil;
+    })
     self.ref = Roact.createRef();
-    self.DragWatcher = nil;
     for PropName, PropValue in pairs(DefaultWindowProps) do -- Set property to default value if none was put in.
         if userProps[PropName] == nil then
             userProps[PropName] = PropValue
@@ -181,7 +189,7 @@ function Window:ToggleDrag(Toggle: boolean?, Input: InputObject)
         if ToDrag == true then
             self.DragWatcher = DragWatcherClass.new(Input, Enum.UserInputType.MouseMovement)
             self.DragWatcher:BindToDragged(function(_Input: InputObject, ActualDelta: Vector3)
-                self:Drag(ActualDelta)
+                self:MoveBy(ActualDelta)
             end)
         else
             if self.DragWatcher ~= nil then
@@ -196,7 +204,7 @@ end
     - RestrictDragWithTopRobloxBar
     - RestrictDragWithBottomRobloxBar
 ]=]
-function Window:Drag(Delta: Vector3)
+function Window:MoveBy(Delta: Vector3)
     local props:WindowProps = self.props
     local ToRestrictDrag = props.RestrictDragToWindow
     local GUIInstance:Frame = self.ref:getValue()
@@ -254,12 +262,16 @@ function Window:render(): RoactElement
             Size = UDim2.fromScale(0.5,0.5);
         },
         {--Children
-            TitleBar = Roact.createElement("Frame",{
-                BackgroundTransparency = props.TitleBarTransparency;
-                BackgroundColor3 = props.TitleBarColor3;
-                Size = UDim2.new(1,0,0,props.TitleBarHeight);
-                --Dragging events
-                [Roact.Event.InputBegan] = function(selfFrame: Frame, input: InputObject)
+            TitleBar = Roact.createElement(TitleBarComponent,{
+                TitleBarTransparency = props.TitleBarTransparency;
+                TitleBarColor3 = props.TitleBarColor3;
+                TitleBarHeight = props.TitleBarHeight;
+                TitleText = props.TitleText;
+                TitleTextColor3 = props.TitleTextColor3;
+                TitleTextSize = props.TitleTextSize;
+                CloseButtonTransparency = props.CloseButtonTransparency;
+                CloseButtonColor3 = props.CloseButtonColor3;
+                TitleBarOnInputBegan = function(selfFrame: Frame, input: InputObject)
                     --[[
                         Triggers:
                         Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
@@ -278,7 +290,7 @@ function Window:render(): RoactElement
                         )
                     end
                 end;
-                [Roact.Event.InputChanged] = function(selfFrame: Frame, input: InputObject)
+                TitleBarOnInputChanged = function(selfFrame: Frame, input: InputObject)
                     --[[
                         Triggers:
                         Mouse move (Position,UserInputState.Change, UserInputType.MouseMovement)
@@ -295,7 +307,7 @@ function Window:render(): RoactElement
                         )
                     end
                 end;
-                [Roact.Event.InputEnded] = function(selfFrame: Frame, input: InputObject)
+                TitleBarOnInputEnded = function(selfFrame: Frame, input: InputObject)
                     --[[
                         Triggers:
                         Mouse exit (Position,UserInputState.Change, UserInputType.MouseMovement)
@@ -314,44 +326,13 @@ function Window:render(): RoactElement
                         )
                     end
                 end;
-            },
-                {
-                    TitleText = Roact.createElement("TextLabel",
-                        {
-                            ZIndex = 1;
-                            Text = props.TitleText;
-                            TextColor3 = props.TitleTextColor3;
-                            TextSize = props.TitleTextSize;
-                            Size = UDim2.new(1,0,1,0);
-                            BackgroundTransparency = 1;
-                        }
-                    );
-                    CloseButton = Roact.createElement("TextButton",
-                        {
-                            SizeConstraint = Enum.SizeConstraint.RelativeYY;
-                            ZIndex = 2;
-                            AnchorPoint = Vector2.new(1,0.5);
-                            Size = UDim2.new(1,-1,1,-1);
-                            BackgroundTransparency = props.CloseButtonTransparency;
-                            BackgroundColor3 = props.CloseButtonColor3;
-                            Position = UDim2.new(1,-1,0.5,0);
-                            Text = "X";
-                            TextScaled = true;
-                            TextXAlignment = Enum.TextXAlignment.Center;
-                            TextYAlignment = Enum.TextYAlignment.Center;
-                            [Roact.Event.Activated] = function(selfButton: TextButton, inputObject: InputObject, clickCount: number)
-                                print(selfButton, inputObject, clickCount)
-                                print("Close the window when functionality is implemented")
-                            end;
-                        }
-                    );
-                }
-            );
+                OnCloseEvent = props.OnCloseEvent;
+            });
             ContentFrame = Roact.createElement("ScrollingFrame",
                 {
                     CanvasSize = UDim2.new(); --Might need to change, unsure.
-                    BackgroundTransparency = self.ContentTransparency;
-                    BackgroundColor3 = self.ContentColor3;
+                    BackgroundTransparency = props.ContentTransparency;
+                    BackgroundColor3 = props.ContentColor3;
                 }
             )
         }
