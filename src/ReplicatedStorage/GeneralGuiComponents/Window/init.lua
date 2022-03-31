@@ -32,6 +32,30 @@ type WindowProps = {
     RestrictDragWithTopRobloxBar:boolean;
     RestrictDragWithBottomRobloxBar:boolean;
 }
+--[[local DefaultWindowProps: WindowProps = {
+    Draggable = true;
+    RestrictDragToWindow = true;
+    RestrictDragWithTopRobloxBar = false;
+    RestrictDragWithBottomRobloxBar = false;
+    TitleBarProps = {
+        TitleBarHeight = 25;
+        TitleBarColor3 = Color3.fromRGB(45,45,45);
+        TitleBarTransparency = 0;
+        TitleTextProps = {
+            TitleText = "Unnamed Window";
+            TitleTextSize = 20;
+            TitleTextColor3 = Color3.new(1,1,1);
+        };
+        CloseButtonProps = {
+            CloseButtonColor3 = Color3.new(1,0,0);
+            CloseButtonTransparency = 0;
+        };
+    };
+    ContentProps = {
+        ContentColor3 = Color3.fromRGB(60,60,60);
+        ContentTransparency = 0;
+    }
+}]]
 local DefaultWindowProps: WindowProps = {
     ContentColor3 = Color3.fromRGB(60,60,60);
     ContentTransparency = 0;

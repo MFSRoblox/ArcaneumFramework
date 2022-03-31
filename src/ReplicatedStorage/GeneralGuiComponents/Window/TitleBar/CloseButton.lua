@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
-type CloseButtonProps = {
+export type CloseButtonProps = {
     CloseButtonTransparency:number;
     CloseButtonColor3:Color3;
     OnCloseEvent:(TextButton, InputObject, number) -> ()
