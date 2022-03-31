@@ -55,6 +55,11 @@ local DefaultWindowProps: WindowProps = {
     A general frame that has the ability to open, close, and be dragable. A staple for PC users.
 ]=]
 --[=[
+    @prop ContentElement RoactElement
+    @within Window
+    The Element of which will be displayed within the Content section.
+]]
+--[=[
     @prop ContentColor3 Color3
     @within Window
     The background color of the Content section. If "false" is put in, it will make the background transparent. By default RGB(60,60,60)
@@ -133,6 +138,7 @@ local DefaultWindowProps: WindowProps = {
     @interface WindowProps
     @private
     @within Window
+    .ContentElement RoactElement -- [Window.ContentElement]
     .ContentColor3 Color3 | false -- [Window.ContentColor3]
     .ContentTransparency number -- [Window.ContentTransparency]
     .TitleBarHeight Integer -- [Window.TitleBarHeight]
@@ -147,7 +153,7 @@ local DefaultWindowProps: WindowProps = {
     .RestrictDragToWindow boolean -- [Window.RestrictDragToWindow]
     .RestrictDragWithTopRobloxBar boolean -- [Window.RestrictDragWithTopRobloxBar]
     .RestrictDragWithBottomRobloxBar boolean -- [Window.RestrictDragWithBottomRobloxBar]
-
+    
     The allowed properties to be passed into the component on creation.
 ]=]
 type RoactComponent = typeof(Roact.Component:extend())
@@ -333,6 +339,9 @@ function Window:render(): RoactElement
                     CanvasSize = UDim2.new(); --Might need to change, unsure.
                     BackgroundTransparency = props.ContentTransparency;
                     BackgroundColor3 = props.ContentColor3;
+                },
+                {
+                    ContentElement = props.ContentElement
                 }
             )
         }
@@ -347,6 +356,12 @@ function Window:didMount()
     --[[Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame1")
     Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame2")
     Roact.mount(Roact.createElement(require(script.SkillTreeFrame)),self.ref:getValue(),"SkillTreesFrame3")]]
+end
+
+function Window:willUnmount()
+    if self.DragWatcher ~= nil then
+        self.DragWatcher = self.DragWatcher:Destroy()
+    end
 end
 
 return Window
