@@ -186,7 +186,7 @@ end
 --[=[
     Sets a [DragWatcher] to listen to the InputObject.UserInputType and binds [Window:Drag] to it.
 ]=]
-function Window:ToggleDrag(Toggle: boolean?, Input: InputObject)
+function Window:ToggleMove(Toggle: boolean?, Input: InputObject)
     if self.props.Draggable then
         local ToDrag = Toggle
         if ToDrag == nil then
@@ -283,7 +283,7 @@ function Window:render(): RoactElement
                         Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
                     if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        self:ToggleDrag(true, input)
+                        self:ToggleMove(true, input)
                     end
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Began")
@@ -319,7 +319,7 @@ function Window:render(): RoactElement
                         Mouse exit (Position,UserInputState.Change, UserInputType.MouseMovement)
                     ]]
                     if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        self:ToggleDrag(false)
+                        self:ToggleMove(false)
                     end
                     if DebugConfig.InputEventOutput then
                         print(selfFrame,"Input Ended")
