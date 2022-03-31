@@ -1,9 +1,15 @@
+local gameIsLoaded = game:IsLoaded()
+if not gameIsLoaded then
+    game.Loaded:Wait()
+end
 --[[local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
+local RoactModule = ReplicatedStorage.Packages.roact
 local Roact = require(RoactModule)
 type RoactComponent = typeof(Roact.Component:extend())
+local WindowModule = ReplicatedStorage.GeneralGuiComponents.Window
+local WindowClass = require(WindowModule)
 --[=[
     @client
     @class SkillTreesGui
@@ -35,7 +41,7 @@ function SkillTreesGui:render(): RoactElement
             Name = "SkillTreesUI"
         },
         {--Children
-            Window = Roact.createElement(require(script.Window),{
+            Window = Roact.createElement(WindowClass,{
                 OnCloseEvent = self.props.OnCloseEvent;
             });
         }
