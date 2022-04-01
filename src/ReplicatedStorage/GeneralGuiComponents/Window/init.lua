@@ -271,7 +271,7 @@ function Window:render(): RoactElement
     end
     local Children = props.Children do
         Children.TitleBar = Roact.createElement(TitleBarComponent,props.TitleBarProps);
-        Children.ContentFrame = Roact.createElement(ContentComponent,props.ContentProps);
+        Children.Content = Roact.createElement(ContentComponent,props.ContentProps);
     end
     return Roact.createElement("Frame",initialProps,Children)
 end
