@@ -13,41 +13,6 @@ local DebugConfig = {
     InputEventOutput = false;
 }
 local RobloxTopBarSize = 36
-type False = boolean
-export type WindowProps = {
-    OnCloseEvent: (TextButton, InputObject, number) -> ();
-    InitialProps: {
-        Position: UDim2;
-        AnchorPoint: Vector2;
-        Size: UDim2;
-        [string]: any;
-    };
-    Children: {
-        [string]: GuiUtilities.RoactComponent;
-    };
-    DragProps:{
-        RestrictDragToWindow:boolean;
-        RestrictDragWithTopRobloxBar:boolean;
-        RestrictDragWithBottomRobloxBar:boolean;
-    };
-    TitleBarProps: TitleBarComponent.TitleBarProps;
-    ContentProps: ContentComponent.ContentProps;
-}
-local DefaultProps: WindowProps = {
-    InitialProps = {
-        Position = UDim2.fromScale(0.5,0.5);
-        AnchorPoint = Vector2.new(0.5,0.5);
-        Size = UDim2.fromScale(0.5,0.5);
-    };
-    Children = {};
-    DragProps = {
-        RestrictDragToWindow = true;
-        RestrictDragWithTopRobloxBar = false;
-        RestrictDragWithBottomRobloxBar = false;
-    };
-    TitleBarProps = {};
-    ContentProps = {};
-}
 --[=[
     @client
     @class Window
@@ -120,7 +85,40 @@ local DefaultProps: WindowProps = {
 ]=]
 type RoactComponent = typeof(Roact.Component:extend())
 local Window: RoactComponent = Roact.Component:extend("GeneralWindow")
-
+export type WindowProps = {
+    OnCloseEvent: (TextButton, InputObject, number) -> ();
+    InitialProps: {
+        Position: UDim2;
+        AnchorPoint: Vector2;
+        Size: UDim2;
+        [string]: any;
+    };
+    Children: {
+        [string]: GuiUtilities.RoactComponent;
+    };
+    DragProps:{
+        RestrictDragToWindow:boolean;
+        RestrictDragWithTopRobloxBar:boolean;
+        RestrictDragWithBottomRobloxBar:boolean;
+    };
+    TitleBarProps: TitleBarComponent.TitleBarProps;
+    ContentProps: ContentComponent.ContentProps;
+}
+Window.DefaultProps = {
+    InitialProps = {
+        Position = UDim2.fromScale(0.5,0.5);
+        AnchorPoint = Vector2.new(0.5,0.5);
+        Size = UDim2.fromScale(0.5,0.5);
+    };
+    Children = {};
+    DragProps = {
+        RestrictDragToWindow = true;
+        RestrictDragWithTopRobloxBar = false;
+        RestrictDragWithBottomRobloxBar = false;
+    };
+    TitleBarProps = TitleBarComponent.DefaultProps;
+    ContentProps = ContentComponent.DefaultProps;
+} :: WindowProps
 --[=[
     The initialization of the frame's state from inputted properties.
 ]=]
@@ -129,8 +127,9 @@ function Window:init(userProps:WindowProps)
         DragWatcher = nil;
     })
     self.ref = Roact.createRef();
-    GuiUtilities:ApplyDefaults(DefaultProps,userProps) -- Set property to default value if none was put in.
+    GuiUtilities:ApplyDefaults(self.DefaultProps,userProps) -- Set property to default value if none was put in.
     local TitleBarProps = userProps.TitleBarProps do
+        TitleBarProps.CloseButtonProps.OnCloseEvent = userProps.OnCloseEvent
         TitleBarProps.BarOnInputBegan = function(selfFrame: Frame, input: InputObject)
             --[[
                 Triggers:

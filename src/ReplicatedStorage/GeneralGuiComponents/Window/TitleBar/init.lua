@@ -79,7 +79,8 @@ export type TitleBarProps = {
     TitleTextProps: TitleTextClass.TitleTextProps;
     CloseButtonProps: CloseButtonClass.CloseButtonProps;
 }
-local DefaultProps = {
+local TitleBar = Roact.Component:extend("TitleBar")
+TitleBar.DefaultProps = {
     BarHeight = 25;
     InitialProps = {
         BackgroundColor3 = Color3.fromRGB(45,45,45);
@@ -98,10 +99,9 @@ local DefaultProps = {
     TitleTextProps = {};
     CloseButtonProps = {};
 }
-local TitleBar = Roact.Component:extend("TitleBar")
 function TitleBar:init(userProps:TitleBarProps)
     self.ref = Roact.createRef();
-    GuiUtilities:ApplyDefaults(DefaultProps,userProps)
+    GuiUtilities:ApplyDefaults(self.DefaultProps,userProps)
     GuiUtilities:CheckColorProp(userProps.InitialProps,"Background")
 end
 function TitleBar:render()

@@ -18,6 +18,7 @@ local Roact = require(RoactModule)
     @within Content
     The transparency of the Content section's background. By default 0 unless overrided by ContentColor3
 ]=]
+local Content = Roact.Component:extend("TitleBar")
 export type ContentProps = {
     InitialProps: {
         BackgroundColor3: Color3;
@@ -28,17 +29,16 @@ export type ContentProps = {
         [string]: GuiUtilities.RoactComponent;
     };
 }
-local DefaultProps = {
+Content.DefaultProps = {
     InitialProps = {
         BackgroundColor3 = Color3.fromRGB(90,90,90);
         BackgroundTransparency = 0;
     };
     Children = {};
 }
-local Content = Roact.Component:extend("TitleBar")
 function Content:init(userProps:ContentProps)
     self.ref = Roact.createRef();
-    GuiUtilities:ApplyDefaults(DefaultProps,userProps)
+    GuiUtilities:ApplyDefaults(self.DefaultProps,userProps)
     GuiUtilities:CheckColorProp(userProps.InitialProps,"Background")
 end
 function Content:render()
