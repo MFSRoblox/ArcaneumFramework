@@ -6,6 +6,7 @@ local Roact = require(RoactModule)
 --[=[
     @client
     @class Content
+    A [ScrollingFrame] that holds other Guis.
 ]=]
 --[=[
     @prop ContentColor3 Color3
@@ -18,33 +19,39 @@ local Roact = require(RoactModule)
     The transparency of the Content section's background. By default 0 unless overrided by ContentColor3
 ]=]
 export type ContentProps = {
-    ContentColor3: Color3;
-    ContentTransparency: number;
+    InitialProps: {
+        BackgroundColor3: Color3;
+        BackgroundTransparency: number;
+        [string]: any;
+    };
+    Children: {
+        [string]: GuiUtilities.RoactComponent;
+    };
 }
 local DefaultProps = {
-    ContentColor3 = Color3.fromRGB(90,90,90);
-    ContentTransparency = 0;
+    InitialProps = {
+        BackgroundColor3 = Color3.fromRGB(90,90,90);
+        BackgroundTransparency = 0;
+    };
+    Children = {};
 }
 local Content = Roact.Component:extend("TitleBar")
 function Content:init(userProps:ContentProps)
     self.ref = Roact.createRef();
     GuiUtilities:ApplyDefaults(DefaultProps,userProps)
-    GuiUtilities:CheckColorProp(userProps,"Content")
+    GuiUtilities:CheckColorProp(userProps.InitialProps,"Background")
 end
 function Content:render()
-    local props = self.props
-    return Roact.createElement("ScrollingFrame",
-    {
-        AnchorPoint = Vector2.new(0.5,1);
-        Position = UDim2.new(0.5,0,1,0);
-        Size = UDim2.new(1,0,1,-1*props.TitleBarHeight);
-        CanvasSize = UDim2.new(); --Might need to change, unsure.
-        BackgroundTransparency = props.ContentTransparency;
-        BackgroundColor3 = props.ContentColor3;
-    },
-    {
-        ContentElement = props.ContentElement
-    }
-)
+    local props:ContentProps = self.props
+    local initialProps = props.InitialProps do
+        initialProps[Roact.Ref] = self.ref;
+        initialProps.AnchorPoint = Vector2.new(0.5,1);
+        initialProps.Position = UDim2.new(0.5,0,1,0);
+        initialProps.Size = UDim2.new(1,0,1,-1*props.TitleBarHeight);
+    end
+    local Children = props.Children do
+        
+    end
+    return Roact.createElement("ScrollingFrame",initialProps,Children)
 end
 return Content

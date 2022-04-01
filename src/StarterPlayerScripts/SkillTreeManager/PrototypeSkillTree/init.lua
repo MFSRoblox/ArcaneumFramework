@@ -43,9 +43,10 @@ function SkillTreesGui:render(): RoactElement
         },
         {--Children
             Window = Roact.createElement(WindowClass,{
+                OnCloseEvent = self.props.OnCloseEvent;
                 TitleBarProps = {
-                    CloseButtonProps = {
-                        OnCloseEvent = self.props.OnCloseEvent
+                    TitleTextProps = {
+                        Text = "🗿"
                     }
                 }
             });

@@ -33,24 +33,30 @@ local Roact = require(RoactModule)
 ]=]
 
 export type TitleTextProps = {
-    Text:string;
-    TextColor3:Color3;
-    TextSize:number;
+    InitialProps: {
+        Text:string;
+        TextColor3:Color3;
+        TextSize:number;
+        [string]:any;
+    };
+    Children: {
+        [string]: GuiUtilities.RoactComponent;
+    };
 }
 local DefaultProps = {
-    Text = "Unnamed Window";
-    TextSize = 20;
-    TextColor3 = Color3.new(1,1,1);
+    InitialProps = {
+        Text = "Unnamed Window";
+        TextSize = 20;
+        TextColor3 = Color3.new(1,1,1);
+    };
+    Children = {};
 };
 return function(props:TitleTextProps)
     GuiUtilities:ApplyDefaults(DefaultProps,props)
-    return Roact.createElement("TextLabel",
-    {
-        ZIndex = 1;
-        Text = props.Text;
-        TextColor3 = props.TextColor3;
-        TextSize = props.TextSize;
-        Size = UDim2.new(1,0,1,0);
-        BackgroundTransparency = 1;
-    });
+    local InitialProps = props.InitialProps do
+        InitialProps.ZIndex = 1
+        InitialProps.Size = UDim2.new(1,0,1,0)
+        InitialProps.BackgroundTransparency = 1
+    end
+    return Roact.createElement("TextLabel",InitialProps,props.Children);
 end

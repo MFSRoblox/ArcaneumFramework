@@ -15,6 +15,16 @@ local DebugConfig = {
 local RobloxTopBarSize = 36
 type False = boolean
 export type WindowProps = {
+    OnCloseEvent: (TextButton, InputObject, number) -> ();
+    InitialProps: {
+        Position: UDim2;
+        AnchorPoint: Vector2;
+        Size: UDim2;
+        [string]: any;
+    };
+    Children: {
+        [string]: GuiUtilities.RoactComponent;
+    };
     DragProps:{
         RestrictDragToWindow:boolean;
         RestrictDragWithTopRobloxBar:boolean;
@@ -22,9 +32,14 @@ export type WindowProps = {
     };
     TitleBarProps: TitleBarComponent.TitleBarProps;
     ContentProps: ContentComponent.ContentProps;
-    OnCloseEvent: (TextButton, InputObject, number) -> ();
 }
-local DefaultWindowProps: WindowProps = {
+local DefaultProps: WindowProps = {
+    InitialProps = {
+        Position = UDim2.fromScale(0.5,0.5);
+        AnchorPoint = Vector2.new(0.5,0.5);
+        Size = UDim2.fromScale(0.5,0.5);
+    };
+    Children = {};
     DragProps = {
         RestrictDragToWindow = true;
         RestrictDragWithTopRobloxBar = false;
@@ -38,6 +53,21 @@ local DefaultWindowProps: WindowProps = {
     @class Window
 
     A general frame that has the ability to open, close, and be dragable. A staple for PC users.
+]=]
+--[=[
+    @prop Position UDim2;
+    @within Window
+    The initial position of the Window. By default is UDim2.fromScale(0.5,0.5)
+]=]
+--[=[
+    @prop AnchorPoint Vector2;
+    @within Window
+    The anchor point of the Window. By default is Vector2.new(0.5,0.5)
+]=]
+--[=[
+    @prop Position Size;
+    @within Window
+    The initial size of the Window. By default is UDim2.fromScale(0.5,0.5)
 ]=]
 --[=[
     @within Window
@@ -68,13 +98,18 @@ local DefaultWindowProps: WindowProps = {
     Whether the window can be dragged beyond the bottom(?) roblox bar. By default false
 ]=]
 --[=[
-    @prop TitleBarProps TitleBarProps;
+    @prop InitialProps FrameProperties;
+    @within Window
+    The properties of the Window's Frame object. Refer to [Frame] for all of the properties.
+]=]
+--[=[
+    @prop TitleBarProps TitleBar;
     @within Window
     The properties of the TitleBar object. Refer to [TitleBar]'s properties.
 ]=]
 --[=[
     @within Window
-    @prop ContentProps ContentProps;
+    @prop ContentProps Content;
     The properties of the Content object. Refer to [Content]'s properties.
 ]=]
 
@@ -94,7 +129,7 @@ function Window:init(userProps:WindowProps)
         DragWatcher = nil;
     })
     self.ref = Roact.createRef();
-    GuiUtilities:ApplyDefaults(DefaultWindowProps,userProps) -- Set property to default value if none was put in.
+    GuiUtilities:ApplyDefaults(DefaultProps,userProps) -- Set property to default value if none was put in.
     local TitleBarProps = userProps.TitleBarProps do
         TitleBarProps.BarOnInputBegan = function(selfFrame: Frame, input: InputObject)
             --[[
@@ -231,23 +266,15 @@ function Window:MoveBy(Delta: Vector3)
 end
 type RoactElement = typeof(Roact.createElement())
 function Window:render(): RoactElement
-    local props: WindowProps = self.props do
-        
+    local props: WindowProps = self.props
+    local initialProps = props.InitialProps do
+        initialProps[Roact.Ref] = self.ref;
     end
-    return Roact.createElement(
-        "Frame",
-        {--Properties of the frame
-            [Roact.Ref] = self.ref;
-            Name = "GeneralWindow";
-            Position = UDim2.fromScale(0.5,0.5);
-            AnchorPoint = Vector2.new(0.5,0.5);
-            Size = UDim2.fromScale(0.5,0.5);
-        },
-        {--Children
-            TitleBar = Roact.createElement(TitleBarComponent,props.TitleBarProps);
-            ContentFrame = Roact.createElement(ContentComponent,props.ContentProps);
-        }
-    )
+    local Children = props.Children do
+        Children.TitleBar = Roact.createElement(TitleBarComponent,props.TitleBarProps);
+        Children.ContentFrame = Roact.createElement(ContentComponent,props.ContentProps);
+    end
+    return Roact.createElement("Frame",initialProps,Children)
 end
 
 --[=[

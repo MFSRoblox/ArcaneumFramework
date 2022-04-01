@@ -65,8 +65,14 @@ local TitleTextClass = require(script.TitleText)
 ]=]
 export type TitleBarProps = {
     BarHeight: number;
-    BarColor3: Color3;
-    BarTransparency: number;
+    InitialProps: {
+        BackgroundColor3: Color3;
+        BackgroundTransparency: number;
+        [string]: any;
+    };
+    Children: {
+        [string]: GuiUtilities.RoactComponent;
+    };
     BarOnInputBegan: (Frame, InputObject) -> ();
     BarOnInputChanged: (Frame, InputObject) -> ();
     BarOnInputEnded: (Frame, InputObject) -> ();
@@ -75,8 +81,11 @@ export type TitleBarProps = {
 }
 local DefaultProps = {
     BarHeight = 25;
-    BarColor3 = Color3.fromRGB(45,45,45);
-    BarTransparency = 0;
+    InitialProps = {
+        BackgroundColor3 = Color3.fromRGB(45,45,45);
+        BackgroundTransparency = 0;
+    };
+    Chlidren = {};
     BarOnInputBegan = function()
         warn("BarOnInputBegan not implemented! Debug:",debug.traceback())
     end;
@@ -93,27 +102,21 @@ local TitleBar = Roact.Component:extend("TitleBar")
 function TitleBar:init(userProps:TitleBarProps)
     self.ref = Roact.createRef();
     GuiUtilities:ApplyDefaults(DefaultProps,userProps)
-    GuiUtilities:CheckColorProp(userProps,"Bar")
+    GuiUtilities:CheckColorProp(userProps.InitialProps,"Background")
 end
 function TitleBar:render()
-    local props = self.props
-    return Roact.createElement("Frame",{
-        BackgroundTransparency = props.BarTransparency;
-        BackgroundColor3 = props.BarColor3;
-        Size = UDim2.new(1,0,0,props.BarHeight);
+    local props: TitleBarProps = self.props
+    local InitialProps = props.InitialProps do
+        InitialProps.Size = UDim2.new(1,0,0,props.BarHeight);
         --Dragging events
-        [Roact.Event.InputBegan] = props.BarOnInputBegan;
-        [Roact.Event.InputChanged] = props.BarOnInputChanged;
-        [Roact.Event.InputEnded] = props.BarOnInputEnded;
-    },
-        {
-            TitleText = Roact.createElement(TitleTextClass,
-                props.TitleTextProps
-            );
-            CloseButton = Roact.createElement(CloseButtonClass,
-                props.CloseButtonProps
-            );
-        }
-    )
+        InitialProps[Roact.Event.InputBegan] = props.BarOnInputBegan;
+        InitialProps[Roact.Event.InputChanged] = props.BarOnInputChanged;
+        InitialProps[Roact.Event.InputEnded] = props.BarOnInputEnded;
+    end
+    local Children = props.Chlidren do
+        Children.TitleText = Roact.createElement(TitleTextClass, props.TitleTextProps);
+        Children.CloseButton = Roact.createElement(CloseButtonClass, props.CloseButtonProps);
+    end
+    return Roact.createElement("Frame",InitialProps,Children)
 end
 return TitleBar
