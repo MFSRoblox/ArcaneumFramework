@@ -3,74 +3,35 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local DragWatcherClass = require(script.DragWatcher)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GuiUtilitiesModule = ReplicatedStorage.GeneralGuiComponents.GuiUtilities
+local GuiUtilities = require(GuiUtilitiesModule)
 local RoactModule = ReplicatedStorage.Packages:WaitForChild("roact")
 local Roact = require(RoactModule)
 local TitleBarComponent = require(script.TitleBar)
+local ContentComponent = require(script.Content)
 local DebugConfig = {
     InputEventOutput = false;
 }
 local RobloxTopBarSize = 36
-local ColorableKeys = {
-    "Content";
-    "TitleBar";
-    "CloseButton";
-}
 type False = boolean
-type WindowProps = {
-    ContentColor3:Color3;
-    ContentTransparency:number;
-    TitleBarHeight:number;
-    TitleBarColor3:Color3;
-    TitleBarTransparency:number;
-    TitleText:string;
-    TitleTextSize:number;
-    TitleTextColor3: Color3;
-    CloseButtonColor3:Color3;
-    CloseButtonTransparency:number;
-    Draggable:boolean;
-    RestrictDragToWindow:boolean;
-    RestrictDragWithTopRobloxBar:boolean;
-    RestrictDragWithBottomRobloxBar:boolean;
-}
---[[local DefaultWindowProps: WindowProps = {
-    Draggable = true;
-    RestrictDragToWindow = true;
-    RestrictDragWithTopRobloxBar = false;
-    RestrictDragWithBottomRobloxBar = false;
-    TitleBarProps = {
-        TitleBarHeight = 25;
-        TitleBarColor3 = Color3.fromRGB(45,45,45);
-        TitleBarTransparency = 0;
-        TitleTextProps = {
-            TitleText = "Unnamed Window";
-            TitleTextSize = 20;
-            TitleTextColor3 = Color3.new(1,1,1);
-        };
-        CloseButtonProps = {
-            CloseButtonColor3 = Color3.new(1,0,0);
-            CloseButtonTransparency = 0;
-        };
+export type WindowProps = {
+    DragProps:{
+        RestrictDragToWindow:boolean;
+        RestrictDragWithTopRobloxBar:boolean;
+        RestrictDragWithBottomRobloxBar:boolean;
     };
-    ContentProps = {
-        ContentColor3 = Color3.fromRGB(60,60,60);
-        ContentTransparency = 0;
-    }
-}]]
+    TitleBarProps: TitleBarComponent.TitleBarProps;
+    ContentProps: ContentComponent.ContentProps;
+    OnCloseEvent: (TextButton, InputObject, number) -> ();
+}
 local DefaultWindowProps: WindowProps = {
-    ContentColor3 = Color3.fromRGB(60,60,60);
-    ContentTransparency = 0;
-    TitleBarHeight = 25;
-    TitleBarColor3 = Color3.fromRGB(45,45,45);
-    TitleBarTransparency = 0;
-    TitleText = "Unnamed Window";
-    TitleTextSize = 20;
-    TitleTextColor3 = Color3.new(1,1,1);
-    CloseButtonColor3 = Color3.new(1,0,0);
-    CloseButtonTransparency = 0;
-    Draggable = true;
-    RestrictDragToWindow = true;
-    RestrictDragWithTopRobloxBar = false;
-    RestrictDragWithBottomRobloxBar = false;
+    DragProps = {
+        RestrictDragToWindow = true;
+        RestrictDragWithTopRobloxBar = false;
+        RestrictDragWithBottomRobloxBar = false;
+    };
+    TitleBarProps = {};
+    ContentProps = {};
 }
 --[=[
     @client
@@ -79,64 +40,17 @@ local DefaultWindowProps: WindowProps = {
     A general frame that has the ability to open, close, and be dragable. A staple for PC users.
 ]=]
 --[=[
-    @prop ContentElement RoactElement
     @within Window
-    The Element of which will be displayed within the Content section.
-]]
---[=[
-    @prop ContentColor3 Color3
-    @within Window
-    The background color of the Content section. If "false" is put in, it will make the background transparent. By default RGB(60,60,60)
+    @interface DragProps
+    .RestrictDragToWindow boolean -- [Window.RestrictDragToWindow]
+    .RestrictDragWithTopRobloxBar boolean -- [Window.RestrictDragWithTopRobloxBar]
+    .RestrictDragWithBottomRobloxBar boolean -- [Window.RestrictDragWithBottomRobloxBar]
+    The interface for the [Window.DragProps] property.
 ]=]
 --[=[
-    @prop ContentTransparency number
+    @prop DragProps DragProps | nil
     @within Window
-    The transparency of the Content section's background. By default 0 unless overrided by ContentColor3
-]=]
---[=[
-    @prop TitleBarHeight Integer
-    @within Window
-    The height of the title bar (in pixels). By default 25
-]=]
---[=[
-    @prop TitleBarColor3 Color3 | false
-    @within Window
-    The color of the TitleBar. If "false" is put in, it will make the background transparent. By default RGB(45,45,45)
-]=]
---[=[
-    @prop TitleBarTransparency number
-    @within Window
-    The transparency of the TitleBar's background. By default 0 unless overrided by [Window.TitleBarColor3]
-]=]
---[=[
-    @prop TitleText string
-    @within Window
-    The text of the window that will be displayed. By default "Unnamed Window"
-]=]
---[=[
-    @prop TitleTextSize Integer
-    @within Window
-    The size of the TitleBar text. By default 20
-]=]
---[=[
-    @prop TitleTextColor3 Color3
-    @within Window
-    The color of the TitleBar text. By default RGB(255,255,255)
-]=]
---[=[
-    @prop CloseButtonColor3 Color3 | false
-    @within Window
-    The color of the CloseButton. If "false" is put in, it will make the background transparent. By default RGB(255,0,0)
-]=]
---[=[
-    @prop CloseButtonTransparency number
-    @within Window
-    The transparency of the CloseButton's background. By default 0 unless overrided by CloseButtonColor3
-]=]
---[=[
-    @prop Draggable boolean
-    @within Window
-    Whether the window can be dragged by the user. By default true
+    Whether the window can be dragged by the user. By default not nil
 ]=]
 --[=[
     @prop RestrictDragToWindow boolean
@@ -154,31 +68,20 @@ local DefaultWindowProps: WindowProps = {
     Whether the window can be dragged beyond the bottom(?) roblox bar. By default false
 ]=]
 --[=[
-    @prop OnCloseEvent function
+    @prop TitleBarProps TitleBarProps;
     @within Window
-    The function that is called when the window's close button is activated.
+    The properties of the TitleBar object. Refer to [TitleBar]'s properties.
 ]=]
 --[=[
-    @interface WindowProps
-    @private
     @within Window
-    .ContentElement RoactElement -- [Window.ContentElement]
-    .ContentColor3 Color3 | false -- [Window.ContentColor3]
-    .ContentTransparency number -- [Window.ContentTransparency]
-    .TitleBarHeight Integer -- [Window.TitleBarHeight]
-    .TitleBarColor3 Color3 | false -- [Window.TitleBarColor3]
-    .TitleBarTransparency number -- [Window.TitleBarTransparency]
-    .TitleText string -- [Window.TitleText]
-    .TitleTextSize Integer -- [Window.TitleTextSize]
-    .TitleTextColor3 Color3 -- [Window.TitleTextColor3]
-    .CloseButtonColor3 Color3 | false -- [Window.CloseButtonColor3]
-    .CloseButtonTransparency number -- [Window.CloseButtonTransparency]
-    .Draggable boolean -- [Window.Draggable]
-    .RestrictDragToWindow boolean -- [Window.RestrictDragToWindow]
-    .RestrictDragWithTopRobloxBar boolean -- [Window.RestrictDragWithTopRobloxBar]
-    .RestrictDragWithBottomRobloxBar boolean -- [Window.RestrictDragWithBottomRobloxBar]
-    
-    The allowed properties to be passed into the component on creation.
+    @prop ContentProps ContentProps;
+    The properties of the Content object. Refer to [Content]'s properties.
+]=]
+
+--[=[
+    @prop OnCloseEvent (GuiButton, InputObject, number) -> ()
+    @within Window
+    The function that is called when the window's close button is activated. Passed to [CloseButton].
 ]=]
 type RoactComponent = typeof(Roact.Component:extend())
 local Window: RoactComponent = Roact.Component:extend("GeneralWindow")
@@ -191,27 +94,73 @@ function Window:init(userProps:WindowProps)
         DragWatcher = nil;
     })
     self.ref = Roact.createRef();
-    for PropName, PropValue in pairs(DefaultWindowProps) do -- Set property to default value if none was put in.
-        if userProps[PropName] == nil then
-            userProps[PropName] = PropValue
-        end
+    GuiUtilities:ApplyDefaults(DefaultWindowProps,userProps) -- Set property to default value if none was put in.
+    local TitleBarProps = userProps.TitleBarProps do
+        TitleBarProps.BarOnInputBegan = function(selfFrame: Frame, input: InputObject)
+            --[[
+                Triggers:
+                Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
+            ]]
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                self:ToggleMove(true, input)
+            end
+            if DebugConfig.InputEventOutput then
+                print(selfFrame,"Input Began")
+                print(
+                    "InputInfo:\nDelta:", input.Delta,
+                    "\nKeyCode:", input.KeyCode,
+                    "\nPosition:", input.Position,
+                    "\nUserInputState:", input.UserInputState,
+                    "\nUserInputType:", input.UserInputType
+                )
+            end
+        end;
+        TitleBarProps.BarOnInputChanged = function(selfFrame: Frame, input: InputObject)
+            --[[
+                Triggers:
+                Mouse move (Position,UserInputState.Change, UserInputType.MouseMovement)
+            ]]
+            --self:Drag(input.Delta)
+            if DebugConfig.InputEventOutput then
+                print(selfFrame,"Input Changed")
+                print(
+                    "InputInfo:\nDelta:", input.Delta,
+                    "\nKeyCode:", input.KeyCode,
+                    "\nPosition:", input.Position,
+                    "\nUserInputState:", input.UserInputState,
+                    "\nUserInputType:", input.UserInputType
+                )
+            end
+        end;
+        TitleBarProps.BarOnInputEnded = function(selfFrame: Frame, input: InputObject)
+            --[[
+                Triggers:
+                Mouse exit (Position,UserInputState.Change, UserInputType.MouseMovement)
+            ]]
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                self:ToggleMove(false)
+            end
+            if DebugConfig.InputEventOutput then
+                print(selfFrame,"Input Ended")
+                print(
+                    "InputInfo:\nDelta:", input.Delta,
+                    "\nKeyCode:", input.KeyCode,
+                    "\nPosition:", input.Position,
+                    "\nUserInputState:", input.UserInputState,
+                    "\nUserInputType:", input.UserInputType
+                )
+            end
+        end;
     end
-    --Color Checks
-    for i=1, #ColorableKeys do
-        local KeyName = ColorableKeys[i]
-        local ColorKey = KeyName.."Color3"
-        --local TransparencyKey = KeyName.."Transparency"
-        assert(userProps[ColorKey], KeyName..".. Color3 doesn't exist in userProps! Debug:\n" .. debug.traceback())
-        if userProps[ColorKey] == false then
-            userProps[KeyName.."Transparency"] = 1
-        end
+    local ContentProps = userProps.ContentProps do
+        ContentProps.TitleBarHeight = TitleBarProps.BarHeight or 25
     end
 end
 --[=[
     Sets a [DragWatcher] to listen to the InputObject.UserInputType and binds [Window:Drag] to it.
 ]=]
 function Window:ToggleMove(Toggle: boolean?, Input: InputObject)
-    if self.props.Draggable then
+    if self.props.DragProps ~= nil then
         local ToDrag = Toggle
         if ToDrag == nil then
             ToDrag = not self.DragWatcher
@@ -236,7 +185,8 @@ end
 ]=]
 function Window:MoveBy(Delta: Vector3)
     local props:WindowProps = self.props
-    local ToRestrictDrag = props.RestrictDragToWindow
+    local DragProps = props.DragProps
+    local ToRestrictDrag = DragProps.RestrictDragToWindow
     local GUIInstance:Frame = self.ref:getValue()
     --GUIInstance.AnchorPoint = Vector2.new()
     local NewPosition = GUIInstance.Position + UDim2.new(0,Delta.X,0,Delta.Y)
@@ -245,11 +195,11 @@ function Window:MoveBy(Delta: Vector3)
         local CurrentGuiSize = GUIInstance.AbsoluteSize
         local CurrentPosition = GUIInstance.AbsolutePosition
         local CurrentScreenSize = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY)
-        if props.RestrictDragWithTopRobloxBar == false then
+        if DragProps.RestrictDragWithTopRobloxBar == false then
             CurrentPosition += Vector2.new(0,RobloxTopBarSize) -- Aligned to Top Left
             CurrentScreenSize += Vector2.new(0, RobloxTopBarSize) --For some reason ViewSizeY doesn't count the top bar, and has an increased size on the bottom too.
         end
-        if props.RestrictDragWithBottomRobloxBar == false then
+        if DragProps.RestrictDragWithBottomRobloxBar == false then
             CurrentScreenSize += Vector2.new(0, RobloxTopBarSize) --For some reason ViewSizeY doesn't count the top bar, and has an increased size on the bottom too.
         end
         --local CameraScreenSize = workspace.CurrentCamera.ViewportSize
@@ -281,7 +231,9 @@ function Window:MoveBy(Delta: Vector3)
 end
 type RoactElement = typeof(Roact.createElement())
 function Window:render(): RoactElement
-    local props: WindowProps = self.props
+    local props: WindowProps = self.props do
+        
+    end
     return Roact.createElement(
         "Frame",
         {--Properties of the frame
@@ -292,82 +244,8 @@ function Window:render(): RoactElement
             Size = UDim2.fromScale(0.5,0.5);
         },
         {--Children
-            TitleBar = Roact.createElement(TitleBarComponent,{
-                TitleBarTransparency = props.TitleBarTransparency;
-                TitleBarColor3 = props.TitleBarColor3;
-                TitleBarHeight = props.TitleBarHeight;
-                TitleText = props.TitleText;
-                TitleTextColor3 = props.TitleTextColor3;
-                TitleTextSize = props.TitleTextSize;
-                CloseButtonTransparency = props.CloseButtonTransparency;
-                CloseButtonColor3 = props.CloseButtonColor3;
-                TitleBarOnInputBegan = function(selfFrame: Frame, input: InputObject)
-                    --[[
-                        Triggers:
-                        Mouse enter (Position,UserInputState.Change, UserInputType.MouseMovement)
-                    ]]
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        self:ToggleMove(true, input)
-                    end
-                    if DebugConfig.InputEventOutput then
-                        print(selfFrame,"Input Began")
-                        print(
-                            "InputInfo:\nDelta:", input.Delta,
-                            "\nKeyCode:", input.KeyCode,
-                            "\nPosition:", input.Position,
-                            "\nUserInputState:", input.UserInputState,
-                            "\nUserInputType:", input.UserInputType
-                        )
-                    end
-                end;
-                TitleBarOnInputChanged = function(selfFrame: Frame, input: InputObject)
-                    --[[
-                        Triggers:
-                        Mouse move (Position,UserInputState.Change, UserInputType.MouseMovement)
-                    ]]
-                    --self:Drag(input.Delta)
-                    if DebugConfig.InputEventOutput then
-                        print(selfFrame,"Input Changed")
-                        print(
-                            "InputInfo:\nDelta:", input.Delta,
-                            "\nKeyCode:", input.KeyCode,
-                            "\nPosition:", input.Position,
-                            "\nUserInputState:", input.UserInputState,
-                            "\nUserInputType:", input.UserInputType
-                        )
-                    end
-                end;
-                TitleBarOnInputEnded = function(selfFrame: Frame, input: InputObject)
-                    --[[
-                        Triggers:
-                        Mouse exit (Position,UserInputState.Change, UserInputType.MouseMovement)
-                    ]]
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        self:ToggleMove(false)
-                    end
-                    if DebugConfig.InputEventOutput then
-                        print(selfFrame,"Input Ended")
-                        print(
-                            "InputInfo:\nDelta:", input.Delta,
-                            "\nKeyCode:", input.KeyCode,
-                            "\nPosition:", input.Position,
-                            "\nUserInputState:", input.UserInputState,
-                            "\nUserInputType:", input.UserInputType
-                        )
-                    end
-                end;
-                OnCloseEvent = props.OnCloseEvent;
-            });
-            ContentFrame = Roact.createElement("ScrollingFrame",
-                {
-                    CanvasSize = UDim2.new(); --Might need to change, unsure.
-                    BackgroundTransparency = props.ContentTransparency;
-                    BackgroundColor3 = props.ContentColor3;
-                },
-                {
-                    ContentElement = props.ContentElement
-                }
-            )
+            TitleBar = Roact.createElement(TitleBarComponent,props.TitleBarProps);
+            ContentFrame = Roact.createElement(ContentComponent,props.ContentProps);
         }
     )
 end

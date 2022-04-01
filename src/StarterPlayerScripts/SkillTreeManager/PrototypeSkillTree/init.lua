@@ -7,7 +7,8 @@ local LocalPlayer = Players.LocalPlayer]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactModule = ReplicatedStorage.Packages.roact
 local Roact = require(RoactModule)
-type RoactComponent = typeof(Roact.Component:extend())
+local GuiUtilitiesModule = ReplicatedStorage.GeneralGuiComponents.GuiUtilities
+local GuiUtilities = require(GuiUtilitiesModule)
 local WindowModule = ReplicatedStorage.GeneralGuiComponents.Window
 local WindowClass = require(WindowModule)
 --[=[
@@ -15,7 +16,7 @@ local WindowClass = require(WindowModule)
     @class SkillTreesGui
     The ScreenGui that holds all of the skill trees.
 ]=]
-local SkillTreesGui: RoactComponent = Roact.Component:extend("SkillTreesGui")
+local SkillTreesGui: GuiUtilities.RoactComponent = Roact.Component:extend("SkillTreesGui")
 
 --[=[
     The initialization of the Gui's state.
@@ -42,7 +43,11 @@ function SkillTreesGui:render(): RoactElement
         },
         {--Children
             Window = Roact.createElement(WindowClass,{
-                OnCloseEvent = self.props.OnCloseEvent;
+                TitleBarProps = {
+                    CloseButtonProps = {
+                        OnCloseEvent = self.props.OnCloseEvent
+                    }
+                }
             });
         }
     )
