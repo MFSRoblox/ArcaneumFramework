@@ -29,12 +29,31 @@ function SkillTreesGui:init()
 end
 
 type RoactElement = typeof(Roact.createElement())
+local SkillTreeFrameClass = require(script.SkillTreesFrame.SkillTreeFrame)
 --[=[
     Setup the element that should be rendered
 
     @return RoactElement
 ]=]
 function SkillTreesGui:render(): RoactElement
+    local WindowProps: WindowClass.WindowProps = {
+        OnCloseEvent = self.props.OnCloseEvent;
+        ContentProps = {
+            Children = {
+                SkillTreeFrame1 = Roact.createElement(SkillTreeFrameClass);
+                SkillTreeFrame2 = Roact.createElement(SkillTreeFrameClass);
+                SkillTreeFrame3 = Roact.createElement(SkillTreeFrameClass);
+                UIListLayout = Roact.createElement("UIListLayout",
+                {
+                    FillDirection = Enum.FillDirection.Horizontal;
+                    HorizontalAlignment = Enum.HorizontalAlignment.Center;
+                    VerticalAlignment = Enum.VerticalAlignment.Center;
+                    Padding = UDim.new(0,2)
+                }
+            )
+            }
+        };
+    }
     return Roact.createElement(
         "ScreenGui",
         {
@@ -42,14 +61,7 @@ function SkillTreesGui:render(): RoactElement
             Name = "SkillTreesUI"
         },
         {--Children
-            Window = Roact.createElement(WindowClass,{
-                OnCloseEvent = self.props.OnCloseEvent;
-                TitleBarProps = {
-                    TitleTextProps = {
-                        Text = "🗿"
-                    }
-                }
-            });
+            Window = Roact.createElement(WindowClass,WindowProps);
         }
     )
 end
