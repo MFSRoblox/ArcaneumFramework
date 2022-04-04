@@ -37,7 +37,7 @@ local TestBot: TestBot = ArcaneumGlobals.ClassFunctions:GetClass("Class"):Extend
         }
     }
 )
-function TestBot:New(TestPlayer: Player | nil, Tests: Folder | nil)
+function TestBot:New(Tests: Folder | nil)
     local TestModules = {}
     local TestModulesFolder = Tests or script:WaitForChild("Tests",1) do
         if TestModulesFolder then
@@ -45,7 +45,6 @@ function TestBot:New(TestPlayer: Player | nil, Tests: Folder | nil)
         end
     end
     self.TestModules = TestModules
-    self.TestPlayer = TestPlayer
     local NumberOfTests = #TestModules
     print("Number of Testers to check:",NumberOfTests)
     local TestData = {
