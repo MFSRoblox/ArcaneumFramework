@@ -28,11 +28,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Selene lint
+      - name : Run selene
         run: |
-          selene -h
-          selene generate-roblox-std
-          selene roblox_source
+          selene src/
   #roblox-tests:
   #  name: Roblox Tests
   #  runs-on: windows-latest
