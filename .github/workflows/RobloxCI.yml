@@ -17,66 +17,66 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  #lint:
-  #  name: Lint
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #  - name: Checkout code
-  #    uses: actions/checkout@v2
-
-  #  - uses: Roblox/setup-foreman@v1
-  #    name: Install Foreman
-  #    with:
-  #        version: "^1.0.0"
-  #        token: ${{ SECRETS.GITHUB_TOKEN }}
-
-  #  - name: Lint
-  #    run: |
-  #      selene ./modules
-  roblox-tests:
-    name: Roblox Tests
-    runs-on: windows-latest
-    timeout-minutes: 10
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Check for ROBLOSECURITY token
-        shell: bash
-        run: ./.github/workflows/validate-secret.sh ROBLOSECURITY "${{ secrets.ROBLOSECURITY }}"
+    - uses: Roblox/setup-foreman@v1
+      name: Install Foreman
+      with:
+          version: "^1.0.0"
+          token: ${{ SECRETS.GITHUB_TOKEN }}
 
-      - name: Check for RBXID token
-        shell: bash
-        run: ./.github/workflows/validate-secret.sh RBXID "${{ secrets.RBXID }}"
+    - name: Lint
+      run: |
+        selene ./modules
+  #roblox-tests:
+  #  name: Roblox Tests
+  #  runs-on: windows-latest
+  #  timeout-minutes: 10
+  #  steps:
+  #    - name: Checkout code
+  #      uses: actions/checkout@v2
 
-      - name: Install toolchain
-        uses: Roblox/setup-foreman@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Check for ROBLOSECURITY token
+      #  shell: bash
+      #  run: ./.github/workflows/validate-secret.sh ROBLOSECURITY "${{ secrets.ROBLOSECURITY }}"
 
-      - name: Install dependencies
-        run: wally install
+      #- name: Check for RBXID token
+      #  shell: bash
+      #  run: ./.github/workflows/validate-secret.sh RBXID "${{ secrets.RBXID }}"
 
-      - name: Build Test Place
-        run: rojo build default.project.json -o test.rbxl
+      #- name: Install toolchain
+      #  uses: Roblox/setup-foreman@v1
+      #  with:
+      #    token: ${{ secrets.GITHUB_TOKEN }}
+#
+      #- name: Install dependencies
+      #  run: wally install
+#
+      #- name: Build Test Place
+      #  run: rojo build default.project.json -o test.rbxl
 
-      - name: Add RBXID to the Windows registry
-        run: REG ADD HKCU\Software\RobloxStudioBrowser\roblox.com /t REG_SZ /v .RBXID /d "${{ secrets.RBXID }}"
+      #- name: Add RBXID to the Windows registry
+      #  run: REG ADD HKCU\Software\RobloxStudioBrowser\roblox.com /t REG_SZ /v .RBXID /d "${{ secrets.RBXID }}"
 
-      - name: Install Roblox Studio
-        uses: OrbitalOwen/roblox-win-installer-action@1.1
-        with:
-          cookie: ${{ secrets.ROBLOSECURITY }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Install Roblox Studio
+      #  uses: OrbitalOwen/roblox-win-installer-action@1.1
+      #  with:
+      #    cookie: ${{ secrets.ROBLOSECURITY }}
+      #    token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Tests
-        shell: bash
-        run: run-in-roblox --place test.rbxl --script ./src/ServerScriptService/ServerScriptsLoader/init.server.lua > test-out.txt
-        continue-on-error: true
+      #- name: Run Tests
+      #  shell: bash
+      #  run: run-in-roblox --place test.rbxl --script ./src/ServerScriptService/ServerScriptsLoader/init.server.lua > test-out.txt
+      #  continue-on-error: true
         
-      - name: Check test status
-        shell: bash
-        run: cat test-out.txt | grep "0 failed" || (cat test-out.txt && exit 1)
+      #- name: Check test status
+      #  shell: bash
+      #  run: cat test-out.txt | grep "0 failed" || (cat test-out.txt && exit 1)
   #moonwave-tests:
   #  name: Moonwave Tests
   #  runs-on: windows-latest
