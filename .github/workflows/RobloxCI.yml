@@ -16,26 +16,22 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - uses: Roblox/setup-foreman@v1
-      name: Install Foreman
-      with:
-          version: "^1.0.0"
-          token: ${{ SECRETS.GITHUB_TOKEN }}
+      - name: Install tools
+        uses: Roblox/setup-foreman@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install dependencies
-      run: wally install
-
-    - name: Lint
-      run: |
-        selene ./modules
+      - name: Selene lint
+        run: |
+          selene generate-roblox-std
+          selene roblox_source
   #roblox-tests:
   #  name: Roblox Tests
   #  runs-on: windows-latest
