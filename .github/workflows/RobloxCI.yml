@@ -30,6 +30,7 @@ jobs:
 
       - name: Selene lint
         run: |
+          selene -h
           selene generate-roblox-std
           selene roblox_source
   #roblox-tests:
