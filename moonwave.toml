@@ -13,11 +13,6 @@ section = "Globals"
 collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
 classes = ["Utilities"]
 
-[[classOrder]]
-section = "SkillTreeUI"
-collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
-classes = ["SkillTreeManager","SkillTreesGui","SkillTreesFrame","SkillTreeFrame"]
-
 [docusaurus]
 onBrokenLinks = "throw"
 onBrokenMarkdownLinks = "warn"
