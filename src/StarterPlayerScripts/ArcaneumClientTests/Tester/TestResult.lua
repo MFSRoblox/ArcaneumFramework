@@ -12,7 +12,7 @@ local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 export type TestResult = {
     Version: number;
     Object: ModuleScript;
-    Status: "Successful" | "Critical Failure" | "Skipped" | "Failure" | "Unassigned";
+    Status: string;--"Successful"|"Critical Failure"|"Skipped"|"Failure"|"Unassigned";
     Result: any;
 }
 local TestResultClass = BaseClass:Extend({
