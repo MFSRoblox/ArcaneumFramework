@@ -5,7 +5,7 @@ gitSourceBranch = "main"
 changelog = true
 [[classOrder]]
 section = "Class Functions"
-collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
+collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.sadfas
 classes = ["BaseClass","Class", "InternalClass"]
 
 [[classOrder]]

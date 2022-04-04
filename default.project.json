@@ -9,7 +9,10 @@
       "Packages": {
         "$className": "Folder",
         "$ignoreUnknownInstances": true,
-        "$path": "Packages"
+        "$path": "Packages",
+        "roact":{
+          "$path": "roact"
+        }
       }
     },
     "ReplicatedFirst": {
@@ -40,7 +43,10 @@
     "Workspace": {
       "$className": "Workspace",
       "$ignoreUnknownInstances": true,
-      "$path": "src/Workspace"
+      "$path": "src/Workspace",
+      "$properties": {
+        "Gravity": 0
+      }
     },
     "StarterPlayer": {
       "$className": "StarterPlayer",

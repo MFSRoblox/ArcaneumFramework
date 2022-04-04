@@ -1,3 +1,11 @@
+local ModuleInfo = {
+    InitName = script.Name;
+    BootOrder = 3;
+    Version = "1.0.0";
+    Dependacies = {
+        Utilities = "1.0.0"
+    };
+}
 local ServerNexus = {}
 function ServerNexus.Setup(_output: table, ArcaneumGlobals: table): table
     local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
@@ -27,5 +35,6 @@ function ServerNexus.Setup(_output: table, ArcaneumGlobals: table): table
     local InitModule = ServerModule:New()
     _output = InitModule
     return InitModule
-    end
-return ServerNexus
+end
+ModuleInfo.__call = ServerNexus.Setup
+return ModuleInfo

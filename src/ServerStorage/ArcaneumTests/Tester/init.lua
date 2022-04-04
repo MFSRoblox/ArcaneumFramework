@@ -10,7 +10,7 @@ local ArcaneumGlobals repeat
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local ScriptUtilities = ArcaneumGlobals.Utilities
-local ClientConnectorClass = ArcaneumGlobals.ClassFunctions:GetClass("ClientConnector") --ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
+--local ClientConnectorClass = ArcaneumGlobals.ClassFunctions:GetClass("ClientConnector") --ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
 local TestCaseClass = ScriptUtilities:ImportModule(script,"TestCase")
 local TestResultClass = ScriptUtilities:ImportModule(script,"TestResult")
 local Tester = BaseClass:Extend({
@@ -18,19 +18,30 @@ local Tester = BaseClass:Extend({
     Object = script;
 })
 function Tester:New(TestName: string, DisplayName: string)
-    local NewTest = BaseClass:New("Tester",TestName)
+    local NewTester = BaseClass:New("Tester",TestName)
     if not DisplayName then
         local RandomNames = {"John Doe", "Jane Doe"}
         DisplayName = "Tester ".. RandomNames[Random.new():NextInteger(1,2)]
     end
-    NewTest.DisplayName = DisplayName
-    NewTest.Tests = {}
-    return self:Extend(NewTest)
+    NewTester.DisplayName = DisplayName
+    NewTester.PrintProcess = true
+    NewTester.Tests = {}
+    return self:Extend(NewTester)
+end
+
+function Tester:print(...:any)
+    if self.PrintProcess then
+        print(...)
+    end
+end
+
+function Tester:SetPrintProcess(ShouldPrintProcess: boolean): nil
+    self.PrintProcess = ShouldPrintProcess
 end
 
 function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (any) -> any)
-    print(self.DisplayName.." added test:",TestName)
-    local ClientConnector = nil
+    self:print(self.DisplayName.." added test:",TestName)
+    --[[local ClientConnector = nil
     if Callback == "Client" then
         if not self.ClientConnector then
             self.ClientConnector = ClientConnectorClass:New(TestName..self.Name)
@@ -39,8 +50,8 @@ function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (any
         Callback = function()
             return "ClientConnector initialized."
         end
-    end
-    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback, ClientConnector)
+    end]]
+    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback)--, ClientConnector)
     table.insert(self.Tests, NewTest)
     return NewTest
 end
@@ -61,7 +72,7 @@ function Tester:RunTests()
         for i = 1, #Tests do
             local Test = Tests[i]
             LatestTestName = Test.Name
-            print(LatestTestName, Test)
+            Test:SetPrintProcess(self.PrintProcess)
             local Success, Result = Test:Run()
             local Status = TestStatuses[5] do
                 if Success then
@@ -89,5 +100,4 @@ function Tester:Destroy(): boolean
     return BaseClass.Destroy(self)
 end
 
-print(Tester)
 return Tester

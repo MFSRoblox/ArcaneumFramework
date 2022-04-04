@@ -1,3 +1,11 @@
+local ModuleInfo = {
+    InitName = script.Name;
+    BootOrder = 1;
+    Version = "1.0.0";
+    Dependacies = {
+        
+    };
+}
 --[=[
     @class Utilities
     @server
@@ -150,5 +158,5 @@ function Utilities.Setup(_output: table, _ArcaneumGlobals: table): table
     _output = Utilities
     return Utilities
 end
-
-return Utilities
+ModuleInfo.__call = Utilities.Setup
+return ModuleInfo

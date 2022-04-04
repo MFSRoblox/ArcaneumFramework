@@ -71,21 +71,6 @@ function TestBot:New(TestPlayer: Player | nil)
         end
     end
     TestBot.TestData = TestData
-    local TestBotProxy = script.TestBotProxy do
-        if TestPlayer ~= nil then
-            TestBotProxy.Disabled = false
-            local ProxyFunction = Instance.new("RemoteFunction")
-            ProxyFunction.Name = "ProxyFunction"
-            ProxyFunction.Parent = TestPlayer
-            local ProxyEvent = Instance.new("RemoteEvent")
-            ProxyEvent.Name = "ProxyEvent"
-            ProxyEvent.Parent = TestPlayer
-            TestBotProxy.Parent = TestPlayer.PlayerGui
-            TestBot.TestPlayer = TestPlayer
-        else
-            TestBotProxy:Destroy()
-        end
-    end
     return self
 end
 

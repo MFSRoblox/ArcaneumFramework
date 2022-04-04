@@ -9,9 +9,19 @@ local SingletonInitClass do
         ClassName = "SingletonInitClass";
     },{__index = SingletonInitClass})
 end
-local VersionClass = require(script.Parent.Parent.BaseClass.DataTypes.Version)
+local DataTypesFolder = script.Parent.Parent.BaseClass.DataTypes
+local VersionClass = require(DataTypesFolder.Version)
 type Version = typeof(VersionClass.new(0,0,0))
-export type SingletonInitObject = typeof(SingletonInitClass:NewFromDictionary({__call = function() end}))
+local DependacyClass = require(DataTypesFolder.DependacyObject)
+type DependacyObject = typeof(DependacyClass.new("",VersionClass.new()))
+export type SingletonInitObject = {
+    InitTable: table,
+    InitName: string,
+    BootOrder: number,
+    Version: Version,
+    Dependacies: Array<DependacyObject>,
+    --__call: (table,...any) -> table
+}
 --[=[
 
 @param InitName string
@@ -22,7 +32,7 @@ export type SingletonInitObject = typeof(SingletonInitClass:NewFromDictionary({_
 
 @return SingletonInitObject
 ]=]
-function SingletonInitClass:New(InitName: string, Version: string | Version, InitCallback: (table,...any) -> table, InitTable:table?, BootOrder: number?): SingletonInitObject
+function SingletonInitClass:New(InitName: string, Version: string | Version, Dependacies: table?, InitCallback: (table,...any) -> table, InitTable:table?, BootOrder: number?): SingletonInitObject
     InitTable = InitTable or {}
     assert(InitName ~= nil, "No init name was passed for SingletonInitClass!" .. debug.traceback())
     InitTable.InitName = InitName
@@ -32,7 +42,7 @@ function SingletonInitClass:New(InitName: string, Version: string | Version, Ini
         Version = VersionClass.fromString(Version)
     end
     InitTable.Version = Version
-    InitTable.Dependacies = nil --need to setup
+    InitTable.Dependacies = self:InitDependacies(Dependacies or {})
     return setmetatable(InitTable, {__call = InitCallback})
 end
 function SingletonInitClass:NewFromDictionary(InitTable: table): SingletonInitObject
@@ -55,6 +65,26 @@ function SingletonInitClass:NewFromDictionary(InitTable: table): SingletonInitOb
         Version = VersionClass.fromString(Version)
     end
     InitTable.Version = Version
+    local Dependacies = InitTable.Dependacies
+    if Dependacies == nil then
+        warn("Table does not have a Dependacies table! Setting it to {}...",debug.traceback())
+        Dependacies = {}
+    end
+    if type(Dependacies) ~= "table" then
+        warn("Table does not have a valid Dependacies table! Setting it to {}...",debug.traceback())
+        Dependacies = {}
+    end
+    InitTable.Dependacies = self:InitDependacies(Dependacies)
     return setmetatable(InitTable, InitTable)
+end
+function SingletonInitClass:InitDependacies(DependaciesTable: table): table
+    local Dependacies = {}
+    for FileName: string, Version: Version in next,DependaciesTable do
+        if type(Version) == "string" then
+            Version = VersionClass.fromString(Version)
+        end
+        table.insert(Dependacies,DependacyClass.new(FileName,Version))
+    end
+    return Dependacies
 end
 return SingletonInitClass

@@ -6,6 +6,8 @@
 /roblox.toml
 /build.rbxl
 /node_modules
+/build
+/package-lock.json
 # Added by cargo
 
 /target

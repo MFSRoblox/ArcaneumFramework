@@ -1,9 +1,0 @@
-{
-    "$className": "LocalScript",
-    "ignoreUnknownInstances": true,
-    "$properties": {
-        "Disabled": {
-            "Boolean": true
-        }
-    }
-}

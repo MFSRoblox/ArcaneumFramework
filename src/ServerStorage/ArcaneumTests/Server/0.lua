@@ -1,6 +1,13 @@
+local PrintDebug = false
+local function debugPrint(...)
+    if PrintDebug == true then
+        print(...)
+    end
+end
 local GlobalExpectations = {
     --Shared Globals
     ClassFunctions = "table";
+    Ballistics = "table";
     Events = "Folder";
     IsStudio = "boolean";
     Perspective = "string";
@@ -14,6 +21,7 @@ return function(self)
     local ArcaneumGlobals = self.ArcaneumGlobals
     --Globals tests
     local ThisTest = self.TesterClass:New("Engine Foundation")
+    ThisTest:SetPrintProcess(PrintDebug)
     ThisTest:AddTest("Global Check", true, function()
         for VarName,Data in pairs(ArcaneumGlobals) do
             local Expectation = GlobalExpectations[VarName]
@@ -30,7 +38,7 @@ return function(self)
             else
                 warn("No Type Check for",VarName,"!")
             end
-            print(VarName,Data)
+            debugPrint(VarName,Data)
         end
         return true
     end)
@@ -74,27 +82,35 @@ return function(self)
     ThisTest:AddTest("Version Test", true, function()
         --init test
         local Version = ArcaneumGlobals.ClassFunctions:GetClass("Version")
+        debugPrint("Checking Version Class")
         assert(Version, "Version didn't return anything!")
         assert(type(Version) == "table", "Version isn't a table!")
         assert(type(Version.new) == "function", "Version.new isn't a function!")
         --.new test
+        debugPrint("Checking Version Creation")
         local Version1 = Version.new(1,2,3)
+        debugPrint("Version1 Metatable:",getmetatable(Version1))
         assert(Version1:GetMajorVersion() == 1, "Test Version1 Object did not set its MajorVersion properly! Expected 1, got "..Version1:GetMajorVersion())
         assert(Version1:GetMinorVersion() == 2, "Test Version1 Object did not set its MinorVersion properly! Expected 2, got "..Version1:GetMinorVersion())
         assert(Version1:GetPatchVersion() == 3, "Test Version1 Object did not set its PatchVersion properly! Expected 3, got "..Version1:GetPatchVersion())
         --__tostring test
+        debugPrint("Version1:__tostring Test")
         assert(tostring(Version1) == "1.2.3", "Test Version1 Object did not return expected result of 1.2.3! Instead, it returned: "..tostring(Version1))
         --__lt and __le tests
+        debugPrint("Version1:__lt and __le Test")
         local MajorLessVersion = Version.new(0,4,5)
+        --print("MajorLessVersion Metatable:",getmetatable(MajorLessVersion))
         assert(getmetatable(Version1) == getmetatable(MajorLessVersion),"Test Version1 Object and MajorLessVersion Object should share the same metatable!")
         assert(Version1 > MajorLessVersion, "Test Version1 Object should be greater than MajorLessVersion Object!")
         assert(Version1 >= MajorLessVersion, "Test Version1 Object should be greater than MajorLessVersion Object!")
         assert(not (Version1 < MajorLessVersion), "Test Version1 Object should be greater than MajorLessVersion Object!")
         assert(not (Version1 <= MajorLessVersion), "Test Version1 Object should be greater than MajorLessVersion Object!")
         --concat test
+        debugPrint("Version:__concat Test")
         local ConcatTest = "Version1: "..Version1
         assert(ConcatTest == "Version1: 1.2.3", "ConcatTEst with Version1: .. Version1 did not return Version1: 1.2.3! Instead it returned: ".. ConcatTest)
         --__eq test
+        debugPrint("Version:__eq Test")
         local DupeVersion1 = Version.new(1,2,3)
         assert(Version1 == DupeVersion1, "Version1 and DupeVersion1 should be equivelant, but isn't!")
         return true

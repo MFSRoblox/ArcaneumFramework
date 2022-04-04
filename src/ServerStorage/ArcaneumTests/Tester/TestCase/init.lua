@@ -36,6 +36,10 @@ function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any)
     return NewTest
 end
 
+function TestCaseClass:SetPrintProcess(ShouldPrintProcess: boolean)
+    self.PrintProcess = ShouldPrintProcess
+end
+
 function TestCaseClass:AddStep(Perspective: string, Callback: (any) -> any)
     table.insert(self.Steps,{
         Perspective = Perspective;
@@ -43,9 +47,18 @@ function TestCaseClass:AddStep(Perspective: string, Callback: (any) -> any)
     })
 end
 
-function TestCaseClass:Run()
+function TestCaseClass:Run(DefaultPrintProcess:boolean)
+    local PrintProcess = self.PrintProcess
+    if PrintProcess == nil then
+        PrintProcess = DefaultPrintProcess
+    end
+    local function debugPrint(...)
+        if PrintProcess then
+            print(...)
+        end
+    end
     local initialString = "TestCase " .. self.Name
-    print("Running",initialString)
+    debugPrint("Running",initialString)
     local Success, TestResult
     local Steps = self.Steps
     for i=1, #Steps do
@@ -63,7 +76,7 @@ function TestCaseClass:Run()
         end
     end
     if Success and TestResult ~= nil then
-        print(initialString.." has executed flawless as expected. Result:\n" .. tostring(TestResult) .. "\n")
+        debugPrint(initialString.." has executed flawless as expected. Result:\n" .. tostring(TestResult) .. "\n")
         return true, TestResult
     else
         local outputMessage = initialString
