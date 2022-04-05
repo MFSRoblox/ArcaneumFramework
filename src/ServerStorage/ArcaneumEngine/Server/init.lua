@@ -16,6 +16,7 @@ function ServerNexus.Setup(_output: table, ArcaneumGlobals: table): table
         Version = 0;
         Object = script;
         Globals = ArcaneumGlobals;
+        AddOns = {};
     })
 
     function ServerModule:New()
@@ -31,6 +32,23 @@ function ServerNexus.Setup(_output: table, ArcaneumGlobals: table): table
 
     function ServerModule:GetPlayerManager()
         return self.PlayerManager
+    end
+
+    function ServerModule:AddModuleIntoEnvironment(Module: ModuleScript | any, Name: string?)
+        local AddOn = Module
+        if typeof(Module) == "Instance" and Module:IsA("ModuleScript") then
+            if Name == nil then
+                Name = Module.Name
+            end
+            AddOn = require(Module)
+        else
+            assert(Name ~= nil, "No name assigned to non-modulescript AddOn! Debug:"..debug.traceback())
+        end
+        self.AddOns[Name] = AddOn
+    end
+
+    function ServerModule:GetAddOn(AddOnName: string): any
+
     end
     local InitModule = ServerModule:New()
     _output = InitModule
