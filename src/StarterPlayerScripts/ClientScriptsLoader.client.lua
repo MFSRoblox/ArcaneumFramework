@@ -19,16 +19,10 @@ print(RunService:IsRunMode())
 if ArcaneumGlobals.IsStudio and not RunService:IsRunMode() then
     game:GetService("Players").PlayerAdded:Wait()]]
 --end
-local WaitTime = 0
 local TestModuleName = "ArcaneumClientTests"
 local TestModule = script.Parent:FindFirstChild(TestModuleName)
 print(ArcaneumGlobals.IsTesting)
 if ArcaneumGlobals.IsTesting then
-    print("Waiting a little in case a player is being added...\n Starting tests in:")
-    for i=WaitTime, 1, -1 do
-        print(i)
-        task.wait(1)
-    end
-    local TestService = require(TestModule):New(LocalPlayer)
+    local TestService = require(TestModule):New()
     TestService:Run()
 end
