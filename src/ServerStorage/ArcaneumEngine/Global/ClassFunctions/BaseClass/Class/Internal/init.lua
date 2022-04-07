@@ -5,17 +5,12 @@ local BaseClass = require(script.Parent)
     @client
     The foundational class for replicated objects. In comparison to the BaseClass, the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
 ]=]
-local InternalClass = BaseClass:Extend({
-    Version = 0;
-    Object = script;
+local InternalClass:InternalClass = BaseClass:Extend({
+    Version = "1.0.0";
 })
---[=[
-    Creates a new InternalClass object with the ClassName of "ClassName" and Name of "Name".
-
-    @param ClassName string -- The name of the class being created.
-    @param Name string -- The name of the object being created.
-    @return NewInternalClass -- Returns an object with the ClassName of "ClassName" and Name of "Name".
-]=]
+export type InternalClass = {
+    Name: string;
+} & typeof(InternalClass) & BaseClass.Class
 --[=[
     @prop ClassName string
     @within InternalClass
@@ -33,7 +28,15 @@ local InternalClass = BaseClass:Extend({
     Inherited from BaseClass.
     A table containing all existing connections to this object.
 ]=]
-function InternalClass:New(ClassName:string, Name:string)
+
+--[=[
+    Creates a new InternalClass object with the ClassName of "ClassName" and Name of "Name".
+
+    @param ClassName string -- The name of the class being created.
+    @param Name string -- The name of the object being created.
+    @return NewInternalClass -- Returns an object with the ClassName of "ClassName" and Name of "Name".
+]=]
+function InternalClass:New(ClassName:string, Name:string): InternalClass
     return self:NewFromTable({},ClassName,Name)
 end
 
@@ -43,7 +46,7 @@ end
     @param ClassName string -- The name of the class being created.
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function InternalClass:NewFromTable(Table: table, ClassName:string, Name:string)
+function InternalClass:NewFromTable(Table: table, ClassName:string, Name:string): InternalClass
     Table = BaseClass:NewFromTable(Table, ClassName)
     Table.Name = Name or ClassName
     return self:Extend(Table)
