@@ -114,8 +114,8 @@ function Utilities:ModulesToTable(ObjectTable: table, BaseOutput: table?, Overwr
                 if Object:IsA("ModuleScript") then
                     local ModuleData = require(Object)
                     ThisOutput = ModuleData
-                elseif Object:IsA("Folder") then
-                    ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)
+                --[[elseif Object:IsA("Folder") then
+                    ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)]]
                 end
             end
             output[ObjectName] = ThisOutput
