@@ -1,4 +1,5 @@
 local BaseClass = require(script.Parent.ClassFunctions.BaseClass)
+BaseClass:CheckVersion("1.0.0")
 --[=[
     @class Utilities
     @server

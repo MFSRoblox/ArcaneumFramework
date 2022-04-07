@@ -5,6 +5,7 @@
     The foundational class for all services and factories. In comparison to the BaseClass, this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
 local BaseClass = require(script.Parent)
+BaseClass:CheckVersion("1.0.0")
 local Class: Class = BaseClass:New("Class","1.0.0")
 export type Class = {
     Connections: {[any]:RBXScriptConnection};

@@ -1,4 +1,5 @@
 local BaseClass = require(script.Parent)
+BaseClass:CheckVersion("1.0.0")
 --[=[
     @class InternalClass
     @server

@@ -1,4 +1,5 @@
 local BaseClass = require(script.BaseClass)
+BaseClass:CheckVersion("1.0.0")
 local ClassService = BaseClass:New("ClassService","1.0.0")
 function ClassService:AddClass(ClassName: string, ClassData: table): any
     self[ClassName] = ClassData
