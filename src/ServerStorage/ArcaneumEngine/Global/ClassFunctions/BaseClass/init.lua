@@ -5,9 +5,12 @@
     The foundational class for all classes.
 ]=]
 local BaseClass = {
-    Version = 0;
-    Object = script;
+    Version = "1.0.0";
 }
+export type BaseClass = {
+    Version: string;
+    ClassName: string;
+} & typeof(BaseClass)
 --[=[
     @prop Object script
     @within BaseClass
@@ -20,10 +23,11 @@ local BaseClass = {
     @param NewObject table -- The table you want to set the __index metatable to.
     @return table -- Returns the table with the index set to itself.
 ]=]
-function BaseClass:Extend(NewObject)
-    NewObject = NewObject or {
-        ClassName = "";
-    }
+function BaseClass:Extend(NewObject): BaseClass
+    NewObject = NewObject or {}
+    if NewObject.ClassName == nil then
+        NewObject.ClassName = ""
+    end
     self.__index = self
     local output = setmetatable(NewObject, self)
     return output
@@ -39,7 +43,7 @@ end
     @within BaseClass
     The name of the object's class.
 ]=]
-function BaseClass:New(ClassName:string)
+function BaseClass:New(ClassName:string): BaseClass
     return self:NewFromTable({}, ClassName)
 end
 
@@ -49,7 +53,7 @@ end
     @param ClassName string -- The name of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:NewFromTable(Table: table, ClassName:string)
+function BaseClass:NewFromTable(Table: table, ClassName:string): BaseClass
     Table.ClassName = ClassName or ""
     return self:Extend(Table)
 end
@@ -57,7 +61,7 @@ end
 --[=[
     Destroy the BaseClass Object to clear up memory.
 ]=]
-function BaseClass:Destroy(): nil
+function BaseClass:Destroy()
     --warn(self.ClassName .. " has been Destroyed!")
     self.ClassName = nil
     table.clear(self)
