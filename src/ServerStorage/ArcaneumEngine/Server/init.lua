@@ -1,40 +1,43 @@
-local ModuleInfo = {
-    InitName = script.Name;
-    BootOrder = 3;
-    Version = "1.0.0";
-    Dependacies = {
-        Utilities = "1.0.0"
-    };
-}
-local ServerNexus = {}
-function ServerNexus.Setup(_output: table, ArcaneumGlobals: table): table
-    local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ArcaneumGlobals = require(ReplicatedStorage.Arcaneum)
+local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+BaseClass:CheckVersion("1.0.0")
+local Scripts = script.Scripts
 
-    local Scripts = script.Scripts
+local ServerNexus = BaseClass:Extend({
+    Globals = ArcaneumGlobals;
+    AddOns = {};
+})
 
-    local ServerModule = BaseClass:Extend({
-        Version = 0;
-        Object = script;
-        Globals = ArcaneumGlobals;
-    })
-
-    function ServerModule:New()
-        local this = self:Extend(BaseClass:New("ServerNexus", "ServerNexus"))
-        this.PlayerActionHandler = nil --require(Scripts:WaitForChild("PlayerActionHandler"))
-        this.PlayerManager = require(Scripts:WaitForChild("PlayerManager"))
-        return this
-    end
-
-    function ServerModule:GetPlayerActionHandler()
-        return self.PlayerActionHandler
-    end
-
-    function ServerModule:GetPlayerManager()
-        return self.PlayerManager
-    end
-    local InitModule = ServerModule:New()
-    _output = InitModule
-    return InitModule
+function ServerNexus:New()
+    local this = self:Extend(BaseClass:New("ServerNexus", "ServerNexus","1.0.0"))
+    this.PlayerActionHandler = nil --require(Scripts:WaitForChild("PlayerActionHandler"))
+    this.PlayerManager = require(Scripts:WaitForChild("PlayerManager"))
+    return this
 end
-ModuleInfo.__call = ServerNexus.Setup
-return ModuleInfo
+
+function ServerNexus:GetPlayerActionHandler()
+    return self.PlayerActionHandler
+end
+
+function ServerNexus:GetPlayerManager()
+    return self.PlayerManager
+end
+
+function ServerNexus:AddModuleIntoEnvironment(Module: ModuleScript | any, Name: string?)
+    local AddOn = Module
+    if typeof(Module) == "Instance" and Module:IsA("ModuleScript") then
+        if Name == nil then
+            Name = Module.Name
+        end
+        AddOn = require(Module)
+    else
+        assert(Name ~= nil, "No name assigned to non-modulescript AddOn! Debug:"..debug.traceback())
+    end
+    self.AddOns[Name] = AddOn
+end
+
+function ServerNexus:GetAddOn(_AddOnName: string): any
+
+end
+return ServerNexus:New()

@@ -84,7 +84,7 @@ local TestInfo = TestInfoInterface.new({
         end)
         ThisTest:AddTest("Version Test", true, function()
             --init test
-            local Version = ArcaneumGlobals.ClassFunctions:GetClass("Version")
+            local Version = ArcaneumGlobals.ClassFunctions:GetClass("VersionClass")
             debugPrint("Checking Version Class")
             assert(Version, "Version didn't return anything!")
             assert(type(Version) == "table", "Version isn't a table!")
@@ -100,6 +100,10 @@ local TestInfo = TestInfoInterface.new({
             debugPrint("Version1:__tostring Test")
             assert(tostring(Version1) == "1.2.3", "Test Version1 Object did not return expected result of 1.2.3! Instead, it returned: "..tostring(Version1))
             --__lt and __le tests
+            debugPrint("Version:__eq Test")
+            local DupeVersion1 = Version.new(1,2,3)
+            assert(Version1 == DupeVersion1, "Version1 and DupeVersion1 should be equivelant, but isn't!")
+            assert(Version1 == Version1, "Version1 and Version1 should be equivelant, but isn't!")
             debugPrint("Version1:__lt and __le Test")
             local MajorLessVersion = Version.new(0,4,5)
             --print("MajorLessVersion Metatable:",getmetatable(MajorLessVersion))
@@ -108,14 +112,15 @@ local TestInfo = TestInfoInterface.new({
             assert(Version1 >= MajorLessVersion, "Test Version1 Object should be greater than MajorLessVersion Object!")
             assert(not (Version1 < MajorLessVersion), "Test Version1 Object should be greater than MajorLessVersion Object!")
             assert(not (Version1 <= MajorLessVersion), "Test Version1 Object should be greater than MajorLessVersion Object!")
+            assert(not (Version1 < DupeVersion1), "Version1 and DupeVersion1 should not be less than DupeVersion1!")
+            assert(not (Version1 < Version1), "Version1 and DupeVersion1 should not be less than Version1")
+            assert(not (Version1 > DupeVersion1), "Version1 and DupeVersion1 should not be less than DupeVersion1!")
+            assert(not (Version1 > Version1), "Version1 and DupeVersion1 should not be less than Version1")
             --concat test
             debugPrint("Version:__concat Test")
             local ConcatTest = "Version1: "..Version1
             assert(ConcatTest == "Version1: 1.2.3", "ConcatTEst with Version1: .. Version1 did not return Version1: 1.2.3! Instead it returned: ".. ConcatTest)
             --__eq test
-            debugPrint("Version:__eq Test")
-            local DupeVersion1 = Version.new(1,2,3)
-            assert(Version1 == DupeVersion1, "Version1 and DupeVersion1 should be equivelant, but isn't!")
             return true
         end)
         return ThisTest

@@ -1,20 +1,13 @@
-local ModuleInfo = {
-    InitName = script.Name;
-    BootOrder = 1;
-    Version = "1.0.0";
-    Dependacies = {
-        
-    };
-}
+local BaseClass = require(script.Parent.ClassFunctions.BaseClass)
+BaseClass:CheckVersion("1.0.0")
 --[=[
     @class Utilities
     @server
     @client
     A module that consists of handy functions that will be used throughout the framework and game.
 ]=]
-local Utilities = {} do
-    Utilities.__index = Utilities
-    Utilities = setmetatable(Utilities,Utilities)
+local Utilities = BaseClass:New("Utilities", "1.0.0") do
+    Utilities.Version = "1.0.0";
     Utilities.ErrorEvent = Instance.new("BindableEvent")
     Utilities.ErrorEvent.Event:Connect(function(ErrorMsg:string)
         error(ErrorMsg,0)
@@ -114,8 +107,8 @@ function Utilities:ModulesToTable(ObjectTable: table, BaseOutput: table?, Overwr
                 if Object:IsA("ModuleScript") then
                     local ModuleData = require(Object)
                     ThisOutput = ModuleData
-                elseif Object:IsA("Folder") then
-                    ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)
+                --[[elseif Object:IsA("Folder") then
+                    ThisOutput = self:ModulesToTable(Object:GetChildren(), nil, Overwrite)]]
                 end
             end
             output[ObjectName] = ThisOutput
@@ -154,9 +147,4 @@ function Utilities:ImportModule(Start: Instance, ...: string): any
     end
     return output
 end
-function Utilities.Setup(_output: table, _ArcaneumGlobals: table): table
-    _output = Utilities
-    return Utilities
-end
-ModuleInfo.__call = Utilities.Setup
-return ModuleInfo
+return Utilities

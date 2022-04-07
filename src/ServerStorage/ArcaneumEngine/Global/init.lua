@@ -1,13 +1,12 @@
-local InitializerService = require(script.ClassFunctions.InitializerService)
-local GlobalInit = InitializerService:New()
-local UtilitiesModule = script.Utilities
-GlobalInit:AddModule(UtilitiesModule)
-local ClassFunctionsModule = script.ClassFunctions
-GlobalInit:AddModule(ClassFunctionsModule)
-local GlobalTable = GlobalInit:InitializeAll()
-local Utilities = GlobalTable.Utilities
-local ScriptChildren = script:GetChildren()
-GlobalTable.Utilities:RemoveFromTable(ScriptChildren,UtilitiesModule)
-Utilities:RemoveFromTable(ScriptChildren,ClassFunctionsModule)
-GlobalTable = Utilities:ModulesToTable(script:GetChildren(), GlobalTable, false)
+local GlobalTable = require(script.Utilities):ModulesToTable(script:GetChildren())
+type GlobalTable = Dictionary<any>
+function GlobalTable:AddGlobal(Data: ModuleScript | any, Name: string?)
+    if typeof(Data) == "Instance" and Data:IsA("ModuleScript") then
+        Name = Data.Name
+        Data = require(Data)
+    end
+    GlobalTable[Name] = Data
+    return Data
+end
+
 return GlobalTable
