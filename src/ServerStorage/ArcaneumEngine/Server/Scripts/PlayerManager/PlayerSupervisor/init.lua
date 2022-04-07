@@ -8,18 +8,21 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals)
     end
 until ArcaneumGlobals ~= nil
+local Utilities = ArcaneumGlobals.Utilities
+Utilities:CheckVersion("1.0.0")
+local ClassFunctions = ArcaneumGlobals.ClassFunctions
+ClassFunctions:CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Internal")
+BaseClass:CheckVersion("1.0.0")
 local PlayerInterface = ArcaneumGlobals.Events.PlayerInterface
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
-
 local PlayerSupervisor = BaseClass:Extend(
     {
-        Version = 1;
-        Object = script;
+        Version = "1.0.0";
     }
 )
 
 function PlayerSupervisor:New(Player: Player)
-    local NewSupervisor = self:Extend(BaseClass:New("PlayerSupervisor","Supervisor"..Player.Name))
+    local NewSupervisor = self:Extend(BaseClass:New("PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version))
     NewSupervisor.Player = Player
     NewSupervisor.Functions = ArcaneumGlobals.Utilities:ModulesToTable(script:GetChildren())
     local ClientPackage = game:GetService("ServerStorage").ArcaneumEngine:Clone()
