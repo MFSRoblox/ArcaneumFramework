@@ -5,14 +5,12 @@ BaseClass:CheckVersion("1.0.0")
 local Scripts = script.Scripts
 
 local ServerNexus = BaseClass:Extend({
-    Version = 0;
-    Object = script;
     Globals = ArcaneumGlobals;
     AddOns = {};
 })
 
 function ServerNexus:New()
-    local this = self:Extend(BaseClass:New("ServerNexus", "ServerNexus"))
+    local this = self:Extend(BaseClass:New("ServerNexus", "ServerNexus","1.0.0"))
     this.PlayerActionHandler = nil --require(Scripts:WaitForChild("PlayerActionHandler"))
     this.PlayerManager = require(Scripts:WaitForChild("PlayerManager"))
     return this
