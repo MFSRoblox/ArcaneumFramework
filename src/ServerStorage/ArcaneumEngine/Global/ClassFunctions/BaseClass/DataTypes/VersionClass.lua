@@ -1,3 +1,4 @@
+local BaseClass = require(script.Parent)
 --[=[
     @tag DataTypes
     @client
@@ -24,7 +25,6 @@
 
     The number representing which patch version is represented. Different patch versions indicate "when you make backwards compatible bug fixes."
 ]=]
-local BaseClass = require(script.Parent)
 local Version: Version = BaseClass:NewClass("Version", "1.0.0")
 export type Version = {
     MajorVersion: number;

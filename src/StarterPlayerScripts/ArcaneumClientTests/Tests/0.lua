@@ -84,7 +84,7 @@ local TestInfo = TestInfoInterface.new({
         end)
         ThisTest:AddTest("Version Test", true, function()
             --init test
-            local Version = ArcaneumGlobals.ClassFunctions:GetClass("Version")
+            local Version = ArcaneumGlobals.ClassFunctions:GetClass("VersionClass")
             debugPrint("Checking Version Class")
             assert(Version, "Version didn't return anything!")
             assert(type(Version) == "table", "Version isn't a table!")
