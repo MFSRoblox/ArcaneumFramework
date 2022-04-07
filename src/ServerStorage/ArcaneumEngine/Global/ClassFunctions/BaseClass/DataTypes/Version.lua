@@ -25,7 +25,12 @@
     The number representing which patch version is represented. Different patch versions indicate "when you make backwards compatible bug fixes."
 ]=]
 local BaseClass = require(script.Parent)
-local Version = BaseClass:NewClass("Version")
+local Version: Version = BaseClass:NewClass("Version")
+export type Version = {
+    MajorVersion: number;
+    MinorVersion: number;
+    PatchVersion: number;
+} & typeof(Version)
 --[=[
     @tag Metamethod
     @return string -- Returns in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
@@ -86,7 +91,6 @@ function Version:__le(value: Version): boolean
     return false
 end;
 
-export type Version = typeof(Version.new(0,0,0))
 --[=[
     @param MajorVersion -- The number representing which MajorVersion the new object has.
     @param MinorVersion -- The number representing which MinorVersion the new object has.
