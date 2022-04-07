@@ -3,7 +3,7 @@ The github repository for The Arcaneum Framework and its documentation.
 
 The devUtils folder contains class diagrams that can be opened via yEd Live.
 
-This project is managed by Rojo (v7.0.0).
+This project is managed by Rojo (v6.2.0).
 
 This project uses Foreman and Moonwave.
 
