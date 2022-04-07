@@ -68,28 +68,30 @@ end
 --[=[
     Checks if the inputted version is the class's current version. If not, put a message on the console.
 
-    @param ClassName string -- The name of the class being created.
-    @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
+    @param VersionUsed Version | string -- The version of the class that the code has used.
+    @return self -- Returns the object itself for easily checks on initialization.
 
     @error "Code was expecting a version of 'ClassName' that was never released! Errors are likely to occur!" -- Occurs when the inputted version has is a newer version than the class itself. Should check to ensure nothing breaks.
     @error "Code was using a significantly older version of 'ClassName'. Errors are likely to occur!" -- Occurs when the inputted version has an older major update. Should check to ensure nothing breaks.
     @error "Code was using an older version of 'ClassName'. Check for possible deprecations!" -- Occurs when the inputted version has an older minor update. Should ensure deprecated code gets updated.
     @error "Code was using an older patch of 'ClassName'. Check for possible deprecations." -- Occurs when the inputted version has an older patch. Can ignore.
 ]=]
-function BaseClass:CheckVersion(VersionUsed: Version | string)
-    local VersionClass = require(script.DataTypes.Version)
+function BaseClass:CheckVersion(VersionUsed: string): any
+    local VersionClass = require(script.DataTypes.VersionClass)
     type Version = typeof(VersionClass)
-    local selfVersion = self.Version
-    if type(selfVersion) == "string" then
+    local selfVersion = VersionClass.fromString(self.Version) :: Version --self.Version
+    VersionUsed = VersionClass.fromString(VersionUsed) :: Version
+    --[[if type(selfVersion) == "string" then
         selfVersion = VersionClass.fromString(selfVersion) :: Version
         self.Version = selfVersion
     end
     if type(VersionUsed) == "string" then
         VersionUsed = VersionClass.fromString(VersionUsed) :: Version
-    end
+    end]]
     --[[if selfVersion == VersionUsed then
         return
     end]]
+    print(selfVersion,VersionUsed)
     assert(selfVersion <= VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
     if selfVersion > VersionUsed then
         local selfMajor,selfMinor,selfPatch = selfVersion:GetMajorVersion(),selfVersion:GetMinorVersion(),selfVersion:GetPatchVersion()
@@ -101,7 +103,9 @@ function BaseClass:CheckVersion(VersionUsed: Version | string)
             print("Code was using an older patch of " .. self.ClassName .. ". Check for possible deprecations.\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n",debug.traceback())
         end
     end
+    selfVersion:Destroy()
     VersionUsed:Destroy()
+    return self
 end
 
 --[=[
