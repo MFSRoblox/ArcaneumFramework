@@ -87,8 +87,6 @@ function BaseClass:CheckVersion(VersionUsed: Version | string)
     if type(VersionUsed) == "string" then
         VersionUsed = VersionClass.fromString(VersionUsed) :: Version
     end
-    print("selfVersion:",selfVersion)
-    print("VersionUsed",VersionUsed)
     --[[if selfVersion == VersionUsed then
         return
     end]]
