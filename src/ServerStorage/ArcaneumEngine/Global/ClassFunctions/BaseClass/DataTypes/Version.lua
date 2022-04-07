@@ -25,12 +25,12 @@
     The number representing which patch version is represented. Different patch versions indicate "when you make backwards compatible bug fixes."
 ]=]
 local BaseClass = require(script.Parent)
-local Version: Version = BaseClass:NewClass("Version")
+local Version: Version = BaseClass:NewClass("Version", "1.0.0")
 export type Version = {
     MajorVersion: number;
     MinorVersion: number;
     PatchVersion: number;
-} & typeof(Version)
+} & typeof(Version) & typeof(BaseClass)
 --[=[
     @tag Metamethod
     @return string -- Returns in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
@@ -101,11 +101,11 @@ function Version.new(MajorVersion:number | string,MinorVersion:number,PatchVersi
     if type(MajorVersion) == "string" then
         return Version.fromString(MajorVersion)
     end
-    return Version:Extend({
+    return Version:NewFromTable({
         MajorVersion = MajorVersion :: number;
         MinorVersion = MinorVersion :: number;
         PatchVersion = PatchVersion :: number;
-    })
+    },"Version",Version.Version)
 end
 
 --[=[
@@ -147,7 +147,7 @@ function Version:Destroy(): nil
     self.MajorVersion = nil
     self.MinorVersion = nil
     self.PatchVersion = nil
-    return self.BaseClass.Destroy(self)
+    return BaseClass.Destroy(self)
 end
 
 return Version

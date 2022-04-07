@@ -1,5 +1,5 @@
 local BaseClass = require(script.Parent)
-local DataTypeInterface: DataTypeInterface = BaseClass:New("DataTypeInterface")
+local DataTypeInterface: DataTypeInterface = BaseClass:New("DataTypeInterface", "1.0.0")
 export type DataTypeInterface = typeof(DataTypeInterface)
 --[=[
     @class DataTypes
@@ -20,8 +20,8 @@ export type DataTypeInterface = typeof(DataTypeInterface)
     .le (self,any) -> (boolean)
 ]=]
 
-function DataTypeInterface:NewClass(ClassName: string): DataTypeInterface
-    local NewClass = self:Extend(BaseClass:New(ClassName))
+function DataTypeInterface:NewClass(ClassName: string, Version:string): DataTypeInterface
+    local NewClass = self:Extend(BaseClass:New(ClassName, Version))
     return NewClass
 end
 

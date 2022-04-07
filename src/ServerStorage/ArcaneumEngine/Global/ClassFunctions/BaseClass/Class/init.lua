@@ -5,9 +5,7 @@
     The foundational class for all services and factories. In comparison to the BaseClass, this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
 local BaseClass = require(script.Parent)
-local Class: Class = BaseClass:Extend({
-    Version = "1.0.0";
-})
+local Class: Class = BaseClass:New("Class","1.0.0")
 export type Class = {
     Connections: {[any]:RBXScriptConnection};
 } & typeof(Class) & BaseClass.BaseClass
@@ -27,8 +25,8 @@ export type Class = {
     @param ClassName string -- The name of the class being created.
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function Class:New(ClassName:string): Class
-    return self:NewFromTable({},ClassName)
+function Class:New(ClassName:string, Version:string): Class
+    return self:NewFromTable({},ClassName, Version)
 end
 
 --[=[
@@ -37,8 +35,8 @@ end
     @param ClassName string -- The name of the class being created.
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function Class:NewFromTable(Table: table, ClassName:string): Class
-    Table = BaseClass:NewFromTable(Table, ClassName)
+function Class:NewFromTable(Table: table, ClassName:string, Version:string): Class
+    Table = BaseClass:NewFromTable(Table, ClassName, Version)
     Table.Connections = {}
     return self:Extend(Table)
 end
