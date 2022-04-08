@@ -91,7 +91,7 @@ function BaseClass:CheckVersion(VersionUsed: string): any
     --[[if selfVersion == VersionUsed then
         return
     end]]
-    print(selfVersion,VersionUsed)
+    --print(selfVersion,VersionUsed)
     assert(selfVersion <= VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
     if selfVersion > VersionUsed then
         local selfMajor,selfMinor,selfPatch = selfVersion:GetMajorVersion(),selfVersion:GetMinorVersion(),selfVersion:GetPatchVersion()
