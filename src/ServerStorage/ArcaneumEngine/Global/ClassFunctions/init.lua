@@ -59,7 +59,7 @@ local function UnpackClasses(Parent: ModuleScript)
     for i=1, #PotentialModules do
         local PotentialModule = PotentialModules[i]
         if PotentialModule:IsA("ModuleScript") then
-            ClassService:AddClass(PotentialModule.Name, require(PotentialModule))
+            ClassService:AddClassModule(PotentialModule)
         end
         UnpackClasses(PotentialModule)
     end
