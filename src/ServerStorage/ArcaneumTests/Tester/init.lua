@@ -10,11 +10,12 @@ local ArcaneumGlobals repeat
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local ScriptUtilities = ArcaneumGlobals.Utilities
---local ClientConnectorClass = ArcaneumGlobals.ClassFunctions:GetClass("ClientConnector") --ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
+ScriptUtilities:CheckVersion("1.0.0")
 local TestCaseClass = ScriptUtilities:ImportModule(script,"TestCase")
 local TestResultClass = ScriptUtilities:ImportModule(script,"TestResult")
 local Tester = BaseClass:Extend({
-    Version = 2;
+    ClassName = "Tester",
+    Version = "1.0.0";
     Object = script;
 })
 function Tester:New(TestName: string, DisplayName: string)

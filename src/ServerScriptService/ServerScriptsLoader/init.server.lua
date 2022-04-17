@@ -19,6 +19,6 @@ if ArcaneumGlobals.IsStudio and not RunService:IsRunMode() then
 local TestModuleName = "ArcaneumTests"
 local TestModule = ServerStorage:FindFirstChild(TestModuleName)
 if ArcaneumGlobals.IsTesting then
-    local TestService = require(TestModule):New()
+    local TestService = require(TestModule):New(script.ServerTests:GetChildren())
     TestService:Run()
 end
