@@ -9,30 +9,23 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
-type Function = typeof(function() end)
-local TestCaseClass = BaseClass:Extend({
+local TestCaseClass:TestCase = BaseClass:Extend({
     Version = 1;
     Object = script;
 })
-type ClientConnector = table
-function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any, ClientConnector: ClientConnector)
+export type TestCase = {
+    Version: number;
+    Object: ModuleScript;
+    StopOnFailure: boolean;
+    PrintProcess: boolean;
+    Steps: Array<(any) -> (any)>;
+} & typeof(TestCaseClass)
+function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any): TestCase
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
-    NewTest.ClientConnector = ClientConnector
-    if Callback then
-        NewTest:AddStep("Server", Callback)
-    elseif Callback == "Client" then
-        NewTest:AddStep("Server", function()
-            local TargetPlayer = ClientConnector.TargetPlayer
-            assert(TargetPlayer, "No TargetPlayer found!")
-            local ProxyFunction = ClientConnector.ProxyFunction
-            assert(ProxyFunction, "No ProxyInterface found!")
-            local ProxyEvent = ClientConnector.ProxyEvent
-            assert(ProxyEvent, "No ProxyEvent found!")
-            return true
-        end)
-    end
+    NewTest.PrintProcess = nil
+    NewTest:AddStep(Callback)
     return NewTest
 end
 
@@ -40,11 +33,12 @@ function TestCaseClass:SetPrintProcess(ShouldPrintProcess: boolean)
     self.PrintProcess = ShouldPrintProcess
 end
 
-function TestCaseClass:AddStep(Perspective: string, Callback: (any) -> any)
-    table.insert(self.Steps,{
-        Perspective = Perspective;
-        Callback = Callback;
-    })
+function TestCaseClass:AddStep(Callback: (any) -> any)
+    if Callback then
+        table.insert(self.Steps,Callback)
+    else
+        warn("No Callback included! Debug:",debug.traceback())
+    end
 end
 
 function TestCaseClass:Run(DefaultPrintProcess:boolean)
@@ -63,13 +57,8 @@ function TestCaseClass:Run(DefaultPrintProcess:boolean)
     local Steps = self.Steps
     for i=1, #Steps do
         local CurrentStep = Steps[i]
-        local Callback = CurrentStep.Callback
-        if Callback then
-            Success, TestResult = pcall(CurrentStep.Callback, TestResult)
-        end
-        local Perspective = CurrentStep.Perspective
-        if Perspective == "Client" then
-            Success, TestResult = pcall(self.InvokeClient, self, TestResult)
+        if CurrentStep then
+            Success, TestResult = pcall(CurrentStep, TestResult)
         end
         if Success == false then
             break
@@ -94,14 +83,10 @@ function TestCaseClass:Run(DefaultPrintProcess:boolean)
     end
 end
 
-function TestCaseClass:InvokeClient(TestResult)
-    return self.ClientConnector:InvokeClient(self.TestName, TestResult)
-end
-
 function TestCaseClass:Destroy()
-    self.Function = nil
-    self.StopOnFailure = nil
-    return true
+    table.clear(self.Steps)
+    table.clear(self)
+    return BaseClass.Destroy(self)
 end
 
 return TestCaseClass

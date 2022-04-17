@@ -11,14 +11,22 @@ until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local ScriptUtilities = ArcaneumGlobals.Utilities
 ScriptUtilities:CheckVersion("1.0.0")
-local TestCaseClass = ScriptUtilities:ImportModule(script,"TestCase")
-local TestResultClass = ScriptUtilities:ImportModule(script,"TestResult")
-local Tester = BaseClass:Extend({
+local TestCaseClass = require(script.TestCase)
+local TestResultClass = require(script.TestResult)
+local Tester:Tester = BaseClass:Extend({
     ClassName = "Tester",
     Version = "1.0.0";
     Object = script;
 })
-function Tester:New(TestName: string, DisplayName: string)
+export type Tester = {
+    Version: number;
+    Object: ModuleScript;
+    Name: string;
+    DisplayName: string;
+    PrintProcess: boolean;
+    Tests: Array<TestCaseClass.TestCase>;
+} & typeof(Tester)
+function Tester:New(TestName: string, DisplayName: string): Tester
     local NewTester = BaseClass:New("Tester",TestName)
     if not DisplayName then
         local RandomNames = {"John Doe", "Jane Doe"}
@@ -40,7 +48,7 @@ function Tester:SetPrintProcess(ShouldPrintProcess: boolean): nil
     self.PrintProcess = ShouldPrintProcess
 end
 
-function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (any) -> any)
+function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (PreviousReturns:any) -> (any))
     self:print(self.DisplayName.." added test:",TestName)
     --[[local ClientConnector = nil
     if Callback == "Client" then
@@ -65,7 +73,7 @@ local TestStatuses = {
     "Unassigned"
 }
 
-function Tester:RunTests()
+function Tester:RunTests(): Array<TestResultClass.TestResult>
     local output = {}
     local LatestTestName:string
     local s, v = pcall(function()
