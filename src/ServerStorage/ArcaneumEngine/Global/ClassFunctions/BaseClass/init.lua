@@ -102,7 +102,7 @@ function BaseClass:CheckVersion(VersionUsed: string): any
             print("Code was using an older patch of " .. self.ClassName .. ". Check for possible deprecations.\nselfVersion:"..selfVersion.."\nModuleVersion:"..VersionUsed.."\nTraceback:\n",debug.traceback())
         end
     else
-        assert(selfVersion <= VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
+        assert(selfVersion == VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
     end
     selfVersion:Destroy()
     VersionUsed:Destroy()
