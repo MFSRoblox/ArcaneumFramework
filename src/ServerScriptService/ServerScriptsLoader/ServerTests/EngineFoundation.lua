@@ -126,6 +126,37 @@ local TestInfo = TestInfoInterface.new({
             --__eq test
             return true
         end)
+        ThisTest:AddTest("CheckVersion Test", true, function()
+            local InternalClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+            local NewInternalClass = InternalClass:Extend({
+                Version = "1.5.1",
+                ClassName = "TestNewInternalClass"
+            })
+            function NewInternalClass:TestFunction():number
+                return 200
+            end
+            local OverVersionSuccess, OverVersionResult = pcall(function()
+                NewInternalClass:CheckVersion("2.0.0")
+            end)
+            assert(not OverVersionSuccess, "The CheckVersion(\"2.0.0\") of NewInternalClass somehow passed! It shouldn't have passed! Debug:"..tostring(OverVersionResult))
+            local SameVersionSuccess, SameVersionResult = pcall(function()
+                NewInternalClass:CheckVersion("1.5.1")
+            end)
+            assert(SameVersionSuccess, "The CheckVersion(\"1.5.1\") of NewInternalClass did not pass! Debug:"..tostring(SameVersionResult))
+            local OldPatchSuccess, OldPatchResult = pcall(function()
+                NewInternalClass:CheckVersion("1.5.0")
+            end)
+            assert(OldPatchSuccess, "The CheckVersion(\"1.5.0\") of NewInternalClass did not pass! Debug:"..tostring(OldPatchResult))
+            local OldMinorSuccess, OldMinorResult = pcall(function()
+                NewInternalClass:CheckVersion("1.4.0")
+            end)
+            assert(OldMinorSuccess, "The CheckVersion(\"1.4.0\") of NewInternalClass did not pass! Debug:"..tostring(OldMinorResult))
+            local OldMajorSuccess, OldMajorResult = pcall(function()
+                NewInternalClass:CheckVersion("0.5.1")
+            end)
+            assert(not OldMajorSuccess, "The CheckVersion(\"0.5.1\") of NewInternalClass somehow passed! It shouldn't have passed! Debug:"..tostring(OldMajorResult))
+            return true
+        end)
         return ThisTest
     end;
 })
