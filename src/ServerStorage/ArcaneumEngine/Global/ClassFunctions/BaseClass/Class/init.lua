@@ -6,26 +6,40 @@
 ]=]
 local BaseClass = require(script.Parent)
 BaseClass:CheckVersion("1.0.0")
-local Class: Class = BaseClass:New("Class","1.0.0")
+local Class: Class = BaseClass:Extend({
+    ClassName = "Class",
+    Version = "1.0.0"
+})
 export type Class = {
     Connections: {[any]:RBXScriptConnection};
 } & typeof(Class) & BaseClass.BaseClass
 --[=[
     @prop ClassName string
     @within Class
-    The name of the object's class.
+    Inherited from [BaseClass.ClassName].
+]=]
+--[=[
+    @prop Version string
+    @within InternalClass
+    Inherited from [BaseClass.Version].
 ]=]
 --[=[
     @prop Connections table
     @within Class
     A table containing all existing connections to this object.
 ]=]
-function Class:Extend(NewObject): Class
-    NewObject = NewObject or {}
+--[=[
+    Applies metatable to NewObject and verifies that all properties of Class has been applied to it.
+
+    @param NewObject table -- The table that is being turned into a Class.
+    @return NewClass -- Returns an object with the ClassName of "ClassName".
+]=]
+function Class:Extend(NewObject: table): Class
+    NewObject = BaseClass.Extend(self, NewObject) :: Class
     if NewObject.Connections == nil then
         NewObject.Connections = {}
     end
-    return BaseClass.Extend(self, NewObject)
+    return NewObject
 end
 --[=[
     Creates a new Class object with a ClassName of "ClassName".
@@ -44,7 +58,7 @@ end
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function Class:NewFromTable(Table: table, ClassName:string, Version:string): Class
-    Table = BaseClass.NewFromTable(self,Table, ClassName, Version)
+    Table = BaseClass.NewFromTable(self, Table, ClassName, Version)
     return self:Extend(Table)
 end
 
