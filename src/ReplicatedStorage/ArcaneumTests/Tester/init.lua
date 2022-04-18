@@ -27,7 +27,7 @@ export type Tester = {
     Tests: Array<TestCaseClass.TestCase>;
 } & typeof(Tester)
 function Tester:New(TestName: string, DisplayName: string): Tester
-    local NewTester = BaseClass:New("Tester",TestName)
+    local NewTester = BaseClass.New(self,"Tester",TestName)
     if not DisplayName then
         local RandomNames = {"John Doe", "Jane Doe"}
         DisplayName = "Tester ".. RandomNames[Random.new():NextInteger(1,2)]

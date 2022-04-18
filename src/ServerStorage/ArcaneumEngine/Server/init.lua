@@ -10,7 +10,7 @@ local ServerNexus = BaseClass:Extend({
 })
 
 function ServerNexus:New()
-    local this = self:Extend(BaseClass:New("ServerNexus", "ServerNexus","1.0.0"))
+    local this = BaseClass.New(self,"ServerNexus", "ServerNexus","1.0.0")
     this.PlayerActionHandler = nil --require(Scripts:WaitForChild("PlayerActionHandler"))
     this.PlayerManager = require(Scripts:WaitForChild("PlayerManager"))
     return this

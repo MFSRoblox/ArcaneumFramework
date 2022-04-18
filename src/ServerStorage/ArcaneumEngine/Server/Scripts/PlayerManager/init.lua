@@ -24,7 +24,7 @@ PlayerInterface.Parent = ArcaneumGlobals:GetGlobal("Events")
 local PlayerSupervisor = require(script.PlayerSupervisor)
 
 function PlayerManager:New(): PlayerManager
-    local NewManager = self:Extend(BaseClass:New("PlayerManager","PlayerManager",PlayerSupervisor.Version))
+    local NewManager = BaseClass.New(self,"PlayerManager","PlayerManager",PlayerSupervisor.Version)
     --NewManager.PlayerInterface = PlayerInterface
     NewManager.Connections.Interface = PlayerInterface.OnServerEvent:Connect(function(Sender,Data)
         NewManager.Supervisors[Sender]:DataFromPlayer(Data)

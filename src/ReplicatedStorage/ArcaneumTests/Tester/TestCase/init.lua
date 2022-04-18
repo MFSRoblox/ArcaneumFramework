@@ -23,7 +23,7 @@ export type TestCase = {
     Steps: Array<(any) -> (any)>;
 } & typeof(TestCaseClass)
 function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any): TestCase
-    local NewTest = self:Extend(BaseClass:New("TestCase",Name))
+    local NewTest = BaseClass.New(self,"TestCase",Name)
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
     NewTest.PrintProcess = nil

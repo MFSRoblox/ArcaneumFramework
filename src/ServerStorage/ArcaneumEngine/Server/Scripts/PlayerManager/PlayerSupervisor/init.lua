@@ -20,7 +20,7 @@ local PlayerSupervisor = BaseClass:Extend(
 )
 
 function PlayerSupervisor:New(Player: Player)
-    local NewSupervisor = self:Extend(BaseClass:New("PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version))
+    local NewSupervisor = BaseClass.New(self,"PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version)
     NewSupervisor.Player = Player
     NewSupervisor.Functions = Utilities:ModulesToTable(script:GetChildren())
     local ClientPackage = game:GetService("ServerStorage").ArcaneumEngine:Clone()

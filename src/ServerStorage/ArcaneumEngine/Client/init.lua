@@ -20,7 +20,7 @@ ClientSoul.Globals = ArcaneumGlobals;
 local _Scripts = script.Scripts
 
 function ClientSoul:New()
-    local this = self:Extend(BaseClass:New("ClientSoul", "ClientSoul","0.0.1"))
+    local this = BaseClass.New(self,"ClientSoul", "ClientSoul","0.0.1")
     print("Created Client's Soul")
     return this
 end

@@ -24,7 +24,7 @@ export type DataTypeInterface = typeof(DataTypeInterface) & BaseClass.BaseClass
 ]=]
 
 function DataTypeInterface:NewClass(ClassName: string, Version:string): DataTypeInterface
-    local NewClass = BaseClass:New(ClassName, Version)
+    local NewClass = BaseClass.New(self,ClassName, Version)
     return NewClass
 end
 
