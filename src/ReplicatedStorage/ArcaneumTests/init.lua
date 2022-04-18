@@ -44,35 +44,41 @@ function TestBot:New(Tests: Folder)
     self.TestModules = TestModules
     local NumberOfTests = #TestModules
     print("Number of Testers to check:",NumberOfTests)
-    local TestData = {
+    local TestData = {}; --[[{
         Tests = table.create(NumberOfTests, nil);
         Positions = table.create(NumberOfTests, nil)
-    }
-    table.sort(TestModules,function(a,b)
-        local aSuc, aNum = pcall(function()
-            return a.Name + 0
-        end)
-        local bSuc, bNum = pcall(function()
-            return b.Name + 0
-        end)
-        assert(aSuc and bSuc,"One of these aren't a number! A: " .. a.Name .. ", B: " .. b.Name)
-        return aNum < bNum
-    end)
+    }]]
     for i=1, #TestModules do
         local ModuleScript = TestModules[i]
         if ModuleScript:IsA("ModuleScript") then
             print("Initializing test:",ModuleScript)
             local TestInfo: TestsClass.TestInfo = require(ModuleScript)
-            local Position = ModuleScript.Name
+            table.insert(TestData, TestInfo)
+            --[[local Position = TestInfo.TestPriority
             if TestData.Tests[Position] then
                 warn("The test with the number \""..Position.."\" [",TestData.Tests[Position],"] was replaced by", ModuleScript)
             end
             TestData.Tests[Position] = TestInfo
-            table.insert(TestData.Positions,Position)
+            table.insert(TestData.Positions,Position)]]
         end
     end
+    table.sort(TestData,function(a,b)
+        local aSuc, aNum = pcall(function()
+            return a.TestPriority + 0
+        end)
+        local bSuc, bNum = pcall(function()
+            return b.TestPriority + 0
+        end)
+        if aSuc and bSuc then
+            return aNum < bNum
+        elseif aSuc then
+            return true
+        elseif bSuc then
+            return false
+        end
+        assert(aSuc and bSuc,"One of these aren't a number! A: " .. a.Name .. ", B: " .. b.Name)
+    end)
     TestBot.TestData = TestData
-    print("Done!", TestData)
     return self
 end
 
@@ -80,8 +86,8 @@ function TestBot:Run()
     local TestData = self.TestData
     print("Running:",TestData)
     local FailedCounter, WarnCounter, SkippedCounter = 0,0,0
-    for i=1, #TestData.Positions do
-        local TesterInitData = TestData.Tests[TestData.Positions[i]]
+    for i=1, #TestData do
+        local TesterInitData = TestData[i]
         if TesterInitData.ToRun == true then
             local Tester = self.TesterClass:New(TesterInitData.TestName)
             Tester:SetPrintProcess(TesterInitData.ToPrintProcess)
