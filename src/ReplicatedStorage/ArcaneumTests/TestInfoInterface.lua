@@ -2,6 +2,7 @@ export type TestInfo = {
     ToRun: boolean;
     TestName: string;
     ToPrintProcess: boolean;
+    TestPriority: number;
     Init: (TestBot:table, Tester:table) -> (any);
 }
 local TestInfoInterface = {} do
@@ -11,6 +12,7 @@ local Default = {
     ToRun = true;
     TestName = "Unnamed Test";
     ToPrintProcess = true;
+    TestPriority = 100;
     Init = function(_TestBot, _ThisTest)
         warn("Init not implemented for this test! Debug:",debug.traceback())
     end;

@@ -10,9 +10,14 @@ local ArcaneumGlobals repeat
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local ScriptUtilities = ArcaneumGlobals.Utilities
---local ClientConnectorClass = ArcaneumGlobals.ClassFunctions:GetClass("ClientConnector") --ScriptUtilities:ImportModule(script,"Parent","ClientConnector")
-local TestCaseClass = require(script.TestCase) --ScriptUtilities:ImportModule(script,"TestCase")
+ScriptUtilities:CheckVersion("1.0.0")
+local TestCaseClass = require(script.TestCase)
 local TestResultClass = require(script.TestResult)
+local Tester:Tester = BaseClass:Extend({
+    ClassName = "Tester",
+    Version = "1.0.0";
+    Object = script;
+})
 export type Tester = {
     Version: number;
     Object: ModuleScript;
@@ -20,11 +25,7 @@ export type Tester = {
     DisplayName: string;
     PrintProcess: boolean;
     Tests: Array<TestCaseClass.TestCase>;
-}
-local Tester:Tester = BaseClass:Extend({
-    Version = 2;
-    Object = script;
-})
+} & typeof(Tester)
 function Tester:New(TestName: string, DisplayName: string): Tester
     local NewTester = BaseClass:New("Tester",TestName)
     if not DisplayName then

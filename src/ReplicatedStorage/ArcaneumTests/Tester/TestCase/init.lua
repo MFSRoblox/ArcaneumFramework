@@ -9,17 +9,17 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+local TestCaseClass:TestCase = BaseClass:Extend({
+    Version = 1;
+    Object = script;
+})
 export type TestCase = {
     Version: number;
     Object: ModuleScript;
     StopOnFailure: boolean;
     PrintProcess: boolean;
     Steps: Array<(any) -> (any)>;
-}
-local TestCaseClass:TestCase = BaseClass:Extend({
-    Version = 1;
-    Object = script;
-})
+} & typeof(TestCaseClass)
 function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any): TestCase
     local NewTest = self:Extend(BaseClass:New("TestCase",Name))
     NewTest.StopOnFailure = StopOnFailure or false;
@@ -86,7 +86,7 @@ end
 function TestCaseClass:Destroy()
     table.clear(self.Steps)
     table.clear(self)
-    return true
+    return BaseClass.Destroy(self)
 end
 
 return TestCaseClass

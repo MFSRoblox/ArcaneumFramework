@@ -91,17 +91,18 @@ function BaseClass:CheckVersion(VersionUsed: string): any
     --[[if selfVersion == VersionUsed then
         return
     end]]
-    print(selfVersion,VersionUsed)
-    assert(selfVersion <= VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
+    --print(selfVersion,VersionUsed)
     if selfVersion > VersionUsed then
         local selfMajor,selfMinor,selfPatch = selfVersion:GetMajorVersion(),selfVersion:GetMinorVersion(),selfVersion:GetPatchVersion()
         local usedMajor,usedMinor,usedPatch = VersionUsed:GetMajorVersion(),VersionUsed:GetMinorVersion(),VersionUsed:GetPatchVersion()
-        assert(selfMajor > usedMajor,"Code was using a significantly older version of " .. self.ClassName .. "! Errors are likely to occur!\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n"..debug.traceback())
+        assert(selfMajor >= usedMajor,"Code was using a significantly older version of " .. self.ClassName .. "! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n"..debug.traceback())
         if selfMinor > usedMinor then
-            warn("Code was using an older version of " .. self.ClassName .. ". Check for possible deprecations!\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n",debug.traceback())
+            warn("Code was using an older version of " .. self.ClassName .. ". Check for possible deprecations!\nselfVersion:"..selfVersion.."\nModuleVersion:"..VersionUsed.."\nTraceback:\n",debug.traceback())
         elseif selfPatch > usedPatch then
-            print("Code was using an older patch of " .. self.ClassName .. ". Check for possible deprecations.\nselfVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n",debug.traceback())
+            print("Code was using an older patch of " .. self.ClassName .. ". Check for possible deprecations.\nselfVersion:"..selfVersion.."\nModuleVersion:"..VersionUsed.."\nTraceback:\n",debug.traceback())
         end
+    else
+        assert(selfVersion == VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
     end
     selfVersion:Destroy()
     VersionUsed:Destroy()

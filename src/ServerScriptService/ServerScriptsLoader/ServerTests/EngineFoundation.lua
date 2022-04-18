@@ -1,4 +1,5 @@
-local TestInfoInterface = require(script.Parent)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TestInfoInterface = require(ReplicatedStorage.ArcaneumTests.TestInfoInterface)
 local PrintDebug = false
 local function debugPrint(...)
     if PrintDebug == true then
@@ -14,6 +15,7 @@ local GlobalExpectations = {
     Perspective = "string";
     Utilities = "table";
     Version = "table";
+    AddGlobal = "function";
     --Server Globals
     IsPublic = "boolean";
     IsTesting = "boolean";
@@ -22,6 +24,7 @@ local TestInfo = TestInfoInterface.new({
     ToRun = true;
     TestName = "Engine Foundation";
     ToPrintProcess = PrintDebug;
+    TestPriority = 0;
     Init = function(TestBot, ThisTest)
         local ArcaneumGlobals = TestBot.ArcaneumGlobals
         --Globals tests
