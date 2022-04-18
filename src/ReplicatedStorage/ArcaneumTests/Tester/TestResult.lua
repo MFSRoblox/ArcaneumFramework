@@ -25,7 +25,7 @@ TestResultClass.__tostring = function(self)
     return string.format("[%s] [Status: %s] [Result: %s]", self.Name, tostring(self.Status), tostring(self.Result))
 end
 function TestResultClass:New(TestName: string, Status: string, Result: any): TestResult
-    local NewTest = self:Extend(BaseClass:New("TestCase",TestName))
+    local NewTest = BaseClass:New("TestCase",TestName)
     NewTest.Status = Status or "Unassigned";
     NewTest.Result = Result;
     return NewTest

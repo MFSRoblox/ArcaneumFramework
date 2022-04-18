@@ -13,7 +13,10 @@ print("Arcaneum Globals:",ArcaneumGlobals)
 ArcaneumGlobals:CheckVersion("1.0.0")
 local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
 local BaseClass = ClassFunctions:GetClass("BaseClass")
-local Arcaneum = BaseClass:New("ArcaneumFramework","0.0.1")
+local Arcaneum = BaseClass:Extend({
+    ClassName = "ArcaneumFramework",
+    Version = "0.0.1"
+})
 
 function Arcaneum:New()
     local Perspective = ArcaneumGlobals:GetGlobal("Perspective")
