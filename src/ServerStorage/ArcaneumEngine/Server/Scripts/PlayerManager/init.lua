@@ -5,11 +5,11 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
-BaseClass:CheckVersion("1.0.0")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
+local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
 local Players = game:GetService("Players")
 local PlayerManager = BaseClass:Extend(
     {
@@ -20,7 +20,7 @@ type PlayerManager = table
 
 local PlayerInterface = Instance.new("RemoteEvent")
 PlayerInterface.Name = "PlayerInterface"
-PlayerInterface.Parent = ArcaneumGlobals.Events
+PlayerInterface.Parent = ArcaneumGlobals:GetGlobal("Events")
 local PlayerSupervisor = require(script.PlayerSupervisor)
 
 function PlayerManager:New(): PlayerManager

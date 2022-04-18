@@ -59,9 +59,9 @@ end
     @param ClassName string -- The name of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:NewFromTable(Table: table, ClassName:string, Version:string): BaseClass
-    Table.ClassName = ClassName or ""
-    Table.Version = Version or "0.0.0"
+function BaseClass:NewFromTable(Table: table, ClassName:string?, Version:string?): BaseClass
+    Table.ClassName = Table.ClassName or ClassName or ""
+    Table.Version = Table.Version or Version or "0.0.0"
     return self:Extend(Table)
 end
 
@@ -76,7 +76,7 @@ end
     @error "Code was using an older version of 'ClassName'. Check for possible deprecations!" -- Occurs when the inputted version has an older minor update. Should ensure deprecated code gets updated.
     @error "Code was using an older patch of 'ClassName'. Check for possible deprecations." -- Occurs when the inputted version has an older patch. Can ignore.
 ]=]
-function BaseClass:CheckVersion(VersionUsed: string): any
+function BaseClass:CheckVersion(VersionUsed: string): BaseClass
     local VersionClass = require(script.DataTypes.VersionClass)
     type Version = typeof(VersionClass)
     local selfVersion = VersionClass.fromString(self.Version) :: Version --self.Version

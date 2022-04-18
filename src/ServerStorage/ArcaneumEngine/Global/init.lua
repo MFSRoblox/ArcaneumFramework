@@ -1,12 +1,30 @@
-local GlobalTable = require(script.Utilities):ModulesToTable(script:GetChildren())
-type GlobalTable = Dictionary<any>
-function GlobalTable:AddGlobal(Data: ModuleScript | any, Name: string?)
+local ClassFunctions = require(script.ClassFunctions)
+ClassFunctions:CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("BaseClass")
+local ArcaneumGlobals: ArcaneumGlobals = BaseClass:Extend({
+    ClassName = "ArcaneumGlobals",
+    Version = "1.0.0",
+    Globals = require(script.Utilities):ModulesToTable(script:GetChildren()),
+})
+type ArcaneumGlobals = {
+    Globals: Dictionary<any>
+} & typeof(ArcaneumGlobals)
+print(ArcaneumGlobals.Globals)
+function ArcaneumGlobals:AddGlobal<T>(Data: ModuleScript | T, Name: string?): T
     if typeof(Data) == "Instance" and Data:IsA("ModuleScript") then
         Name = Data.Name
         Data = require(Data)
     end
-    GlobalTable[Name] = Data
+    if ArcaneumGlobals.Globals[Name] ~= nil then
+        warn("Overriding Global "..Name.."!")
+    end
+    ArcaneumGlobals.Globals[Name] = Data
     return Data
 end
 
-return GlobalTable
+function ArcaneumGlobals:GetGlobal(Name: string): any
+    assert(Name ~= nil, "")
+    return ArcaneumGlobals.Globals[Name]
+end
+
+return ArcaneumGlobals

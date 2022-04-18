@@ -6,9 +6,11 @@ local ArcaneumGlobals repeat
         task.wait(1)
     else
         ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals:CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
+local BaseClass = ClassFunctions:GetClass("Internal")
 local ClientSoul = BaseClass:Extend({
     Globals = ArcaneumGlobals;
     AddOns = {};

@@ -20,6 +20,13 @@ export type Class = {
     @within Class
     A table containing all existing connections to this object.
 ]=]
+function Class:Extend(NewObject): Class
+    NewObject = NewObject or {}
+    if NewObject.Connections == nil then
+        NewObject.Connections = {}
+    end
+    return BaseClass.Extend(self, NewObject)
+end
 --[=[
     Creates a new Class object with a ClassName of "ClassName".
 
@@ -37,8 +44,7 @@ end
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function Class:NewFromTable(Table: table, ClassName:string, Version:string): Class
-    Table = BaseClass:NewFromTable(Table, ClassName, Version)
-    Table.Connections = {}
+    Table = BaseClass.NewFromTable(self,Table, ClassName, Version)
     return self:Extend(Table)
 end
 

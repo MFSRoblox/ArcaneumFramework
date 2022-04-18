@@ -6,12 +6,15 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Class"):CheckVersion("1.0.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
 local TesterClass = require(script.Tester)
 local TestsClass = require(script.TestInfoInterface)
-local TestBot: TestBot = ArcaneumGlobals.ClassFunctions:GetClass("Class"):Extend(
+local TestBot: TestBot = BaseClass:Extend(
     {
         ClassName = "ArcaneumTestService";
         ArcaneumGlobals = ArcaneumGlobals;
@@ -104,7 +107,7 @@ function TestBot:Run()
                         warn(Result)
                         WarnCounter += 1
                     elseif Result.Status == "Critical Failure" then
-                        ArcaneumGlobals.Utilities:error(Result)
+                        Utilities:error(Result)
                         FailedCounter += 1
                     else
                         warn("Test did not have a Status!")

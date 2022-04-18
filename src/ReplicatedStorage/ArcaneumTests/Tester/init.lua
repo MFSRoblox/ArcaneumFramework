@@ -5,12 +5,12 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
-local ScriptUtilities = ArcaneumGlobals.Utilities
-ScriptUtilities:CheckVersion("1.0.0")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
 local TestCaseClass = require(script.TestCase)
 local TestResultClass = require(script.TestResult)
 local Tester:Tester = BaseClass:Extend({
@@ -88,7 +88,7 @@ function Tester:RunTests(): Array<TestResultClass.TestResult>
         end
     end)
     if not s then
-        ScriptUtilities:error(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
+        Utilities:error(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
         table.insert(output,TestResultClass:New(LatestTestName, TestStatuses[2], tostring(v)))
     end
     return output
