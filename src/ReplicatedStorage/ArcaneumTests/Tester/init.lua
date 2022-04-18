@@ -50,17 +50,7 @@ end
 
 function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (PreviousReturns:any) -> (any))
     self:print(self.DisplayName.." added test:",TestName)
-    --[[local ClientConnector = nil
-    if Callback == "Client" then
-        if not self.ClientConnector then
-            self.ClientConnector = ClientConnectorClass:New(TestName..self.Name)
-        end
-        ClientConnector = self.ClientConnector
-        Callback = function()
-            return "ClientConnector initialized."
-        end
-    end]]
-    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback)--, ClientConnector)
+    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback)
     table.insert(self.Tests, NewTest)
     return NewTest
 end
