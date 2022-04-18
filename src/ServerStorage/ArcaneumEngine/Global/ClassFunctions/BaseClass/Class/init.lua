@@ -2,7 +2,9 @@
     @class Class
     @server
     @client
-    The foundational class for all services and factories. In comparison to the BaseClass, this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
+    The foundational class for all services and factories that need to manage connections. Inherits from [BaseClass].
+    
+    In comparison to [BaseClass], this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
 local BaseClass = require(script.Parent)
 BaseClass:CheckVersion("1.0.0")
@@ -14,20 +16,11 @@ export type Class = {
     Connections: {[any]:RBXScriptConnection};
 } & typeof(Class) & BaseClass.BaseClass
 --[=[
-    @prop ClassName string
-    @within Class
-    Inherited from [BaseClass.ClassName].
-]=]
---[=[
-    @prop Version string
-    @within InternalClass
-    Inherited from [BaseClass.Version].
-]=]
---[=[
     @prop Connections table
     @within Class
     A table containing all existing connections to this object.
 ]=]
+
 --[=[
     Applies metatable to NewObject and verifies that all properties of Class has been applied to it.
 

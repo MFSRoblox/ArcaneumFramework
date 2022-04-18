@@ -20,7 +20,7 @@ export type BaseClass = {
 --[=[
     @prop Version string
     @within BaseClass
-    A string in (Semantic Versioning format)[https://semver.org/] that represents the class's current version.
+    A string in [Semantic Versioning format](https://semver.org/) that represents the class's current version.
 ]=]
 
 --[=[

@@ -4,7 +4,9 @@ BaseClass:CheckVersion("1.0.0")
     @class InternalClass
     @server
     @client
-    The foundational class for replicated objects. In comparison to the BaseClass, the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
+    The foundational class for replicated objects. Inherits from [Class].
+    
+    In comparison to [Class], the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
 ]=]
 local InternalClass:InternalClass = BaseClass:Extend({
     ClassName = "InternalClass",
@@ -13,21 +15,6 @@ local InternalClass:InternalClass = BaseClass:Extend({
 export type InternalClass = {
     Name: string;
 } & typeof(InternalClass) & BaseClass.Class
---[=[
-    @prop ClassName string
-    @within Class
-    Inherited from [BaseClass.ClassName].
-]=]
---[=[
-    @prop Version string
-    @within InternalClass
-    Inherited from [BaseClass.Version].
-]=]
---[=[
-    @prop Connections table
-    @within InternalClass
-    Inherited from [Class.Connections].
-]=]
 --[=[
     @prop Name string
     @within InternalClass
