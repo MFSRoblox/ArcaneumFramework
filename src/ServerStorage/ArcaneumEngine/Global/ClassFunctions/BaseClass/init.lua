@@ -1,4 +1,5 @@
 --[=[
+    @since v1.0.0
     @class BaseClass
     @server
     @client
@@ -6,24 +7,27 @@
 ]=]
 local BaseClass: BaseClass = {
     ClassName = "BaseClass";
-    Version = "1.0.0";
+    Version = "1.0.1";
 }
 export type BaseClass = {
     ClassName: string;
     Version: string;
 } & typeof(BaseClass)
 --[=[
+    @since v1.0.0
     @prop ClassName string
     @within BaseClass
     The name of the object's class.
 ]=]
 --[=[
+    @since v1.0.0
     @prop Version string
     @within BaseClass
     A string in [Semantic Versioning format](https://semver.org/) that represents the class's current version.
 ]=]
 
 --[=[
+    @since v1.0.0
     This is a very fancy function that sets the index of the table so you don't need to repeatedly .__index and setmetatable.
 
     @param NewObject table -- The table you want to set the __index metatable to.
@@ -32,10 +36,10 @@ export type BaseClass = {
 function BaseClass:Extend(NewObject): BaseClass
     NewObject = NewObject or {}
     if NewObject.ClassName == nil then
-        NewObject.ClassName = ""
+        NewObject.ClassName = self.ClassName or ""
     end
     if NewObject.Version == nil then
-        NewObject.Version = "0.0.0"
+        NewObject.Version = self.Version or "0.0.0"
     end
     self.__index = self
     local output = setmetatable(NewObject, self)
@@ -43,6 +47,7 @@ function BaseClass:Extend(NewObject): BaseClass
 end
 
 --[=[
+    @since v1.0.0
     Creates a new BaseClass object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
@@ -50,22 +55,25 @@ end
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function BaseClass:New(ClassName:string, Version:string): BaseClass
-    return self:NewFromTable({}, ClassName, Version)
+    return self:Extend({
+        ClassName = ClassName;
+        Version = Version;
+    })
 end
 
 --[=[
-    Creates a new BaseClass object from a premade table with a ClassName of "ClassName".
+    @deprecated v1.0.1 -- [description]
+    A wrapper for [BaseClass:Extend].
 
-    @param ClassName string -- The name of the class being created.
+    @param Table table -- The name of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:NewFromTable(Table: table, ClassName:string?, Version:string?): BaseClass
-    Table.ClassName = Table.ClassName or ClassName or ""
-    Table.Version = Table.Version or Version or "0.0.0"
+function BaseClass:NewFromTable(Table: table): BaseClass
     return self:Extend(Table)
 end
 
 --[=[
+    @since v1.0.0
     Checks if the inputted version is the class's current version. If not, put a message on the console.
 
     @param VersionUsed Version | string -- The version of the class that the code has used.
@@ -110,6 +118,7 @@ function BaseClass:CheckVersion(VersionUsed: string): BaseClass
 end
 
 --[=[
+    @since v1.0.0
     Destroy the BaseClass Object to clear up memory.
 ]=]
 function BaseClass:Destroy()
