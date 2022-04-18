@@ -44,22 +44,13 @@ function TestBot:New(Tests: Folder)
     self.TestModules = TestModules
     local NumberOfTests = #TestModules
     print("Number of Testers to check:",NumberOfTests)
-    local TestData = {}; --[[{
-        Tests = table.create(NumberOfTests, nil);
-        Positions = table.create(NumberOfTests, nil)
-    }]]
+    local TestData = {};
     for i=1, #TestModules do
         local ModuleScript = TestModules[i]
         if ModuleScript:IsA("ModuleScript") then
             print("Initializing test:",ModuleScript)
             local TestInfo: TestsClass.TestInfo = require(ModuleScript)
             table.insert(TestData, TestInfo)
-            --[[local Position = TestInfo.TestPriority
-            if TestData.Tests[Position] then
-                warn("The test with the number \""..Position.."\" [",TestData.Tests[Position],"] was replaced by", ModuleScript)
-            end
-            TestData.Tests[Position] = TestInfo
-            table.insert(TestData.Positions,Position)]]
         end
     end
     table.sort(TestData,function(a,b)
