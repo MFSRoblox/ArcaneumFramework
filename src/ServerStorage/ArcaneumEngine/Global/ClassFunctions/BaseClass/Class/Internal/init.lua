@@ -4,29 +4,36 @@ BaseClass:CheckVersion("1.0.0")
     @class InternalClass
     @server
     @client
-    The foundational class for replicated objects. In comparison to the BaseClass, the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
+    The foundational class for replicated objects. Inherits from [Class].
+    
+    In comparison to [Class], the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
 ]=]
-local InternalClass:InternalClass = BaseClass:New("InternalClass", "1.0.0")
+local InternalClass:InternalClass = BaseClass:Extend({
+    ClassName = "InternalClass",
+    Version = "1.0.0",
+})
 export type InternalClass = {
     Name: string;
-} & typeof(InternalClass) & typeof(BaseClass)
---[=[
-    @prop ClassName string
-    @within InternalClass
-    Inherited from BaseClass.
-    The name of the object's class.
-]=]
+} & typeof(InternalClass) & BaseClass.Class
 --[=[
     @prop Name string
     @within InternalClass
     The name of the object's class.
 ]=]
+
 --[=[
-    @prop Connections table
-    @within InternalClass
-    Inherited from BaseClass.
-    A table containing all existing connections to this object.
+    Applies metatable to NewObject and verifies that all properties of InternalClass has been applied to it.
+
+    @param NewObject table -- The table that is being turned into a Class.
+    @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
+function InternalClass:Extend(NewObject: table): InternalClass
+    NewObject = BaseClass.Extend(self, NewObject) :: InternalClass
+    if NewObject.Name == nil then
+        NewObject.Name = NewObject.ClassName
+    end
+    return NewObject
+end
 
 --[=[
     Creates a new InternalClass object with the ClassName of "ClassName" and Name of "Name".

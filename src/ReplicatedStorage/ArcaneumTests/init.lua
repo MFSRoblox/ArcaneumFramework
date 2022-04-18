@@ -6,12 +6,15 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Class"):CheckVersion("1.0.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
 local TesterClass = require(script.Tester)
 local TestsClass = require(script.TestInfoInterface)
-local TestBot: TestBot = ArcaneumGlobals.ClassFunctions:GetClass("Class"):Extend(
+local TestBot: TestBot = BaseClass:Extend(
     {
         ClassName = "ArcaneumTestService";
         ArcaneumGlobals = ArcaneumGlobals;
@@ -44,22 +47,13 @@ function TestBot:New(Tests: Folder)
     self.TestModules = TestModules
     local NumberOfTests = #TestModules
     print("Number of Testers to check:",NumberOfTests)
-    local TestData = {}; --[[{
-        Tests = table.create(NumberOfTests, nil);
-        Positions = table.create(NumberOfTests, nil)
-    }]]
+    local TestData = {};
     for i=1, #TestModules do
         local ModuleScript = TestModules[i]
         if ModuleScript:IsA("ModuleScript") then
             print("Initializing test:",ModuleScript)
             local TestInfo: TestsClass.TestInfo = require(ModuleScript)
             table.insert(TestData, TestInfo)
-            --[[local Position = TestInfo.TestPriority
-            if TestData.Tests[Position] then
-                warn("The test with the number \""..Position.."\" [",TestData.Tests[Position],"] was replaced by", ModuleScript)
-            end
-            TestData.Tests[Position] = TestInfo
-            table.insert(TestData.Positions,Position)]]
         end
     end
     table.sort(TestData,function(a,b)
@@ -113,7 +107,7 @@ function TestBot:Run()
                         warn(Result)
                         WarnCounter += 1
                     elseif Result.Status == "Critical Failure" then
-                        ArcaneumGlobals.Utilities:error(Result)
+                        Utilities:error(Result)
                         FailedCounter += 1
                     else
                         warn("Test did not have a Status!")

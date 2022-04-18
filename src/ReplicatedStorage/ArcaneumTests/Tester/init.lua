@@ -5,12 +5,12 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
-local ScriptUtilities = ArcaneumGlobals.Utilities
-ScriptUtilities:CheckVersion("1.0.0")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
 local TestCaseClass = require(script.TestCase)
 local TestResultClass = require(script.TestResult)
 local Tester:Tester = BaseClass:Extend({
@@ -27,7 +27,7 @@ export type Tester = {
     Tests: Array<TestCaseClass.TestCase>;
 } & typeof(Tester)
 function Tester:New(TestName: string, DisplayName: string): Tester
-    local NewTester = BaseClass:New("Tester",TestName)
+    local NewTester = BaseClass.New(self,"Tester",TestName)
     if not DisplayName then
         local RandomNames = {"John Doe", "Jane Doe"}
         DisplayName = "Tester ".. RandomNames[Random.new():NextInteger(1,2)]
@@ -50,17 +50,7 @@ end
 
 function Tester:AddTest(TestName: string, StopOnFailure: boolean, Callback: (PreviousReturns:any) -> (any))
     self:print(self.DisplayName.." added test:",TestName)
-    --[[local ClientConnector = nil
-    if Callback == "Client" then
-        if not self.ClientConnector then
-            self.ClientConnector = ClientConnectorClass:New(TestName..self.Name)
-        end
-        ClientConnector = self.ClientConnector
-        Callback = function()
-            return "ClientConnector initialized."
-        end
-    end]]
-    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback)--, ClientConnector)
+    local NewTest = TestCaseClass:New(TestName, StopOnFailure, Callback)
     table.insert(self.Tests, NewTest)
     return NewTest
 end
@@ -98,7 +88,7 @@ function Tester:RunTests(): Array<TestResultClass.TestResult>
         end
     end)
     if not s then
-        ScriptUtilities:error(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
+        Utilities:error(self.DisplayName .." cannot execute all tests! Result:\n"..tostring(v))
         table.insert(output,TestResultClass:New(LatestTestName, TestStatuses[2], tostring(v)))
     end
     return output

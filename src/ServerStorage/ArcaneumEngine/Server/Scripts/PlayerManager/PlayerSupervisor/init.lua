@@ -5,16 +5,14 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local Utilities = ArcaneumGlobals.Utilities
-Utilities:CheckVersion("1.0.0")
-local ClassFunctions = ArcaneumGlobals.ClassFunctions
-ClassFunctions:CheckVersion("1.0.0")
-local BaseClass = ClassFunctions:GetClass("Internal")
-BaseClass:CheckVersion("1.0.0")
-local PlayerInterface = ArcaneumGlobals.Events.PlayerInterface
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
+local Events = ArcaneumGlobals:GetGlobal("Events")
+local PlayerInterface = Events.PlayerInterface
 local PlayerSupervisor = BaseClass:Extend(
     {
         Version = "1.0.0";
@@ -22,9 +20,9 @@ local PlayerSupervisor = BaseClass:Extend(
 )
 
 function PlayerSupervisor:New(Player: Player)
-    local NewSupervisor = self:Extend(BaseClass:New("PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version))
+    local NewSupervisor = BaseClass.New(self,"PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version)
     NewSupervisor.Player = Player
-    NewSupervisor.Functions = ArcaneumGlobals.Utilities:ModulesToTable(script:GetChildren())
+    NewSupervisor.Functions = Utilities:ModulesToTable(script:GetChildren())
     local ClientPackage = game:GetService("ServerStorage").ArcaneumEngine:Clone()
     ClientPackage.Server:Destroy()
     ClientPackage.Parent = Player

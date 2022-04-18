@@ -2,24 +2,38 @@
     @class Class
     @server
     @client
-    The foundational class for all services and factories. In comparison to the BaseClass, this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
+    The foundational class for all services and factories that need to manage connections. Inherits from [BaseClass].
+    
+    In comparison to [BaseClass], this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
 local BaseClass = require(script.Parent)
 BaseClass:CheckVersion("1.0.0")
-local Class: Class = BaseClass:New("Class","1.0.0")
+local Class: Class = BaseClass:Extend({
+    ClassName = "Class",
+    Version = "1.0.0"
+})
 export type Class = {
     Connections: {[any]:RBXScriptConnection};
 } & typeof(Class) & BaseClass.BaseClass
---[=[
-    @prop ClassName string
-    @within Class
-    The name of the object's class.
-]=]
 --[=[
     @prop Connections table
     @within Class
     A table containing all existing connections to this object.
 ]=]
+
+--[=[
+    Applies metatable to NewObject and verifies that all properties of Class has been applied to it.
+
+    @param NewObject table -- The table that is being turned into a Class.
+    @return NewClass -- Returns an object with the ClassName of "ClassName".
+]=]
+function Class:Extend(NewObject: table): Class
+    NewObject = BaseClass.Extend(self, NewObject) :: Class
+    if NewObject.Connections == nil then
+        NewObject.Connections = {}
+    end
+    return NewObject
+end
 --[=[
     Creates a new Class object with a ClassName of "ClassName".
 
@@ -37,8 +51,7 @@ end
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function Class:NewFromTable(Table: table, ClassName:string, Version:string): Class
-    Table = BaseClass:NewFromTable(Table, ClassName, Version)
-    Table.Connections = {}
+    Table = BaseClass.NewFromTable(self, Table, ClassName, Version)
     return self:Extend(Table)
 end
 

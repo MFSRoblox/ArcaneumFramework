@@ -5,12 +5,14 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
 local TestCaseClass:TestCase = BaseClass:Extend({
-    Version = 1;
+    ClassName = "TestCaseClass";
+    Version = "1.0.0";
     Object = script;
 })
 export type TestCase = {
@@ -21,7 +23,7 @@ export type TestCase = {
     Steps: Array<(any) -> (any)>;
 } & typeof(TestCaseClass)
 function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any): TestCase
-    local NewTest = self:Extend(BaseClass:New("TestCase",Name))
+    local NewTest = BaseClass.New(self,"TestCase",Name)
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
     NewTest.PrintProcess = nil

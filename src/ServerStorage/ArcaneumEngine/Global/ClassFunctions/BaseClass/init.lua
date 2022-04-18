@@ -20,7 +20,7 @@ export type BaseClass = {
 --[=[
     @prop Version string
     @within BaseClass
-    The version of the object's class.
+    A string in [Semantic Versioning format](https://semver.org/) that represents the class's current version.
 ]=]
 
 --[=[
@@ -35,7 +35,7 @@ function BaseClass:Extend(NewObject): BaseClass
         NewObject.ClassName = ""
     end
     if NewObject.Version == nil then
-        NewObject.Version = "0.0.1"
+        NewObject.Version = "0.0.0"
     end
     self.__index = self
     local output = setmetatable(NewObject, self)
@@ -59,9 +59,9 @@ end
     @param ClassName string -- The name of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:NewFromTable(Table: table, ClassName:string, Version:string): BaseClass
-    Table.ClassName = ClassName or ""
-    Table.Version = Version or "0.0.0"
+function BaseClass:NewFromTable(Table: table, ClassName:string?, Version:string?): BaseClass
+    Table.ClassName = Table.ClassName or ClassName or ""
+    Table.Version = Table.Version or Version or "0.0.0"
     return self:Extend(Table)
 end
 
@@ -76,7 +76,7 @@ end
     @error "Code was using an older version of 'ClassName'. Check for possible deprecations!" -- Occurs when the inputted version has an older minor update. Should ensure deprecated code gets updated.
     @error "Code was using an older patch of 'ClassName'. Check for possible deprecations." -- Occurs when the inputted version has an older patch. Can ignore.
 ]=]
-function BaseClass:CheckVersion(VersionUsed: string): any
+function BaseClass:CheckVersion(VersionUsed: string): BaseClass
     local VersionClass = require(script.DataTypes.VersionClass)
     type Version = typeof(VersionClass)
     local selfVersion = VersionClass.fromString(self.Version) :: Version --self.Version
@@ -95,7 +95,7 @@ function BaseClass:CheckVersion(VersionUsed: string): any
     if selfVersion > VersionUsed then
         local selfMajor,selfMinor,selfPatch = selfVersion:GetMajorVersion(),selfVersion:GetMinorVersion(),selfVersion:GetPatchVersion()
         local usedMajor,usedMinor,usedPatch = VersionUsed:GetMajorVersion(),VersionUsed:GetMinorVersion(),VersionUsed:GetPatchVersion()
-        assert(selfMajor >= usedMajor,"Code was using a significantly older version of " .. self.ClassName .. "! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n"..debug.traceback())
+        assert(selfMajor <= usedMajor,"Code was using a significantly older version of " .. self.ClassName .. "! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n"..debug.traceback())
         if selfMinor > usedMinor then
             warn("Code was using an older version of " .. self.ClassName .. ". Check for possible deprecations!\nselfVersion:"..selfVersion.."\nModuleVersion:"..VersionUsed.."\nTraceback:\n",debug.traceback())
         elseif selfPatch > usedPatch then

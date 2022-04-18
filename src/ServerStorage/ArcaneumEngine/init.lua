@@ -9,22 +9,22 @@ local GlobalsModule = ReplicatedStorage:FindFirstChild(GlobalModuleName) do
     GlobalsModule.Parent = ReplicatedStorage
 end
 local ArcaneumGlobals = require(GlobalsModule)
---ArcaneumGlobals.ClassFunctions.ClientConnector = ArcaneumGlobals.Utilities:ImportModule(GlobalsModule,"ClassFunctions","Class","Internal","ClientConnector")
 print("Arcaneum Globals:",ArcaneumGlobals)
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("BaseClass")
-local Arcaneum = BaseClass:New("ArcaneumFramework","0.0.1")
+ArcaneumGlobals:CheckVersion("1.0.0")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
+local BaseClass = ClassFunctions:GetClass("BaseClass")
+local Arcaneum = BaseClass:Extend({
+    ClassName = "ArcaneumFramework",
+    Version = "0.0.1"
+})
 
 function Arcaneum:New()
-    local Perspective = ArcaneumGlobals.Perspective
+    local Perspective = ArcaneumGlobals:GetGlobal("Perspective")
     print("Arcaneum initializing on",Perspective)
     local PerspectiveGlobals = require(script[Perspective].Shared)
     print("Arcaneum",Perspective,"Globals:",PerspectiveGlobals)
     for Name, Data in next, PerspectiveGlobals do
-        if ArcaneumGlobals[Name] then
-            local printOutput = "(" .. tostring(Perspective) .. ") Overwritten " .. Name .." with " .. tostring(Data)
-            print(printOutput)
-        end
-        ArcaneumGlobals[Name] = Data
+        ArcaneumGlobals:AddGlobal(Data,Name)
     end
     local Module = require(script[Perspective])
     return Module

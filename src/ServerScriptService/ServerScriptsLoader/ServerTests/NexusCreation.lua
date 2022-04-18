@@ -14,7 +14,6 @@ local TestInfo = TestInfoInterface.new({
     ToPrintProcess = PrintDebug;
     TestPriority = 1;
     Init = function(_TestBot, ThisTest)
-        --local ArcaneumGlobals = self.ArcaneumGlobals
         local Nexus
         ThisTest:SetPrintProcess(PrintDebug)
         ThisTest:AddTest("Nexus Test", true, function()

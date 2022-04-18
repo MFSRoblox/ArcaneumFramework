@@ -1,17 +1,23 @@
-local BaseClass = require(script.Parent.ClassFunctions.BaseClass)
+local ClassFunctions = require(script.Parent.ClassFunctions)
+ClassFunctions:CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Class")
 BaseClass:CheckVersion("1.0.0")
 --[=[
     @class Utilities
     @server
     @client
-    A module that consists of handy functions that will be used throughout the framework and game.
+    A module that consists of handy functions that will be used throughout the framework and game. Extends [Class].
 ]=]
-local Utilities = BaseClass:New("Utilities", "1.0.0") do
-    Utilities.Version = "1.0.0";
-    Utilities.ErrorEvent = Instance.new("BindableEvent")
+local Utilities = BaseClass:Extend({
+    ClassName = "Utilities";
+    Version = "1.0.0";
+    ErrorEvent = Instance.new("BindableEvent");
+}) do
+    Utilities:AddConnection("ErrorEvent",
     Utilities.ErrorEvent.Event:Connect(function(ErrorMsg:string)
         error(ErrorMsg,0)
-    end)
+    end))
+    
 end
 --[=[
     A pcall function with a prebuilt message in the format of "ErrorMsg: Result \n traceback"

@@ -10,16 +10,10 @@ local Software = require(BootDrive)
 print("Booted")
 
 local ArcaneumGlobals = Software.Globals
---[[
-local RunService = game:GetService("RunService")
-print(RunService:IsRunMode())
-if ArcaneumGlobals.IsStudio and not RunService:IsRunMode() then
-    game:GetService("Players").PlayerAdded:Wait()]]
---end
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TestModuleName = "ArcaneumTests"
 local TestModule = ReplicatedStorage:FindFirstChild(TestModuleName)
-if ArcaneumGlobals.IsTesting then
+if ArcaneumGlobals:GetGlobal("IsTesting") then
     local TestService = require(TestModule):New(script.ServerTests)
     print("Run Tests")
     TestService:Run()

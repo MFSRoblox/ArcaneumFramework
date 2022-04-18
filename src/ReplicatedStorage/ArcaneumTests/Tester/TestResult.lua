@@ -5,12 +5,14 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
+local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
 local TestResultClass: TestResult = BaseClass:Extend({
-    Version = 1;
+    ClassName = "TestResultClass";
+    Version = "1.0.0";
     Object = script;
 })
 export type TestResult = {
@@ -23,7 +25,7 @@ TestResultClass.__tostring = function(self)
     return string.format("[%s] [Status: %s] [Result: %s]", self.Name, tostring(self.Status), tostring(self.Result))
 end
 function TestResultClass:New(TestName: string, Status: string, Result: any): TestResult
-    local NewTest = self:Extend(BaseClass:New("TestCase",TestName))
+    local NewTest = BaseClass.New(self,"TestCase",TestName)
     NewTest.Status = Status or "Unassigned";
     NewTest.Result = Result;
     return NewTest
