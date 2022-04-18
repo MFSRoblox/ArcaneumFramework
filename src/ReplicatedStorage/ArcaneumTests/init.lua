@@ -61,6 +61,7 @@ function TestBot:New(Tests: Folder)
     for i=1, #TestModules do
         local ModuleScript = TestModules[i]
         if ModuleScript:IsA("ModuleScript") then
+            print("Initializing test:",ModuleScript)
             local TestInfo: TestsClass.TestInfo = require(ModuleScript)
             local Position = ModuleScript.Name
             if TestData.Tests[Position] then
@@ -71,11 +72,13 @@ function TestBot:New(Tests: Folder)
         end
     end
     TestBot.TestData = TestData
+    print("Done!", TestData)
     return self
 end
 
 function TestBot:Run()
     local TestData = self.TestData
+    print("Running:",TestData)
     local FailedCounter, WarnCounter, SkippedCounter = 0,0,0
     for i=1, #TestData.Positions do
         local TesterInitData = TestData.Tests[TestData.Positions[i]]

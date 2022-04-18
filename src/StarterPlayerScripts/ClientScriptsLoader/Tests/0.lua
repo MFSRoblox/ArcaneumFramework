@@ -15,7 +15,6 @@ local GlobalExpectations = {
     Perspective = "string";
     Utilities = "table";
     Version = "table";
-    AddGlobal = "function";
     --Server Globals
     IsPublic = "boolean";
     IsTesting = "boolean";

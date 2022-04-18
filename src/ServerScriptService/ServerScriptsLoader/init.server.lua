@@ -20,6 +20,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TestModuleName = "ArcaneumTests"
 local TestModule = ReplicatedStorage:FindFirstChild(TestModuleName)
 if ArcaneumGlobals.IsTesting then
-    local TestService = require(TestModule):New(script.ServerTests:GetChildren())
+    local TestService = require(TestModule):New(script.ServerTests)
+    print("Run Tests")
     TestService:Run()
 end

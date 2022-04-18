@@ -19,10 +19,11 @@ print(RunService:IsRunMode())
 if ArcaneumGlobals.IsStudio and not RunService:IsRunMode() then
     game:GetService("Players").PlayerAdded:Wait()]]
 --end
-local TestModuleName = "ArcaneumClientTests"
-local TestModule = script.Parent:FindFirstChild(TestModuleName)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TestModuleName = "ArcaneumTests"
+local TestModule = ReplicatedStorage:FindFirstChild(TestModuleName)
 print(ArcaneumGlobals.IsTesting)
 if ArcaneumGlobals.IsTesting then
-    local TestService = require(TestModule):New()
+    local TestService = require(TestModule):New(script.Tests)
     TestService:Run()
 end
