@@ -35,7 +35,7 @@ function BaseClass:Extend(NewObject): BaseClass
         NewObject.ClassName = ""
     end
     if NewObject.Version == nil then
-        NewObject.Version = "0.0.1"
+        NewObject.Version = "0.0.0"
     end
     self.__index = self
     local output = setmetatable(NewObject, self)

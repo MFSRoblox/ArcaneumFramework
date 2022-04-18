@@ -10,7 +10,8 @@ local ArcaneumGlobals repeat
 until ArcaneumGlobals ~= nil
 local BaseClass = ArcaneumGlobals.ClassFunctions:GetClass("Internal")
 local TestResultClass: TestResult = BaseClass:Extend({
-    Version = 1;
+    ClassName = "TestResultClass";
+    Version = "1.0.0";
     Object = script;
 })
 export type TestResult = {
