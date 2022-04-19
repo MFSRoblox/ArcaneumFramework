@@ -9,8 +9,8 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals:CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-local BaseClass = ClassFunctions:GetClass("InternalClass"):CheckVersion("1.1.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
 local ClientSoul = BaseClass:Extend({
     Globals = ArcaneumGlobals;
     AddOns = {};

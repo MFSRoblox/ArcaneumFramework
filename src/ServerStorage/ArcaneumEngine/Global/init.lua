@@ -1,5 +1,5 @@
-local ClassFunctions = require(script.ClassFunctions):CheckVersion("1.0.0")
-local BaseClass = ClassFunctions:GetClass("BaseClass"):CheckVersion("1.1.0")
+local ClassService = require(script.ClassService):CheckVersion("1.0.0")
+local BaseClass = ClassService:GetClass("BaseClass"):CheckVersion("1.1.0")
 local ArcaneumGlobals: ArcaneumGlobals = BaseClass:Extend({
     ClassName = "ArcaneumGlobals",
     Version = "1.0.0",

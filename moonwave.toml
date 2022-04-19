@@ -11,7 +11,7 @@ classes = ["BaseClass","Class", "InternalClass"]
 [[classOrder]]
 section = "Globals"
 collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
-classes = ["Utilities"]
+classes = ["ClassService","Utilities"]
 
 [docusaurus]
 onBrokenLinks = "throw"

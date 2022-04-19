@@ -8,8 +8,8 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-local BaseClass = ClassFunctions:GetClass("InternalClass"):CheckVersion("1.1.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Players = game:GetService("Players")
 local PlayerManager = BaseClass:Extend(
     {

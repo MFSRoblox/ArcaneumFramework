@@ -8,7 +8,7 @@ local function debugPrint(...)
 end
 local GlobalExpectations = {
     --Shared Globals
-    ClassFunctions = "table";
+    ClassService = "table";
     Ballistics = "table";
     Events = "Folder";
     IsStudio = "boolean";
@@ -48,8 +48,8 @@ local TestInfo = TestInfoInterface.new({
             return true
         end)
         ThisTest:AddTest("Version Test", true, function()
-            local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-            local Version = ClassFunctions:GetClass("VersionClass")
+            local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+            local Version = ClassService:GetClass("VersionClass")
             debugPrint("Checking Version Class")
             assert(Version, "Version didn't return anything!")
             assert(type(Version) == "table", "Version isn't a table!")
@@ -121,9 +121,9 @@ local TestInfo = TestInfoInterface.new({
         end
         local BaseClassName = "BaseTestClass" do
             ThisTest:AddTest("BaseClass:New Check", true, function()
-                local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-                local BaseClass = ClassFunctions:GetClass("BaseClass")
-                assert(BaseClass, "ClassFunctions:GetClass(\"BaseClass\") didn't return anything!")
+                local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+                local BaseClass = ClassService:GetClass("BaseClass")
+                assert(BaseClass, "ClassService:GetClass(\"BaseClass\") didn't return anything!")
                 local Object = BaseClass:New(BaseClassName, InitVersion)
                 CheckBaseClass(Object, BaseClassName)
                 Object:Destroy()
@@ -135,9 +135,9 @@ local TestInfo = TestInfoInterface.new({
                 return true
             end)
             ThisTest:AddTest("BaseClass:NewFromTable [table] Check", false, function()
-                local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-                local BaseClass = ClassFunctions:GetClass("BaseClass")
-                assert(BaseClass, "ClassFunctions:GetClass(\"BaseClass\") didn't return anything!")
+                local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+                local BaseClass = ClassService:GetClass("BaseClass")
+                assert(BaseClass, "ClassService:GetClass(\"BaseClass\") didn't return anything!")
                 local Object = BaseClass:NewFromTable({ClassName = BaseClassName, Version = InitVersion})
                 CheckBaseClass(Object, BaseClassName)
                 Object:Destroy()
@@ -149,9 +149,9 @@ local TestInfo = TestInfoInterface.new({
                 return true
             end)
             ThisTest:AddTest("BaseClass:Extend [table] Check", true, function()
-                local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-                local BaseClass = ClassFunctions:GetClass("BaseClass")
-                assert(BaseClass, "ClassFunctions:GetClass(\"BaseClass\") didn't return anything!")
+                local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+                local BaseClass = ClassService:GetClass("BaseClass")
+                assert(BaseClass, "ClassService:GetClass(\"BaseClass\") didn't return anything!")
                 local Object = BaseClass:Extend({ClassName = BaseClassName, Version = InitVersion})
                 CheckBaseClass(Object, BaseClassName)
                 Object:Destroy()
@@ -163,9 +163,9 @@ local TestInfo = TestInfoInterface.new({
                 return true
             end)
             ThisTest:AddTest("BaseClass:Extend [nil table, post init] Check", true, function()
-                local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-                local BaseClass = ClassFunctions:GetClass("BaseClass")
-                assert(BaseClass, "ClassFunctions:GetClass(\"BaseClass\") didn't return anything!")
+                local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+                local BaseClass = ClassService:GetClass("BaseClass")
+                assert(BaseClass, "ClassService:GetClass(\"BaseClass\") didn't return anything!")
                 local Object = BaseClass:Extend()
                 Object.ClassName = BaseClassName
                 Object.Version = InitVersion
@@ -179,9 +179,9 @@ local TestInfo = TestInfoInterface.new({
                 return true
             end)
             ThisTest:AddTest("BaseClass:Extend and New Object Check", true, function()
-                local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-                local BaseClass = ClassFunctions:GetClass("BaseClass")
-                assert(BaseClass, "ClassFunctions:GetClass(\"BaseClass\") didn't return anything!")
+                local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+                local BaseClass = ClassService:GetClass("BaseClass")
+                assert(BaseClass, "ClassService:GetClass(\"BaseClass\") didn't return anything!")
                 local Object = BaseClass:Extend()
                 Object.ClassName = BaseClassName
                 Object.Version = InitVersion
@@ -205,9 +205,9 @@ local TestInfo = TestInfoInterface.new({
             assert(type(Object.Connections) == "table", "Class's Connections property isn't a table!")
         end
         ThisTest:AddTest("Class:New Test", true, function()
-            local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-            local Class = ClassFunctions:GetClass("Class")
-            assert(Class, "ClassFunctions:GetClass(\"Class\") didn't return anything!")
+            local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+            local Class = ClassService:GetClass("Class")
+            assert(Class, "ClassService:GetClass(\"Class\") didn't return anything!")
             local TestClassName = "TestClass"
             local Object = Class:New(TestClassName, "1.5.1")
             CheckClass(Object, TestClassName)
@@ -223,9 +223,9 @@ local TestInfo = TestInfoInterface.new({
             assert(Object.Name == ExpectedName, "InternalClass didn't assign the provided Name! Object.Name:" .. tostring(Object.Name) .. " ~= " .. ExpectedName .. "\nDebug: " .. debug.traceback())
         end
         ThisTest:AddTest("InternalClass:New Test", true, function()
-            local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-            local InternalClass = ClassFunctions:GetClass("InternalClass")
-            assert(InternalClass, "ClassFunctions:GetClass(\"Internal\") didn't return anything!")
+            local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+            local InternalClass = ClassService:GetClass("InternalClass")
+            assert(InternalClass, "ClassService:GetClass(\"Internal\") didn't return anything!")
             local TestClassName = "InternalTestClass"
             local Object = InternalClass:New(TestClassName, nil, "1.5.1")
             CheckInternalClass(Object, TestClassName)
@@ -236,8 +236,8 @@ local TestInfo = TestInfoInterface.new({
             return true
         end)
         ThisTest:AddTest("InternalClass CheckVersion Test", true, function()
-            local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-            local InternalClass = ClassFunctions:GetClass("InternalClass")
+            local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+            local InternalClass = ClassService:GetClass("InternalClass")
             local NewInternalClass = InternalClass:Extend({
                 Version = "1.5.1",
                 ClassName = "TestNewInternalClass"

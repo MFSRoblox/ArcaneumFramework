@@ -8,8 +8,8 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
-local BaseClass = ClassFunctions:GetClass("InternalClass"):CheckVersion("1.1.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")
+local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
 local TestCaseClass = require(script.TestCase)
 local TestResultClass = require(script.TestResult)
