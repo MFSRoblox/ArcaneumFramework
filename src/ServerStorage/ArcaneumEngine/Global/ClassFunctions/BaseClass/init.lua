@@ -47,7 +47,7 @@ function BaseClass:Extend(NewObject): BaseClass
 end
 
 --[=[
-    @since v1.0.0
+    @since v1.1.0
     Creates a new BaseClass object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
@@ -62,7 +62,7 @@ function BaseClass:New(ClassName:string, Version:string): BaseClass
 end
 
 --[=[
-    @deprecated v1.0.1 -- Removed as [BaseClass:Extend] functionally does the same thing.
+    @deprecated v1.1.0 -- Removed as [BaseClass:Extend] functionally does the same thing.
     A wrapper for [BaseClass:Extend].
 
     @param Table table -- The name of the class being created.

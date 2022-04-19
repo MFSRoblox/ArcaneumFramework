@@ -37,7 +37,7 @@ function Class:Extend(NewObject: table): Class
     return NewObject
 end
 --[=[
-    @since v1.0.0
+    @since v1.1.0
     Creates a new Class object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
@@ -51,7 +51,7 @@ function Class:New(ClassName:string, Version:string): Class
 end
 
 --[=[
-    @deprecated v1.0.1 -- Removed as [Class:Extend] functionally does the same thing.
+    @deprecated v1.1.0 -- Removed as [Class:Extend] functionally does the same thing.
     Creates a new Class object from a premade table with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
