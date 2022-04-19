@@ -1,13 +1,13 @@
 --[=[
     @since v1.0.0
-    @class BaseClass
     @server
     @client
+    @class BaseClass
     The foundational class for all classes.
 ]=]
 local BaseClass: BaseClass = {
     ClassName = "BaseClass";
-    Version = "1.0.1";
+    Version = "1.1.0";
 }
 export type BaseClass = {
     ClassName: string;
@@ -62,13 +62,15 @@ function BaseClass:New(ClassName:string, Version:string): BaseClass
 end
 
 --[=[
-    @deprecated v1.0.1 -- [description]
+    @deprecated v1.0.1 -- Removed as [BaseClass:Extend] functionally does the same thing.
     A wrapper for [BaseClass:Extend].
 
     @param Table table -- The name of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:NewFromTable(Table: table): BaseClass
+function BaseClass:NewFromTable(Table: table, ClassName:string?, Version:string?): BaseClass
+    Table.ClassName = Table.ClassName or ClassName or ""
+    Table.Version = Table.Version or Version or "0.0.0"
     return self:Extend(Table)
 end
 
@@ -100,17 +102,18 @@ function BaseClass:CheckVersion(VersionUsed: string): BaseClass
         return
     end]]
     --print(selfVersion,VersionUsed)
+    local VersionComparisonString = string.format("%s Version: %s\nRequested Version: %s",self.ClassName, tostring(selfVersion), tostring(VersionUsed))
     if selfVersion > VersionUsed then
         local selfMajor,selfMinor,selfPatch = selfVersion:GetMajorVersion(),selfVersion:GetMinorVersion(),selfVersion:GetPatchVersion()
         local usedMajor,usedMinor,usedPatch = VersionUsed:GetMajorVersion(),VersionUsed:GetMinorVersion(),VersionUsed:GetPatchVersion()
-        assert(selfMajor <= usedMajor,"Code was using a significantly older version of " .. self.ClassName .. "! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTraceback:\n"..debug.traceback())
+        assert(selfMajor <= usedMajor,debug.traceback("Code was using a significantly older version of " .. self.ClassName .. "! Errors are likely to occur!\n"..VersionComparisonString.."\nTraceback:",2))
         if selfMinor > usedMinor then
-            warn("Code was using an older version of " .. self.ClassName .. ". Check for possible deprecations!\nselfVersion:"..selfVersion.."\nModuleVersion:"..VersionUsed.."\nTraceback:\n",debug.traceback())
+            warn(debug.traceback("Code was using an older version of " .. self.ClassName .. ". Check for possible deprecations!\n"..VersionComparisonString.."\nTraceback:",2))
         elseif selfPatch > usedPatch then
-            print("Code was using an older patch of " .. self.ClassName .. ". Check for possible deprecations.\nselfVersion:"..selfVersion.."\nModuleVersion:"..VersionUsed.."\nTraceback:\n",debug.traceback())
+            print(debug.traceback("Code was using an older patch of " .. self.ClassName .. ". Check for possible deprecations.\n"..VersionComparisonString.."\nTraceback:",2))
         end
     else
-        assert(selfVersion == VersionUsed, "Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\nModuleVersion:"..selfVersion.."\nVersionUsed:"..VersionUsed.."\nTrackback:\n"..debug.traceback())
+        assert(selfVersion == VersionUsed, debug.traceback("Code was expecting a version of " .. self.ClassName .. " that was never released! Errors are likely to occur!\n"..VersionComparisonString.."\nTrackback:\n",2))
     end
     selfVersion:Destroy()
     VersionUsed:Destroy()

@@ -1,4 +1,4 @@
-local BaseClass = require(script.BaseClass):CheckVersion("1.0.1")
+local BaseClass = require(script.BaseClass):CheckVersion("1.1.0")
 --[=[
     @class ClassService
     A singleton that allows quick indexing of initialized classes in the environment.

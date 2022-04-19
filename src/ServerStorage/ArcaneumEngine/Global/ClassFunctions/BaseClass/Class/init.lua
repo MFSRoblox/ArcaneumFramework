@@ -1,27 +1,29 @@
 --[=[
-    @class Class
+    @since v1.0.0
     @server
     @client
+    @class Class
     The foundational class for all services and factories that need to manage connections. Inherits from [BaseClass].
     
     In comparison to [BaseClass], this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
-local BaseClass = require(script.Parent)
-BaseClass:CheckVersion("1.0.0")
+local BaseClass = require(script.Parent):CheckVersion("1.1.0")
 local Class: Class = BaseClass:Extend({
     ClassName = "Class",
-    Version = "1.0.0"
+    Version = "1.1.0"
 })
 export type Class = {
     Connections: {[any]:RBXScriptConnection};
 } & typeof(Class) & BaseClass.BaseClass
 --[=[
-    @prop Connections table
+    @since v1.0.0
     @within Class
+    @prop Connections table
     A table containing all existing connections to this object.
 ]=]
 
 --[=[
+    @since v1.0.0
     Applies metatable to NewObject and verifies that all properties of Class has been applied to it.
 
     @param NewObject table -- The table that is being turned into a Class.
@@ -35,16 +37,21 @@ function Class:Extend(NewObject: table): Class
     return NewObject
 end
 --[=[
+    @since v1.0.0
     Creates a new Class object with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.
     @return NewClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function Class:New(ClassName:string, Version:string): Class
-    return self:NewFromTable({},ClassName, Version)
+    return self:Extend({
+        ClassName = ClassName;
+        Version = Version;
+    })
 end
 
 --[=[
+    @deprecated v1.0.1 -- Removed as [Class:Extend] functionally does the same thing.
     Creates a new Class object from a premade table with a ClassName of "ClassName".
 
     @param ClassName string -- The name of the class being created.

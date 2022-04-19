@@ -1,7 +1,5 @@
-local ClassFunctions = require(script.Parent.ClassFunctions)
-ClassFunctions:CheckVersion("1.0.0")
-local BaseClass = ClassFunctions:GetClass("Class")
-BaseClass:CheckVersion("1.0.0")
+local ClassFunctions = require(script.Parent.ClassFunctions):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("Class"):CheckVersion("1.1.0")
 --[=[
     @class Utilities
     @server
