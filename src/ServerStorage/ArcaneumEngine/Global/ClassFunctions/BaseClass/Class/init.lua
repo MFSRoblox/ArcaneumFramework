@@ -3,6 +3,7 @@
     @server
     @client
     @class Class
+    ### Current Version: 1.1.0
     The foundational class for all services and factories that need to manage connections. Inherits from [BaseClass].
     
     In comparison to [BaseClass], this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.

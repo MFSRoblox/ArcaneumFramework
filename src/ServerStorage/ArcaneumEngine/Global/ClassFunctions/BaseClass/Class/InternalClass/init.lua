@@ -4,6 +4,7 @@ local BaseClass = require(script.Parent):CheckVersion("1.1.0")
     @server
     @client
     @class InternalClass
+    ### Current Version: 1.1.0
     The foundational class for replicated objects. Inherits from [Class].
     
     In comparison to [Class], the InternalClass includes the Name property to help distinglish it from other InternalClass objects.

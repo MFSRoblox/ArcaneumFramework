@@ -3,6 +3,7 @@
     @server
     @client
     @class BaseClass
+    ### Current Version: 1.1.0
     The foundational class for all classes.
 ]=]
 local BaseClass: BaseClass = {
