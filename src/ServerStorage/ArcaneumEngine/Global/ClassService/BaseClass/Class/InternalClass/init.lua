@@ -32,7 +32,7 @@ export type InternalClass = {
 ]=]
 function InternalClass:Extend(NewObject: table): InternalClass
     NewObject = BaseClass.Extend(self, NewObject) :: InternalClass
-    if NewObject.Name == nil then
+    if rawget(NewObject,"Name") == nil then
         NewObject.Name = NewObject.ClassName
     end
     return NewObject

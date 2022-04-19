@@ -32,7 +32,7 @@ export type Class = {
 ]=]
 function Class:Extend(NewObject: table): Class
     NewObject = BaseClass.Extend(self, NewObject) :: Class
-    if NewObject.Connections == nil then
+    if rawget(NewObject,"Connections") == nil then
         NewObject.Connections = {}
     end
     return NewObject

@@ -36,10 +36,10 @@ export type BaseClass = {
 ]=]
 function BaseClass:Extend(NewObject): BaseClass
     NewObject = NewObject or {}
-    if NewObject.ClassName == nil then
+    if rawget(NewObject,"ClassName") == nil then
         NewObject.ClassName = self.ClassName or ""
     end
-    if NewObject.Version == nil then
+    if rawget(NewObject,"Version") == nil then
         NewObject.Version = self.Version or "0.0.0"
     end
     self.__index = self

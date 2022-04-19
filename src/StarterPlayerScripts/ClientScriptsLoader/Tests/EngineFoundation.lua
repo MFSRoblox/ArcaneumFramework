@@ -116,7 +116,9 @@ local TestInfo = TestInfoInterface.new({
         local function CheckBaseClass(Object:table,ExpectedClassName:string)
             assert(Object ~= nil, "BaseClass didn't return an object! Object:" .. tostring(Object) .. "\nDebug: " .. debug.traceback())
             assert(Object.ClassName == ExpectedClassName, "BaseClass didn't assign the provided ClassName! Object.ClassName:" .. tostring(Object.ClassName) .. " ~= " .. ExpectedClassName .. "\nDebug: " .. debug.traceback())
+            assert(rawget(Object,"ClassName") == ExpectedClassName, "BaseClass didn't assign the provided ClassName to the Object directly! rawget(Object,ClassName):" .. tostring(Object.ClassName) .. " ~= " .. ExpectedClassName .. "\nDebug: " .. debug.traceback())
             assert(Object.Version == InitVersion, "BaseClass didn't assign the provided Version! Object.Version:" .. tostring(Object.Version) .. " ~= " .. InitVersion .. "\nDebug: " .. debug.traceback())
+            assert(rawget(Object,"Version") == InitVersion, "BaseClass didn't assign the provided Version directly! rawget(Object,Version):" .. tostring(Object.Version) .. " ~= " .. InitVersion .. "\nDebug: " .. debug.traceback())
             CheckClassVersion(Object)
         end
         local BaseClassName = "BaseTestClass" do
@@ -202,6 +204,7 @@ local TestInfo = TestInfoInterface.new({
         local function CheckClass(Object:table,ExpectedClassName:string)
             CheckBaseClass(Object, ExpectedClassName)
             assert(Object.Connections ~= nil, "Class didn't have a Connections table!")
+            assert(rawget(Object,"Connections") ~= nil, "Class didn't have a Connections table directly set!")
             assert(type(Object.Connections) == "table", "Class's Connections property isn't a table!")
         end
         ThisTest:AddTest("Class:New Test", true, function()
@@ -221,6 +224,7 @@ local TestInfo = TestInfoInterface.new({
             ExpectedName = ExpectedName or ExpectedClassName or ""
             CheckClass(Object, ExpectedClassName)
             assert(Object.Name == ExpectedName, "InternalClass didn't assign the provided Name! Object.Name:" .. tostring(Object.Name) .. " ~= " .. ExpectedName .. "\nDebug: " .. debug.traceback())
+            assert(rawget(Object,"Name") == ExpectedName, "InternalClass didn't assign the provided Name! Object.Name:" .. tostring(rawget(Object,"Name")) .. " ~= " .. ExpectedName .. "\nDebug: " .. debug.traceback())
         end
         ThisTest:AddTest("InternalClass:New Test", true, function()
             local ClassService = ArcaneumGlobals:GetGlobal("ClassService")

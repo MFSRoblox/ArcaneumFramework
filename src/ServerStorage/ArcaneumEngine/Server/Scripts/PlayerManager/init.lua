@@ -35,12 +35,16 @@ function PlayerManager:New(): PlayerManager
         local Player = CurrentPlayers[i]
         NewManager:AddPlayer(Player)
     end
-    NewManager.Connections["PlayerAdded"] = Players.PlayerAdded:Connect(function(Player)
-        NewManager:AddPlayer(Player)
-    end)
-    NewManager.Connections["PlayerRemoving"] = Players.PlayerRemoving:Connect(function(Player)
-        NewManager:RemovePlayer(Player)
-    end)
+    NewManager:AddConnection("PlayerAdded",
+        Players.PlayerAdded:Connect(function(Player)
+            NewManager:AddPlayer(Player)
+        end)
+    )
+    NewManager:AddConnection("PlayerRemoving",
+        Players.PlayerRemoving:Connect(function(Player)
+            NewManager:RemovePlayer(Player)
+        end)
+    )
     print("PlayerManager Booted:", NewManager)
     return NewManager
 end
