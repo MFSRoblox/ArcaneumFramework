@@ -11,8 +11,8 @@ end
 local ArcaneumGlobals = require(GlobalsModule)
 print("Arcaneum Globals:",ArcaneumGlobals)
 ArcaneumGlobals:CheckVersion("1.0.0")
-local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-local BaseClass = ClassFunctions:GetClass("BaseClass")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+local BaseClass = ClassService:GetClass("BaseClass"):CheckVersion("1.1.0")
 local Arcaneum = BaseClass:Extend({
     ClassName = "ArcaneumFramework",
     Version = "0.0.1"

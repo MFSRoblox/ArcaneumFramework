@@ -660,7 +660,7 @@
 					<data key="d4">
 						<x:List>
 							<y:Label LayoutParameter="{x:Static y:InteriorLabelModel.North}">
-								<y:Label.Text>ClassFunctions</y:Label.Text>
+								<y:Label.Text>ClassService</y:Label.Text>
 								<y:Label.Style>
 									<yjs:DefaultLabelStyle textFill="WHITE">
 										<yjs:DefaultLabelStyle.font>
@@ -686,7 +686,7 @@
 							<data key="d7">
 								<uml:UMLNodeStyle fill="{y:GraphMLReference 1}" highlightFill="{y:GraphMLReference 2}">
 									<uml:UMLNodeStyle.model>
-										<uml:UMLClassModel stereotype="" constraint="" className="ClassFunctions" attributesOpen="true" operationsOpen="true">
+										<uml:UMLClassModel stereotype="" constraint="" className="ClassService" attributesOpen="true" operationsOpen="true">
 											<uml:UMLClassModel.attributes>
 												<x:Array Type="sys:Object">
 													<sys:String><![CDATA[self: Dictionary<any>]]></sys:String>
@@ -1508,7 +1508,7 @@
 								<uml:UMLClassModel stereotype="" constraint="" className="Global" attributesOpen="true" operationsOpen="false">
 									<uml:UMLClassModel.attributes>
 										<x:Array Type="sys:Object">
-											<sys:String><![CDATA[ClassFunctions: ClassFunctions]]></sys:String>
+											<sys:String><![CDATA[ClassService: ClassService]]></sys:String>
 											<sys:String><![CDATA[IsStudio: Boolean]]></sys:String>
 											<sys:String><![CDATA[Perspective: String]]></sys:String>
 											<sys:String><![CDATA[Utilities: Utilities]]></sys:String>

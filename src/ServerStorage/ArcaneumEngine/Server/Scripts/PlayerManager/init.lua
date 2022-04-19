@@ -8,8 +8,8 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Players = game:GetService("Players")
 local PlayerManager = BaseClass:Extend(
     {
@@ -35,12 +35,16 @@ function PlayerManager:New(): PlayerManager
         local Player = CurrentPlayers[i]
         NewManager:AddPlayer(Player)
     end
-    NewManager.Connections["PlayerAdded"] = Players.PlayerAdded:Connect(function(Player)
-        NewManager:AddPlayer(Player)
-    end)
-    NewManager.Connections["PlayerRemoving"] = Players.PlayerRemoving:Connect(function(Player)
-        NewManager:RemovePlayer(Player)
-    end)
+    NewManager:AddConnection("PlayerAdded",
+        Players.PlayerAdded:Connect(function(Player)
+            NewManager:AddPlayer(Player)
+        end)
+    )
+    NewManager:AddConnection("PlayerRemoving",
+        Players.PlayerRemoving:Connect(function(Player)
+            NewManager:RemovePlayer(Player)
+        end)
+    )
     print("PlayerManager Booted:", NewManager)
     return NewManager
 end
