@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ArcaneumGlobals = require(ReplicatedStorage.Arcaneum):CheckVersion("1.0.0")
 local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Scripts = script.Scripts
 
 local ServerNexus = BaseClass:Extend({

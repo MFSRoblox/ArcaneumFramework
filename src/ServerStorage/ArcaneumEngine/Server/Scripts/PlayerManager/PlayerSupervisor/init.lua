@@ -9,7 +9,7 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions"):CheckVersion("1.0.0")
-local BaseClass = ClassFunctions:GetClass("Internal"):CheckVersion("1.0.0")
+local BaseClass = ClassFunctions:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
 local Events = ArcaneumGlobals:GetGlobal("Events")
 local PlayerInterface = Events.PlayerInterface

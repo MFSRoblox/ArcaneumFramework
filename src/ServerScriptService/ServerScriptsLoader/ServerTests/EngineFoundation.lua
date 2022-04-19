@@ -224,7 +224,7 @@ local TestInfo = TestInfoInterface.new({
         end
         ThisTest:AddTest("InternalClass:New Test", true, function()
             local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-            local InternalClass = ClassFunctions:GetClass("Internal")
+            local InternalClass = ClassFunctions:GetClass("InternalClass")
             assert(InternalClass, "ClassFunctions:GetClass(\"Internal\") didn't return anything!")
             local TestClassName = "InternalTestClass"
             local Object = InternalClass:New(TestClassName, nil, "1.5.1")
@@ -237,7 +237,7 @@ local TestInfo = TestInfoInterface.new({
         end)
         ThisTest:AddTest("InternalClass CheckVersion Test", true, function()
             local ClassFunctions = ArcaneumGlobals:GetGlobal("ClassFunctions")
-            local InternalClass = ClassFunctions:GetClass("Internal")
+            local InternalClass = ClassFunctions:GetClass("InternalClass")
             local NewInternalClass = InternalClass:Extend({
                 Version = "1.5.1",
                 ClassName = "TestNewInternalClass"
