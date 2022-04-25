@@ -11,24 +11,26 @@ until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Players = game:GetService("Players")
-local PlayerManager = BaseClass:Extend(
+local PlayerManager: PlayerManager = BaseClass:Extend(
     {
+        Name = "PlayerManager";
+        ClassName = "PlayerManager";
         Version = "1.0.0";
     }
 )
-type PlayerManager = table
-
 local PlayerInterface = Instance.new("RemoteEvent")
 PlayerInterface.Name = "PlayerInterface"
 PlayerInterface.Parent = ArcaneumGlobals:GetGlobal("Events")
 local PlayerSupervisor = require(script.PlayerSupervisor)
-
+type PlayerManager = {
+    Supervisors: Array<PlayerSupervisor.PlayerSupervisor>
+} & typeof(PlayerManager)
 function PlayerManager:New(): PlayerManager
     local NewManager = BaseClass.New(self,"PlayerManager","PlayerManager",PlayerSupervisor.Version)
     --NewManager.PlayerInterface = PlayerInterface
-    NewManager.Connections.Interface = PlayerInterface.OnServerEvent:Connect(function(Sender,Data)
+    NewManager:AddConnection("Interface", PlayerInterface.OnServerEvent:Connect(function(Sender,Data)
         NewManager.Supervisors[Sender]:DataFromPlayer(Data)
-    end)
+    end))
     NewManager.Supervisors = {}
     local CurrentPlayers = Players:GetPlayers()
     for i=1, #CurrentPlayers do
@@ -49,15 +51,14 @@ function PlayerManager:New(): PlayerManager
     return NewManager
 end
 
-type PlayerSupervisor = table
-function PlayerManager:AddPlayer(Player: Player): PlayerSupervisor
+function PlayerManager:AddPlayer(Player: Player): PlayerSupervisor.PlayerSupervisor
     print("PlayerManager AddPlayer Triggered!", Player)
     local NewSupervisor = PlayerSupervisor:New(Player)
     self.Supervisors[Player] = NewSupervisor
     return NewSupervisor
 end
 
-function PlayerManager:RemovePlayer(Player: Player): nil
+function PlayerManager:RemovePlayer(Player: Player)
     self.Supervisors[Player]:Destroy()
     self.Supervisors[Player] = nil
 end
