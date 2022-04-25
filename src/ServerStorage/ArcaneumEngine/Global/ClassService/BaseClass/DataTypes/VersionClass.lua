@@ -115,14 +115,16 @@ Version.new = function(MajorVersion:number | string,MinorVersion:number,PatchVer
     if type(MajorVersion) == "string" then
         return Version.fromString(MajorVersion)
     end
-    return Version:NewFromTable({
+    return Version:Extend({
         MajorVersion = MajorVersion :: number;
         MinorVersion = MinorVersion :: number;
         PatchVersion = PatchVersion :: number;
-    },"Version",Version.Version)
+    })
 end :: ((MajorVersion:number,MinorVersion:number,PatchVersion:number) -> (Version) & (String: string) -> (Version))
 
 --[=[
+    Creates a new Version datatype object.
+
     @param String string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
     @return Version -- A new version object.
 ]=]
@@ -131,6 +133,8 @@ function Version.fromString(String: string): Version
 end
 
 --[=[
+    Gets the version numbers from the inputted string and returns them in the order of MajorVersion, MinorVersion, and PatchVersion.
+
     @param String string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
     @return number, number, number -- The numbers representing the respective versions (MajorVersion,MinorVersion, and PatchVersion respectively).
 ]=]
@@ -145,18 +149,36 @@ function Version.getNumbersFromString(String: string): (number,number,number)
     return table.unpack(VersionNumbers)
 end
 
+--[=[
+    Returns the Version's Major Version.
+
+    @return number -- [Version.MajorVersion]
+]=]
 function Version:GetMajorVersion(): number
     return self.MajorVersion
 end
 
+--[=[
+    Returns the Version's Minor Version.
+
+    @return number -- [Version.MinorVersion]
+]=]
 function Version:GetMinorVersion(): number
     return self.MinorVersion
 end
 
+--[=[
+    Returns the Version's Patch Version.
+
+    @return number -- [Version.PatchVersion]
+]=]
 function Version:GetPatchVersion(): number
     return self.PatchVersion
 end
 
+--[=[
+    Destroys the object to clean up memory.
+]=]
 function Version:Destroy(): nil
     self.MajorVersion = nil
     self.MinorVersion = nil
