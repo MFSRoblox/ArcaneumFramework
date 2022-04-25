@@ -92,12 +92,25 @@ function Version:__le(value: Version): boolean
 end;
 
 --[=[
-    @param MajorVersion -- The number representing which MajorVersion the new object has.
-    @param MinorVersion -- The number representing which MinorVersion the new object has.
-    @param PatchVersion -- The number representing which PatchVersion the new object has.
+    @within Version
+    @function new
+        
+    Creates a new Version datatype object from [Version.fromString]
+
+    @param MajorVersion string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
     @return Version -- A new version object.
 ]=]
-type VersionNew = (MajorVersion:number,MinorVersion:number,PatchVersion:number) -> (Version) & (String: string) -> (Version)
+--[=[
+    @within Version
+    @function new
+    
+    Creates a new Version datatype object.
+
+    @param MajorVersion number -- The number representing which MajorVersion the new object has.
+    @param MinorVersion number -- The number representing which MinorVersion the new object has.
+    @param PatchVersion number -- The number representing which PatchVersion the new object has.
+    @return Version -- A new version object.
+]=]
 Version.new = function(MajorVersion:number | string,MinorVersion:number,PatchVersion:number): Version
     if type(MajorVersion) == "string" then
         return Version.fromString(MajorVersion)
@@ -107,10 +120,10 @@ Version.new = function(MajorVersion:number | string,MinorVersion:number,PatchVer
         MinorVersion = MinorVersion :: number;
         PatchVersion = PatchVersion :: number;
     },"Version",Version.Version)
-end :: VersionNew
+end :: ((MajorVersion:number,MinorVersion:number,PatchVersion:number) -> (Version) & (String: string) -> (Version))
 
 --[=[
-    @param String -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
+    @param String string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
     @return Version -- A new version object.
 ]=]
 function Version.fromString(String: string): Version
@@ -118,8 +131,8 @@ function Version.fromString(String: string): Version
 end
 
 --[=[
-    @param String -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
-    @return MajorVersion,MinorVersion,PatchVersion -- The numbers representing the respective versions.
+    @param String string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
+    @return number, number, number -- The numbers representing the respective versions (MajorVersion,MinorVersion, and PatchVersion respectively).
 ]=]
 function Version.getNumbersFromString(String: string): (number,number,number)
     local VersionNumbers = string.split(String,".")
