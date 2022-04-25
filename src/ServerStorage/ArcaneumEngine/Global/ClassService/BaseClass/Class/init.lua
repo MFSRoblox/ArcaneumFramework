@@ -64,7 +64,7 @@ function Class:NewFromTable(Table: table, ClassName:string, Version:string): Cla
 end
 
 --[=[
-    Adds a connection to the Connections dictionary with inputted key.
+    Adds a connection to the Connections dictionary with inputted key so it can be disconnected later (either automatically on [Class:Destroy] or manually on [Class:RemoveConnection]).
 
     @param ConnectionKey any -- The reference of which the Connection will be assoiated with.
     @param Connection RBXScriptConnection -- The connection returned by a [RBXScriptSignal]:Connect().
