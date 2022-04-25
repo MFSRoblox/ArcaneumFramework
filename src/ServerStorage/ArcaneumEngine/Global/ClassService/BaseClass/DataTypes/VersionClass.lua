@@ -97,7 +97,8 @@ end;
     @param PatchVersion -- The number representing which PatchVersion the new object has.
     @return Version -- A new version object.
 ]=]
-function Version.new(MajorVersion:number | string,MinorVersion:number,PatchVersion:number): Version
+type VersionNew = (MajorVersion:number,MinorVersion:number,PatchVersion:number) -> (Version) & (String: string) -> (Version)
+Version.new = function(MajorVersion:number | string,MinorVersion:number,PatchVersion:number): Version
     if type(MajorVersion) == "string" then
         return Version.fromString(MajorVersion)
     end
@@ -106,7 +107,7 @@ function Version.new(MajorVersion:number | string,MinorVersion:number,PatchVersi
         MinorVersion = MinorVersion :: number;
         PatchVersion = PatchVersion :: number;
     },"Version",Version.Version)
-end
+end :: VersionNew
 
 --[=[
     @param String -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".

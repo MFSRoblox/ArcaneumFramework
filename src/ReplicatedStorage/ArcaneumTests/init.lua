@@ -36,7 +36,7 @@ export type TestBot = {
         Positions: Array<number>;
     };
 }
-function TestBot:New(Tests: Folder)
+function TestBot:New(Tests: Folder): TestBot
     assert(Tests ~= nil, "No tests provided! Debug:\n"..debug.traceback())
     local TestModules = {}
     local TestModulesFolder = Tests do
