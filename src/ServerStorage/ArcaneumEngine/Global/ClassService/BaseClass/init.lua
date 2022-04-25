@@ -55,7 +55,7 @@ end
     @param Version string -- The name version of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:New(ClassName:string, Version:string): BaseClass
+function BaseClass:New(ClassName:string?, Version:string?): BaseClass
     return self:Extend({
         ClassName = ClassName;
         Version = Version;
@@ -70,8 +70,8 @@ end
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function BaseClass:NewFromTable(Table: table, ClassName:string?, Version:string?): BaseClass
-    Table.ClassName = Table.ClassName or ClassName or ""
-    Table.Version = Table.Version or Version or "0.0.0"
+    Table.ClassName = Table.ClassName or ClassName
+    Table.Version = Table.Version or Version
     return self:Extend(Table)
 end
 
