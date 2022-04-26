@@ -2,7 +2,7 @@
 slug: firstpost
 title: First Post
 authors: [SS1]
-tags: [leoyulee]
+tags: [leoyulee, 0.0.0, development]
 date: 2022-04-25T20:00
 ---
 
