@@ -93,6 +93,7 @@ function ClassService:GetClass(ClassName: string): any?
 end
 
 --[=[
+    @within ClassService
     @since 1.0.0
     @private
     Sets up the initial classes upon being required.
