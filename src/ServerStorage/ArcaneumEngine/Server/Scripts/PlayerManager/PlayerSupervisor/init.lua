@@ -12,7 +12,7 @@ until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 ClassService:CheckVersion("1.0.0")
 local InternalClass = ClassService:GetClass("InternalClass")
-InternalClass:CheckVersion("1.1.0")
+InternalClass:CheckVersion("1.2.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
 Utilities:CheckVersion("1.0.0")
 local Events = ArcaneumGlobals:GetGlobal("Events")
@@ -22,6 +22,7 @@ local PlayerSupervisor: PlayerSupervisor = InternalClass:Extend(
         Name = "Itself";
         ClassName = "PlayerSupervisor";
         Version = "1.0.0";
+        CoreModule = script;
     }
 )
 type FunctionsFunction = ((...any) -> (...any))

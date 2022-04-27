@@ -1,15 +1,16 @@
 local ClassService = require(script.ClassService)
 ClassService:CheckVersion("1.0.0")
 local BaseClass = ClassService:GetClass("BaseClass")
-BaseClass:CheckVersion("1.1.0")
+BaseClass:CheckVersion("1.2.0")
 --[=[
     @class ArcaneumGlobals
     The class that manages each global that is present within the environment.
     It is NOT replicated between server and client.
 ]=]
 local ArcaneumGlobals: ArcaneumGlobals = BaseClass:Extend({
-    ClassName = "ArcaneumGlobals",
-    Version = "1.1.0",
+    ClassName = "ArcaneumGlobals";
+    Version = "1.1.0";
+    CoreModule = script;
     Globals = require(script.Utilities):ModulesToTable(script:GetChildren()),
 })
 type ArcaneumGlobals = {

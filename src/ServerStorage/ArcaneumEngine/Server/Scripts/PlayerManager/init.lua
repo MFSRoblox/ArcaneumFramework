@@ -12,13 +12,14 @@ until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 ClassService:CheckVersion("1.0.0")
 local InternalClass = ClassService:GetClass("InternalClass")
-InternalClass:CheckVersion("1.1.0")
+InternalClass:CheckVersion("1.2.0")
 local Players = game:GetService("Players")
 local PlayerManager: PlayerManager = InternalClass:Extend(
     {
         Name = "PlayerManager";
         ClassName = "PlayerManager";
         Version = "1.0.0";
+        CoreModule = script;
     }
 )
 local PlayerInterface = Instance.new("RemoteEvent")

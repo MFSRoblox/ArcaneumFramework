@@ -14,10 +14,11 @@ print("Arcaneum Globals:",ArcaneumGlobals)
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 ClassService:CheckVersion("1.0.0")
 local BaseClass = ClassService:GetClass("BaseClass")
-BaseClass:CheckVersion("1.1.0")
+BaseClass:CheckVersion("1.2.0")
 local Arcaneum = BaseClass:Extend({
-    ClassName = "ArcaneumFramework",
-    Version = "0.0.1"
+    ClassName = "ArcaneumFramework";
+    Version = "0.0.1";
+    CoreModule = script;
 })
 
 function Arcaneum:New()

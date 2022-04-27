@@ -1,7 +1,7 @@
 local ClassService = require(script.Parent.ClassService)
 ClassService:CheckVersion("1.0.0")
 local Class = ClassService:GetClass("Class")
-Class:CheckVersion("1.1.0")
+Class:CheckVersion("1.2.0")
 --[=[
     @class Utilities
     @server
@@ -11,6 +11,7 @@ Class:CheckVersion("1.1.0")
 local Utilities = Class:Extend({
     ClassName = "Utilities";
     Version = "1.0.0";
+    CoreModule = script;
     ErrorEvent = Instance.new("BindableEvent");
 }) do
     Utilities:AddConnection("ErrorEvent",

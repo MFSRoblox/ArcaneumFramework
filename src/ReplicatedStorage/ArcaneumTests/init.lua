@@ -13,7 +13,7 @@ until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 ClassService:CheckVersion("1.0.0")
 local Class = ClassService:GetClass("Class")
-Class:CheckVersion("1.1.0")
+Class:CheckVersion("1.2.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
 Utilities:CheckVersion("1.0.0")
 local TesterClass = require(script.Tester)
@@ -23,7 +23,7 @@ local TestBot: TestBot = Class:Extend(
         ClassName = "ArcaneumTestService";
         ArcaneumGlobals = ArcaneumGlobals;
         Version = "1.0.0";
-        Object = script;
+        CoreModule = script;
         TesterClass = TesterClass;
         TestModules = {};
         TestData = {

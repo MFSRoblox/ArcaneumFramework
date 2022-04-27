@@ -1,5 +1,5 @@
 local Class = require(script.Parent)
-Class:CheckVersion("1.1.0")
+Class:CheckVersion("1.2.0")
 --[=[
     @since v1.0.0
     @server
@@ -11,8 +11,9 @@ Class:CheckVersion("1.1.0")
     In comparison to [Class], the InternalClass includes the Name property to help distinglish it from other InternalClass objects.
 ]=]
 local InternalClass:InternalClass = Class:Extend({
-    ClassName = "InternalClass",
-    Version = "1.1.0",
+    ClassName = "InternalClass";
+    Version = "1.2.0";
+    CoreModule = script;
 })
 export type InternalClass = {
     Name: string;

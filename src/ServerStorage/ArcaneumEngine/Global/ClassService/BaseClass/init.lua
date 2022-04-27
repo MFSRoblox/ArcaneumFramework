@@ -8,11 +8,13 @@
 ]=]
 local BaseClass: BaseClass = {
     ClassName = "BaseClass";
-    Version = "1.1.0";
+    Version = "1.2.0";
+    CoreModule = script;
 }
 export type BaseClass = {
     ClassName: string;
     Version: string;
+    CoreModule: ModuleScript?;
 } & typeof(BaseClass)
 --[=[
     @since v1.0.0
@@ -25,6 +27,12 @@ export type BaseClass = {
     @prop Version string
     @within BaseClass
     A string in [Semantic Versioning format](https://semver.org/) that represents the class's current version.
+]=]
+--[=[
+    @since v1.2.0
+    @prop CoreModule ModuleScript
+    @within BaseClass
+    The script itself for easy access outside of the script.
 ]=]
 
 --[=[
@@ -128,6 +136,8 @@ end
 function BaseClass:Destroy()
     --warn(self.ClassName .. " has been Destroyed!")
     self.ClassName = nil
+    self.Version:Destroy()
+    self.CoreModule = nil
     table.clear(self)
     self = nil
 end

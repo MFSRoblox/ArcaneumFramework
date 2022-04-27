@@ -1,5 +1,5 @@
 local BaseClass = require(script.BaseClass)
-BaseClass:CheckVersion("1.1.0")
+BaseClass:CheckVersion("1.2.0")
 --[=[
     @class ClassService
     A singleton that allows quick indexing of initialized classes in the environment.
@@ -7,10 +7,13 @@ BaseClass:CheckVersion("1.1.0")
 local ClassService: ClassService = BaseClass:Extend({
     ClassName = "ClassService";
     Version = "1.0.0";
+    CoreModule = script;
     Classes = {};
+    AddOnFolder = script.AddOns;
 })
 export type ClassService = {
     Classes: {[string]: any};
+    AddOnFolder: Folder;
 } & typeof(ClassService) & BaseClass.BaseClass
 
 --[=[
@@ -20,7 +23,7 @@ export type ClassService = {
     @param ClassData any -- The data of the class being added.
     @return any -- The class itself.
 ]=]
-function ClassService:AddClass<Data>(ClassName: string, ClassData: Data): Data
+function ClassService:SetClass<Data>(ClassName: string, ClassData: Data): Data
     if self.Classes[ClassName] ~= nil then
         warn("Overwritting " .. ClassName .."! Unintended bugs might occur! Debug:\n"..debug.traceback())
     end
@@ -37,7 +40,7 @@ end
 function ClassService:AddClassModule(ClassModule: ModuleScript): any
     assert(typeof(ClassModule) == "Instance", "ClassModule is not an Instance! Debug:\n"..debug.traceback())
     assert(ClassModule:IsA("ModuleScript"), "ClassModule is not a ModuleScript! Debug:\n"..debug.traceback())
-    return self:AddClass(ClassModule.Name, require(ClassModule))
+    return self:SetClass(ClassModule.Name, require(ClassModule))
 end
 
 --[=[

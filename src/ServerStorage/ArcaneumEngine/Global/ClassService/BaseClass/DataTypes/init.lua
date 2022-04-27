@@ -1,7 +1,8 @@
 local BaseClass = require(script.Parent)
 local DataTypeInterface: DataTypeInterface = BaseClass:Extend({
-    ClassName = "DataTypeInterface",
-    Version = "1.0.0"
+    ClassName = "DataTypeInterface";
+    Version = "1.0.0";
+    CoreModule = script;
 })
 export type DataTypeInterface = typeof(DataTypeInterface) & BaseClass.BaseClass
 --[=[
