@@ -9,20 +9,27 @@ type ArcaneumGlobals = {
     Globals: Dictionary<any>
 } & typeof(ArcaneumGlobals)
 print(ArcaneumGlobals.Globals)
+
 function ArcaneumGlobals:AddGlobal<T>(Data: ModuleScript | T, Name: string?): T
     if typeof(Data) == "Instance" and Data:IsA("ModuleScript") then
         Name = Data.Name
+        Data.Parent = script
         Data = require(Data)
     end
+    return self:SetGlobal(Data,Name)
+end
+
+function ArcaneumGlobals:SetGlobal<T>(Data: T, Name: string?): T
+    assert(Name ~= nil, debug.traceback("No name was passed into SetGlobal!"))
     if ArcaneumGlobals.Globals[Name] ~= nil then
-        warn("Overriding Global "..Name.."!")
+        warn(debug.traceback("Overriding Global "..Name.."!"))
     end
     ArcaneumGlobals.Globals[Name] = Data
-    return Data
+    return ArcaneumGlobals.Globals[Name]
 end
 
 function ArcaneumGlobals:GetGlobal(Name: string): any
-    assert(Name ~= nil, "")
+    assert(Name ~= nil, debug.traceback("No name was passed into GetGlobal!"))
     return ArcaneumGlobals.Globals[Name]
 end
 
