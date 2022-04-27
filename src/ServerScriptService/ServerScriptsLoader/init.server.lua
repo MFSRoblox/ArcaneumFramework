@@ -10,6 +10,7 @@ local Software = require(BootDrive)
 print("Booted")
 
 local ArcaneumGlobals = Software.Globals
+ArcaneumGlobals:CheckVersion("1.1.0")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TestModuleName = "ArcaneumTests"
 local TestModule = ReplicatedStorage:FindFirstChild(TestModuleName)

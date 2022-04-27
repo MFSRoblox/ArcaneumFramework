@@ -1,5 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ArcaneumGlobals = require(ReplicatedStorage.Arcaneum):CheckVersion("1.0.0")
+local ArcaneumGlobals do
+    ArcaneumGlobals = require(ReplicatedStorage.Arcaneum)
+    ArcaneumGlobals:CheckVersion("1.1.0")
+end
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
 local Scripts = script.Scripts

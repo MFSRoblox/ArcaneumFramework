@@ -9,8 +9,8 @@ local GlobalsModule = ReplicatedStorage:FindFirstChild(GlobalModuleName) do
     GlobalsModule.Parent = ReplicatedStorage
 end
 local ArcaneumGlobals = require(GlobalsModule)
+ArcaneumGlobals:CheckVersion("1.1.0")
 print("Arcaneum Globals:",ArcaneumGlobals)
-ArcaneumGlobals:CheckVersion("1.0.0")
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
 local BaseClass = ClassService:GetClass("BaseClass"):CheckVersion("1.1.0")
 local Arcaneum = BaseClass:Extend({

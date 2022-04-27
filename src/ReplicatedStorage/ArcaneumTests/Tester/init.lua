@@ -5,7 +5,8 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
+        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")

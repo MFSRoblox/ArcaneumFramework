@@ -25,7 +25,7 @@ local TestInfo = TestInfoInterface.new({
     ToPrintProcess = PrintDebug;
     TestPriority = 0;
     Init = function(TestBot, ThisTest)
-        local ArcaneumGlobals = TestBot.ArcaneumGlobals
+        local ArcaneumGlobals = TestBot.ArcaneumGlobals --v1.1.0
         --Globals tests
         ThisTest:AddTest("Global Check", true, function()
             for VarName,Data in pairs(ArcaneumGlobals.Globals) do
