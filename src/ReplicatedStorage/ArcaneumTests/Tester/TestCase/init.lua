@@ -9,9 +9,11 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")
-local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
-local TestCaseClass:TestCase = BaseClass:Extend({
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+ClassService:CheckVersion("1.0.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.1.0")
+local TestCaseClass:TestCase = InternalClass:Extend({
     ClassName = "TestCaseClass";
     Version = "1.0.0";
     Object = script;
@@ -24,7 +26,7 @@ export type TestCase = {
     Steps: Array<(any) -> (any)>;
 } & typeof(TestCaseClass)
 function TestCaseClass:New(Name: string, StopOnFailure: boolean, Callback: (any) -> any): TestCase
-    local NewTest = BaseClass.New(self,"TestCase",Name)
+    local NewTest = InternalClass.New(self,"TestCase",Name)
     NewTest.StopOnFailure = StopOnFailure or false;
     NewTest.Steps = {}
     NewTest.PrintProcess = nil
@@ -89,7 +91,7 @@ end
 function TestCaseClass:Destroy()
     table.clear(self.Steps)
     table.clear(self)
-    return BaseClass.Destroy(self)
+    return InternalClass.Destroy(self)
 end
 
 return TestCaseClass

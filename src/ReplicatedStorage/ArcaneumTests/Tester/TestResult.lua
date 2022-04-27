@@ -9,9 +9,11 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")
-local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
-local TestResultClass: TestResult = BaseClass:Extend({
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+ClassService:CheckVersion("1.0.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.1.0")
+local TestResultClass: TestResult = InternalClass:Extend({
     ClassName = "TestResultClass";
     Version = "1.0.0";
     Object = script;
@@ -26,13 +28,13 @@ TestResultClass.__tostring = function(self)
     return string.format("[%s] [Status: %s] [Result: %s]", self.Name, tostring(self.Status), tostring(self.Result))
 end
 function TestResultClass:New(TestName: string, Status: string, Result: any): TestResult
-    local NewTest = BaseClass.New(self,"TestCase",TestName)
+    local NewTest = InternalClass.New(self,"TestCase",TestName)
     NewTest.Status = Status or "Unassigned";
     NewTest.Result = Result;
     return NewTest
 end
 function TestResultClass:Destroy()
     table.clear(self)
-    BaseClass.Destroy(self)
+    InternalClass.Destroy(self)
 end
 return TestResultClass

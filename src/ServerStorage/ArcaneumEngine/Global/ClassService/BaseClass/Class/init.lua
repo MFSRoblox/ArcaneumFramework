@@ -8,7 +8,8 @@
     
     In comparison to [BaseClass], this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
-local BaseClass = require(script.Parent):CheckVersion("1.1.0")
+local BaseClass = require(script.Parent)
+BaseClass:CheckVersion("1.1.0")
 local Class: Class = BaseClass:Extend({
     ClassName = "Class",
     Version = "1.1.0"

@@ -1,12 +1,14 @@
-local ClassService = require(script.Parent.ClassService):CheckVersion("1.0.0")
-local BaseClass = ClassService:GetClass("Class"):CheckVersion("1.1.0")
+local ClassService = require(script.Parent.ClassService)
+ClassService:CheckVersion("1.0.0")
+local Class = ClassService:GetClass("Class")
+Class:CheckVersion("1.1.0")
 --[=[
     @class Utilities
     @server
     @client
     A module that consists of handy functions that will be used throughout the framework and game. Extends [Class].
 ]=]
-local Utilities = BaseClass:Extend({
+local Utilities = Class:Extend({
     ClassName = "Utilities";
     Version = "1.0.0";
     ErrorEvent = Instance.new("BindableEvent");

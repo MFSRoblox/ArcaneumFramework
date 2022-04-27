@@ -9,9 +9,12 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")
-local InternalClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
-local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+ClassService:CheckVersion("1.0.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.1.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
+Utilities:CheckVersion("1.0.0")
 local Events = ArcaneumGlobals:GetGlobal("Events")
 local PlayerInterface = Events.PlayerInterface
 local PlayerSupervisor: PlayerSupervisor = InternalClass:Extend(

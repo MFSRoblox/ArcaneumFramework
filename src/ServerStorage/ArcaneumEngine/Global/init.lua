@@ -1,5 +1,7 @@
-local ClassService = require(script.ClassService):CheckVersion("1.0.0")
-local BaseClass = ClassService:GetClass("BaseClass"):CheckVersion("1.1.0")
+local ClassService = require(script.ClassService)
+ClassService:CheckVersion("1.0.0")
+local BaseClass = ClassService:GetClass("BaseClass")
+BaseClass:CheckVersion("1.1.0")
 --[=[
     @class ArcaneumGlobals
     The class that manages each global that is present within the environment.

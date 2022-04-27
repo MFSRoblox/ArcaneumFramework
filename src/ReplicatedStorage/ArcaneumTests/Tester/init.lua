@@ -9,12 +9,15 @@ local ArcaneumGlobals repeat
         ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")
-local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
-local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+ClassService:CheckVersion("1.0.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.1.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
+Utilities:CheckVersion("1.0.0")
 local TestCaseClass = require(script.TestCase)
 local TestResultClass = require(script.TestResult)
-local Tester:Tester = BaseClass:Extend({
+local Tester:Tester = InternalClass:Extend({
     ClassName = "Tester",
     Version = "1.0.0";
     Object = script;
@@ -28,7 +31,7 @@ export type Tester = {
     Tests: Array<TestCaseClass.TestCase>;
 } & typeof(Tester)
 function Tester:New(TestName: string, DisplayName: string): Tester
-    local NewTester = BaseClass.New(self,"Tester",TestName)
+    local NewTester = InternalClass.New(self,"Tester",TestName)
     if not DisplayName then
         local RandomNames = {"John Doe", "Jane Doe"}
         DisplayName = "Tester ".. RandomNames[Random.new():NextInteger(1,2)]
@@ -97,7 +100,7 @@ end
 
 function Tester:Destroy(): boolean
     self.Tests = nil
-    return BaseClass.Destroy(self)
+    return InternalClass.Destroy(self)
 end
 
 return Tester

@@ -10,9 +10,11 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
-local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
+ClassService:CheckVersion("1.0.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.1.0")
 local Players = game:GetService("Players")
-local PlayerManager: PlayerManager = BaseClass:Extend(
+local PlayerManager: PlayerManager = InternalClass:Extend(
     {
         Name = "PlayerManager";
         ClassName = "PlayerManager";
@@ -27,7 +29,7 @@ type PlayerManager = {
     Supervisors: Array<PlayerSupervisor.PlayerSupervisor>
 } & typeof(PlayerManager)
 function PlayerManager:New(): PlayerManager
-    local NewManager = BaseClass.New(self,"PlayerManager","PlayerManager",PlayerSupervisor.Version)
+    local NewManager = InternalClass.New(self,"PlayerManager","PlayerManager",PlayerSupervisor.Version)
     --NewManager.PlayerInterface = PlayerInterface
     NewManager:AddConnection("Interface", PlayerInterface.OnServerEvent:Connect(function(Sender,Data)
         NewManager.Supervisors[Sender]:DataFromPlayer(Data)
