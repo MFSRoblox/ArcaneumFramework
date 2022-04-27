@@ -3,7 +3,7 @@
     @server
     @client
     @class BaseClass
-    ### Current Version: 1.1.0
+    ### Current Version: 1.2.0
     The foundational class for all classes.
 ]=]
 local BaseClass: BaseClass = {
@@ -136,7 +136,11 @@ end
 function BaseClass:Destroy()
     --warn(self.ClassName .. " has been Destroyed!")
     self.ClassName = nil
-    self.Version:Destroy()
+    if type(self.Version) == "table" then
+        self.Version:Destroy()
+    else
+        self.Version = nil
+    end
     self.CoreModule = nil
     table.clear(self)
     self = nil
