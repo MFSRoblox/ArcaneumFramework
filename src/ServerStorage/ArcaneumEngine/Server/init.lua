@@ -4,7 +4,7 @@ local ArcaneumGlobals do
     ArcaneumGlobals:CheckVersion("1.1.0")
 end
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
-ClassService:CheckVersion("1.0.0")
+ClassService:CheckVersion("1.1.0")
 local InternalClass = ClassService:GetClass("InternalClass")
 InternalClass:CheckVersion("1.2.0")
 local Scripts = script.Scripts

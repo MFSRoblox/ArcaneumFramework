@@ -12,7 +12,7 @@ local ArcaneumGlobals = require(GlobalsModule)
 ArcaneumGlobals:CheckVersion("1.1.0")
 print("Arcaneum Globals:",ArcaneumGlobals)
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
-ClassService:CheckVersion("1.0.0")
+ClassService:CheckVersion("1.1.0")
 local BaseClass = ClassService:GetClass("BaseClass")
 BaseClass:CheckVersion("1.2.0")
 local Arcaneum = BaseClass:Extend({

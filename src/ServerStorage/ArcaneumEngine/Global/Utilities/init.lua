@@ -1,5 +1,5 @@
 local ClassService = require(script.Parent.ClassService)
-ClassService:CheckVersion("1.0.0")
+ClassService:CheckVersion("1.1.0")
 local Class = ClassService:GetClass("Class")
 Class:CheckVersion("1.2.0")
 --[=[

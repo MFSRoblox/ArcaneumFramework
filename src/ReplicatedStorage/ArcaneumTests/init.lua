@@ -11,7 +11,7 @@ local ArcaneumGlobals repeat
     end
 until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
-ClassService:CheckVersion("1.0.0")
+ClassService:CheckVersion("1.1.0")
 local Class = ClassService:GetClass("Class")
 Class:CheckVersion("1.2.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
