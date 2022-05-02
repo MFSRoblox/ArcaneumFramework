@@ -28,9 +28,8 @@ local TestBot: TestBot = Class:Extend(
 export type TestBot = {
     TestCollections: Dictionary<TestCollectionClass.TestCollection>;
 } & typeof(TestBot) & typeof(Class)
-function TestBot:New(Tests: Folder): TestBot
+function TestBot:New(Tests: Folder?): TestBot
     local NewBot = self:Extend({});
-    assert(Tests ~= nil, "No tests provided! Debug:\n"..debug.traceback())
     local TestCollections = {}
     TestCollections.GlobalTests = TestCollectionClass:New("GlobalTests",script.GlobalTests);
     local TestModulesFolder = Tests do
