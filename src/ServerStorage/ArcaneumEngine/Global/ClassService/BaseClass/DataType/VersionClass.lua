@@ -1,6 +1,6 @@
-local DataTypes = require(script.Parent)
+local DataTypeClass = require(script.Parent)
 --[=[
-    @tag DataTypes
+    @tag DataType
     @client
     @server
     @class Version
@@ -25,12 +25,12 @@ local DataTypes = require(script.Parent)
 
     The number representing which patch version is represented. Different patch versions indicate "when you make backwards compatible bug fixes."
 ]=]
-local Version: Version = DataTypes:NewClass("Version", "1.0.0")
+local Version: Version = DataTypeClass:NewClass("Version","1.0.0",script)
 export type Version = {
     MajorVersion: number;
     MinorVersion: number;
     PatchVersion: number;
-} & typeof(Version) & typeof(DataTypes)
+} & typeof(Version) & typeof(DataTypeClass)
 --[=[
     @tag Metamethod
     @return string -- Returns in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
@@ -115,11 +115,13 @@ Version.new = function(MajorVersion:number | string,MinorVersion:number,PatchVer
     if type(MajorVersion) == "string" then
         return Version.fromString(MajorVersion)
     end
-    return Version:Extend({
+    local NewVersionType = Version:Extend({
         MajorVersion = MajorVersion :: number;
         MinorVersion = MinorVersion :: number;
         PatchVersion = PatchVersion :: number;
     })
+    --print(NewVersionType,getmetatable(NewVersionType))
+    return NewVersionType
 end :: ((MajorVersion:number,MinorVersion:number,PatchVersion:number) -> (Version) & (String: string) -> (Version))
 
 --[=[
@@ -183,7 +185,7 @@ function Version:Destroy(): nil
     self.MajorVersion = nil
     self.MinorVersion = nil
     self.PatchVersion = nil
-    return DataTypes.Destroy(self)
+    return DataTypeClass.Destroy(self)
 end
-
+--print(Version,getmetatable(Version))
 return Version

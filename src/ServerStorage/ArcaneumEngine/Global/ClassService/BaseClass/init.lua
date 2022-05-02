@@ -96,7 +96,7 @@ end
     @error "Code was using an older patch of 'ClassName'. Check for possible deprecations." -- Occurs when the inputted version has an older patch. Can ignore.
 ]=]
 function BaseClass:CheckVersion(VersionUsed: string): BaseClass
-    local VersionClass = require(script.DataTypes.VersionClass)
+    local VersionClass = require(script.DataType.VersionClass)
     type Version = typeof(VersionClass)
     local selfVersion = VersionClass.fromString(self.Version) :: Version --self.Version
     VersionUsed = VersionClass.fromString(VersionUsed) :: Version
