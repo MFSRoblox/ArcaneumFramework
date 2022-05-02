@@ -6,12 +6,17 @@ local ArcaneumGlobals repeat
         task.wait(1)
     else
         ArcaneumGlobals = require(ArcaneumGlobals)
-        ArcaneumGlobals:CheckVersion("1.0.0")
+        ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
 local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
-local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
-local ClientSoul = BaseClass:Extend({
+ClassService:CheckVersion("1.1.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.2.0")
+local ClientSoul = InternalClass:Extend({
+    ClassName = "ClientSoul";
+    Version = "1.0.0";
+    CoreModule = script;
     Globals = ArcaneumGlobals;
     AddOns = {};
 })
@@ -20,7 +25,7 @@ ClientSoul.Globals = ArcaneumGlobals;
 local _Scripts = script.Scripts
 
 function ClientSoul:New()
-    local this = BaseClass.New(self,"ClientSoul", "ClientSoul","0.0.1")
+    local this = InternalClass.New(self,"ClientSoul", "ClientSoul","0.0.1")
     print("Created Client's Soul")
     return this
 end

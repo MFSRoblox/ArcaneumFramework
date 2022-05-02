@@ -1,6 +1,6 @@
-local BaseClass = require(script.Parent)
+local DataTypeClass = require(script.Parent)
 --[=[
-    @tag DataTypes
+    @tag DataType
     @client
     @server
     @class Version
@@ -25,12 +25,12 @@ local BaseClass = require(script.Parent)
 
     The number representing which patch version is represented. Different patch versions indicate "when you make backwards compatible bug fixes."
 ]=]
-local Version: Version = BaseClass:NewClass("Version", "1.0.0")
+local Version: Version = DataTypeClass:NewClass("Version","1.0.0",script)
 export type Version = {
     MajorVersion: number;
     MinorVersion: number;
     PatchVersion: number;
-} & typeof(Version) & typeof(BaseClass)
+} & typeof(Version) & typeof(DataTypeClass)
 --[=[
     @tag Metamethod
     @return string -- Returns in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
@@ -92,24 +92,42 @@ function Version:__le(value: Version): boolean
 end;
 
 --[=[
-    @param MajorVersion -- The number representing which MajorVersion the new object has.
-    @param MinorVersion -- The number representing which MinorVersion the new object has.
-    @param PatchVersion -- The number representing which PatchVersion the new object has.
+    @within Version
+    @function new
+        
+    Creates a new Version datatype object from [Version.fromString]
+
+    @param MajorVersion string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
     @return Version -- A new version object.
 ]=]
-function Version.new(MajorVersion:number | string,MinorVersion:number,PatchVersion:number): Version
+--[=[
+    @within Version
+    @function new
+    
+    Creates a new Version datatype object.
+
+    @param MajorVersion number -- The number representing which MajorVersion the new object has.
+    @param MinorVersion number -- The number representing which MinorVersion the new object has.
+    @param PatchVersion number -- The number representing which PatchVersion the new object has.
+    @return Version -- A new version object.
+]=]
+Version.new = function(MajorVersion:number | string,MinorVersion:number,PatchVersion:number): Version
     if type(MajorVersion) == "string" then
         return Version.fromString(MajorVersion)
     end
-    return Version:NewFromTable({
+    local NewVersionType = Version:Extend({
         MajorVersion = MajorVersion :: number;
         MinorVersion = MinorVersion :: number;
         PatchVersion = PatchVersion :: number;
-    },"Version",Version.Version)
-end
+    })
+    --print(NewVersionType,getmetatable(NewVersionType))
+    return NewVersionType
+end :: ((MajorVersion:number,MinorVersion:number,PatchVersion:number) -> (Version) & (String: string) -> (Version))
 
 --[=[
-    @param String -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
+    Creates a new Version datatype object.
+
+    @param String string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
     @return Version -- A new version object.
 ]=]
 function Version.fromString(String: string): Version
@@ -117,8 +135,10 @@ function Version.fromString(String: string): Version
 end
 
 --[=[
-    @param String -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
-    @return MajorVersion,MinorVersion,PatchVersion -- The numbers representing the respective versions.
+    Gets the version numbers from the inputted string and returns them in the order of MajorVersion, MinorVersion, and PatchVersion.
+
+    @param String string -- A string in the format of "[[Version.MajorVersion]].[[Version.MinorVersion]].[[Version.PatchVersion]]".
+    @return number, number, number -- The numbers representing the respective versions (MajorVersion,MinorVersion, and PatchVersion respectively).
 ]=]
 function Version.getNumbersFromString(String: string): (number,number,number)
     local VersionNumbers = string.split(String,".")
@@ -131,23 +151,41 @@ function Version.getNumbersFromString(String: string): (number,number,number)
     return table.unpack(VersionNumbers)
 end
 
+--[=[
+    Returns the Version's Major Version.
+
+    @return number -- [Version.MajorVersion]
+]=]
 function Version:GetMajorVersion(): number
     return self.MajorVersion
 end
 
+--[=[
+    Returns the Version's Minor Version.
+
+    @return number -- [Version.MinorVersion]
+]=]
 function Version:GetMinorVersion(): number
     return self.MinorVersion
 end
 
+--[=[
+    Returns the Version's Patch Version.
+
+    @return number -- [Version.PatchVersion]
+]=]
 function Version:GetPatchVersion(): number
     return self.PatchVersion
 end
 
+--[=[
+    Destroys the object to clean up memory.
+]=]
 function Version:Destroy(): nil
     self.MajorVersion = nil
     self.MinorVersion = nil
     self.PatchVersion = nil
-    return BaseClass.Destroy(self)
+    return DataTypeClass.Destroy(self)
 end
-
+--print(Version,getmetatable(Version))
 return Version

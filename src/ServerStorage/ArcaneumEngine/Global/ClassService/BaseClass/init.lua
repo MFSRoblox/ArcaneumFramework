@@ -3,16 +3,18 @@
     @server
     @client
     @class BaseClass
-    ### Current Version: 1.1.0
+    ### Current Version: 1.2.0
     The foundational class for all classes.
 ]=]
 local BaseClass: BaseClass = {
     ClassName = "BaseClass";
-    Version = "1.1.0";
+    Version = "1.2.0";
+    CoreModule = script;
 }
 export type BaseClass = {
     ClassName: string;
     Version: string;
+    CoreModule: ModuleScript?;
 } & typeof(BaseClass)
 --[=[
     @since v1.0.0
@@ -25,6 +27,12 @@ export type BaseClass = {
     @prop Version string
     @within BaseClass
     A string in [Semantic Versioning format](https://semver.org/) that represents the class's current version.
+]=]
+--[=[
+    @since v1.2.0
+    @prop CoreModule ModuleScript
+    @within BaseClass
+    The script itself for easy access outside of the script.
 ]=]
 
 --[=[
@@ -55,7 +63,7 @@ end
     @param Version string -- The name version of the class being created.
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
-function BaseClass:New(ClassName:string, Version:string): BaseClass
+function BaseClass:New(ClassName:string?, Version:string?): BaseClass
     return self:Extend({
         ClassName = ClassName;
         Version = Version;
@@ -70,8 +78,8 @@ end
     @return NewBaseClass -- Returns an object with the ClassName of "ClassName".
 ]=]
 function BaseClass:NewFromTable(Table: table, ClassName:string?, Version:string?): BaseClass
-    Table.ClassName = Table.ClassName or ClassName or ""
-    Table.Version = Table.Version or Version or "0.0.0"
+    Table.ClassName = Table.ClassName or ClassName
+    Table.Version = Table.Version or Version
     return self:Extend(Table)
 end
 
@@ -88,7 +96,7 @@ end
     @error "Code was using an older patch of 'ClassName'. Check for possible deprecations." -- Occurs when the inputted version has an older patch. Can ignore.
 ]=]
 function BaseClass:CheckVersion(VersionUsed: string): BaseClass
-    local VersionClass = require(script.DataTypes.VersionClass)
+    local VersionClass = require(script.DataType.VersionClass)
     type Version = typeof(VersionClass)
     local selfVersion = VersionClass.fromString(self.Version) :: Version --self.Version
     VersionUsed = VersionClass.fromString(VersionUsed) :: Version
@@ -128,6 +136,12 @@ end
 function BaseClass:Destroy()
     --warn(self.ClassName .. " has been Destroyed!")
     self.ClassName = nil
+    if type(self.Version) == "table" then
+        self.Version:Destroy()
+    else
+        self.Version = nil
+    end
+    self.CoreModule = nil
     table.clear(self)
     self = nil
 end

@@ -3,15 +3,17 @@
     @server
     @client
     @class Class
-    ### Current Version: 1.1.0
+    ### Current Version: 1.2.0
     The foundational class for all services and factories that need to manage connections. Inherits from [BaseClass].
     
     In comparison to [BaseClass], this class gives a Connections table to store any RBLXScriptSignals made and disconnect them when the class is destroyed.
 ]=]
-local BaseClass = require(script.Parent):CheckVersion("1.1.0")
+local BaseClass = require(script.Parent)
+BaseClass:CheckVersion("1.2.0")
 local Class: Class = BaseClass:Extend({
-    ClassName = "Class",
-    Version = "1.1.0"
+    ClassName = "Class";
+    Version = "1.2.0";
+    CoreModule = script;
 })
 export type Class = {
     Connections: {[any]:RBXScriptConnection};
@@ -64,7 +66,7 @@ function Class:NewFromTable(Table: table, ClassName:string, Version:string): Cla
 end
 
 --[=[
-    Adds a connection to the Connections dictionary with inputted key.
+    Adds a connection to the Connections dictionary with inputted key so it can be disconnected later (either automatically on [Class:Destroy] or manually on [Class:RemoveConnection]).
 
     @param ConnectionKey any -- The reference of which the Connection will be assoiated with.
     @param Connection RBXScriptConnection -- The connection returned by a [RBXScriptSignal]:Connect().

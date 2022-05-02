@@ -5,22 +5,33 @@ local ArcaneumGlobals repeat
     if ArcaneumGlobals == nil then
         task.wait(1)
     else
-        ArcaneumGlobals = require(ArcaneumGlobals):CheckVersion("1.0.0")
+        ArcaneumGlobals = require(ArcaneumGlobals)
+        ArcaneumGlobals:CheckVersion("1.1.0")
     end
 until ArcaneumGlobals ~= nil
-local ClassService = ArcaneumGlobals:GetGlobal("ClassService"):CheckVersion("1.0.0")
-local BaseClass = ClassService:GetClass("InternalClass"):CheckVersion("1.1.0")
-local Utilities = ArcaneumGlobals:GetGlobal("Utilities"):CheckVersion("1.0.0")
+local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+ClassService:CheckVersion("1.1.0")
+local InternalClass = ClassService:GetClass("InternalClass")
+InternalClass:CheckVersion("1.2.0")
+local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
+Utilities:CheckVersion("1.0.0")
 local Events = ArcaneumGlobals:GetGlobal("Events")
 local PlayerInterface = Events.PlayerInterface
-local PlayerSupervisor = BaseClass:Extend(
+local PlayerSupervisor: PlayerSupervisor = InternalClass:Extend(
     {
+        Name = "Itself";
+        ClassName = "PlayerSupervisor";
         Version = "1.0.0";
+        CoreModule = script;
     }
 )
-
-function PlayerSupervisor:New(Player: Player)
-    local NewSupervisor = BaseClass.New(self,"PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version)
+type FunctionsFunction = ((...any) -> (...any))
+export type PlayerSupervisor = {
+    Player: Player;
+    Functions: Dictionary<FunctionsFunction>;
+} & typeof(PlayerSupervisor)
+function PlayerSupervisor:New(Player: Player): PlayerSupervisor
+    local NewSupervisor = InternalClass.New(self,"PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version)
     NewSupervisor.Player = Player
     NewSupervisor.Functions = Utilities:ModulesToTable(script:GetChildren())
     local ClientPackage = game:GetService("ServerStorage").ArcaneumEngine:Clone()
@@ -59,7 +70,7 @@ function PlayerSupervisor:Destroy()
         self.Interface = nil
     end]]
     --warn(self.ClassName .." has called Destroy at PlayerSupervisor!")
-    BaseClass.Destroy(self)
+    InternalClass.Destroy(self)
 end
 
 return PlayerSupervisor

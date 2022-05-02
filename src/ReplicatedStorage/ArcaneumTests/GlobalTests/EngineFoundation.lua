@@ -25,7 +25,7 @@ local TestInfo = TestInfoInterface.new({
     ToPrintProcess = PrintDebug;
     TestPriority = 0;
     Init = function(TestBot, ThisTest)
-        local ArcaneumGlobals = TestBot.ArcaneumGlobals
+        local ArcaneumGlobals = TestBot.ArcaneumGlobals --v1.1.0
         --Globals tests
         ThisTest:AddTest("Global Check", true, function()
             for VarName,Data in pairs(ArcaneumGlobals.Globals) do
@@ -57,7 +57,7 @@ local TestInfo = TestInfoInterface.new({
             --.new test
             debugPrint("Checking Version Creation")
             local Version1 = Version.new(1,2,3)
-            debugPrint("Version1 Metatable:",getmetatable(Version1))
+            --debugPrint("Version1 Metatable:",getmetatable(Version1))
             assert(Version1:GetMajorVersion() == 1, "Test Version1 Object did not set its MajorVersion properly! Expected 1, got "..Version1:GetMajorVersion())
             assert(Version1:GetMinorVersion() == 2, "Test Version1 Object did not set its MinorVersion properly! Expected 2, got "..Version1:GetMinorVersion())
             assert(Version1:GetPatchVersion() == 3, "Test Version1 Object did not set its PatchVersion properly! Expected 3, got "..Version1:GetPatchVersion())
@@ -251,6 +251,112 @@ local TestInfo = TestInfoInterface.new({
             end
             CheckClassVersion(NewInternalClass)
             assert(NewInternalClass:TestFunction() == 200, debug.traceback("Custom assigned function did not return expected result! Traceback:"))
+            return true
+        end)
+        ThisTest:AddTest("DataType Test: Freshly New Datatype", true, function()
+            local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+            local DataTypesClass = ClassService:GetClass("DataType")
+            local NewDataType = DataTypesClass:Extend({})
+            local RealizedNewDataType = NewDataType:Extend({})
+            print(getmetatable(RealizedNewDataType))
+            debugPrint("NewDataType metatable:",getmetatable(RealizedNewDataType))
+            assert(RealizedNewDataType.ClassName == "DataType", debug.traceback("NewDataType doesn't have a ClassName of DataType!"))
+
+            local NewResult, NewValue = pcall(RealizedNewDataType.new)
+            debugPrint(NewResult, NewValue)
+            assert(NewResult == false, debug.traceback("NewDataType.new should not be successful!"))
+
+            local tostringResult, tostringValue = pcall(function()
+                return tostring(RealizedNewDataType)
+            end)
+            debugPrint(tostringResult, tostringValue)
+            assert(tostringResult == false, debug.traceback("NewDataType.__tostring should not be successful!"))
+
+            local concatResult, concatValue = pcall(function()
+                return RealizedNewDataType.."concattinated"
+            end)
+            debugPrint(concatResult, concatValue)
+            assert(concatResult == false, debug.traceback("NewDataType.__concat should not be successful as __tostring isn't successful!"))
+
+            local eqResult1, eqValue1 = pcall(function()
+                return RealizedNewDataType == 1
+            end)
+            debugPrint(eqResult1, eqValue1)
+            assert(eqValue1 == false, debug.traceback("NewDataType.__eq should not be successful!"))
+
+            local eqResult2, eqValue2 = pcall(function()
+                return RealizedNewDataType == RealizedNewDataType
+            end)
+            print(eqResult2, eqValue2)
+            assert(eqResult2 == false, debug.traceback("NewDataType.__eq should not be successful!"))
+
+            local ltResult, ltValue = pcall(function()
+                return RealizedNewDataType < RealizedNewDataType
+            end)
+            debugPrint(ltResult, ltValue)
+            assert(ltResult == false, debug.traceback("NewDataType.__lt should not be successful!"))
+
+            local leResult, leValue = pcall(function()
+                return RealizedNewDataType <= RealizedNewDataType
+            end)
+            debugPrint(leResult, leValue)
+            assert(leResult == false, debug.traceback("NewDataType.__le should not be successful!"))
+
+            return true
+        end)
+        ThisTest:AddTest("DataType Test: Freshly New Datatype with __tostring", true, function()
+            local ClassService = ArcaneumGlobals:GetGlobal("ClassService")
+            local DataTypesClass = ClassService:GetClass("DataType")
+            local NewDataType = DataTypesClass:Extend({})
+            function NewDataType:__tostring()
+                return "I am a new datatype that has a tostring metamethod! WOah!"
+            end
+            local RealizedNewDataType = NewDataType:Extend({})
+            print(getmetatable(RealizedNewDataType))
+            debugPrint("NewDataType metatable:",getmetatable(RealizedNewDataType))
+            assert(RealizedNewDataType.ClassName == "DataType", debug.traceback("NewDataType doesn't have a ClassName of DataType!"))
+
+            local NewResult, NewValue = pcall(RealizedNewDataType.new)
+            debugPrint(NewResult, NewValue)
+            assert(NewResult == false, debug.traceback("NewDataType.new should not be successful!"))
+
+            local tostringResult, tostringValue = pcall(function()
+                return tostring(RealizedNewDataType)
+            end)
+            debugPrint(tostringResult, tostringValue)
+            assert(tostringResult == true, debug.traceback("NewDataType.__tostring should be working!"))
+            debugPrint(tostringValue)
+            assert(tostringValue == "I am a new datatype that has a tostring metamethod! WOah!", debug.traceback("NewDataType.__tostring did not return the expected value!"))
+            local concatResult, concatValue = pcall(function()
+                return RealizedNewDataType.."concattinated"
+            end)
+            debugPrint(concatResult, concatValue)
+            assert(concatResult == true, debug.traceback("NewDataType.__concat should be successful as __tostring is successful!"))
+            assert(concatValue == "I am a new datatype that has a tostring metamethod! WOah!concattinated", debug.traceback("NewDataType.__concat did not return the expected value!"))
+            local eqResult1, eqValue1 = pcall(function()
+                return RealizedNewDataType == 1
+            end)
+            debugPrint(eqResult1, eqValue1)
+            assert(eqValue1 == false, debug.traceback("NewDataType.__eq should not be successful!"))
+
+            local eqResult2, eqValue2 = pcall(function()
+                return RealizedNewDataType == RealizedNewDataType
+            end)
+            print(eqResult2, eqValue2)
+            assert(eqResult2 == false, debug.traceback("NewDataType.__eq should not be successful!"))
+
+            local ltResult, ltValue = pcall(function()
+                return RealizedNewDataType < RealizedNewDataType
+            end)
+            debugPrint(ltResult, ltValue)
+            assert(ltResult == false, debug.traceback("NewDataType.__lt should not be successful!"))
+
+            local leResult, leValue = pcall(function()
+                return RealizedNewDataType <= RealizedNewDataType
+            end)
+            debugPrint(leResult, leValue)
+            assert(leResult == false, debug.traceback("NewDataType.__le should not be successful!"))
+
             return true
         end)
         return ThisTest
