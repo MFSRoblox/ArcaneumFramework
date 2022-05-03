@@ -45,7 +45,10 @@ function ServerNexus:AddModuleIntoEnvironment(Module: ModuleScript | any, Name: 
     self.AddOns[Name] = AddOn
 end
 
-function ServerNexus:GetAddOn(_AddOnName: string): any
-
+function ServerNexus:GetAddOn(AddOnName: string): any
+    if self.AddOns[AddOnName] == nil then
+        warn(debug.traceback("Could not find "..AddOnName.." in Server.AddOns! Returning nil!"))
+    end
+    return self.AddOns[AddOnName]
 end
 return ServerNexus:New()
