@@ -6,7 +6,7 @@
 local Players = game:GetService("Players")
 
 local LocalPlayer = Players.LocalPlayer
-local BootDrive = LocalPlayer:WaitForChild("ArcaneumEngine")
+local BootDrive = LocalPlayer:WaitForChild("ArcaneumFramework")
 print("Booting")
 local Software = require(BootDrive)
 print("Booted")

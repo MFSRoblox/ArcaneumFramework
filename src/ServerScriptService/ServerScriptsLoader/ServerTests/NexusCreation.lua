@@ -18,7 +18,7 @@ local TestInfo = TestingService.NewTest({
         local Nexus
         ThisTest:SetPrintProcess(PrintDebug)
         ThisTest:AddTest("Nexus Test", true, function()
-            Nexus = ServerStorage:WaitForChild("ArcaneumEngine")
+            Nexus = ServerStorage:WaitForChild("ArcaneumFramework")
             if Nexus then
                 Nexus = require(Nexus)
             else

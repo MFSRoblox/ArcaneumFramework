@@ -4,7 +4,7 @@
     This script sets up Arcaneum for the environment.
 ]=]]
 local ServerStorage = game:GetService("ServerStorage")
-local BootDrive = ServerStorage:WaitForChild("ArcaneumEngine")
+local BootDrive = ServerStorage:WaitForChild("ArcaneumFramework")
 print("Booting")
 local Software = require(BootDrive)
 print("Booted")
