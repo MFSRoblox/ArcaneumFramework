@@ -1,59 +1,6 @@
 {
-  "name": "Arcaneum Framework 0.0.1",
+  "name": "ArcaneumFramework",
   "tree": {
-    "$className": "DataModel",
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ReplicatedStorage"
-    },
-    "ReplicatedFirst": {
-      "$className": "ReplicatedFirst",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ReplicatedFirst"
-    },
-    "ServerScriptService": {
-      "$className": "ServerScriptService",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ServerScriptService"
-    },
-    "ServerStorage": {
-      "$className": "ServerStorage",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ServerStorage"
-    },
-    "StarterGui": {
-      "$className": "StarterGui",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/StarterGui"
-    },
-    "StarterPack": {
-      "$className": "StarterPack",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/StarterPack"
-    },
-    "Workspace": {
-      "$className": "Workspace",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/Workspace",
-      "$properties": {
-        "Gravity": 0
-      }
-    },
-    "StarterPlayer": {
-      "$className": "StarterPlayer",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/StarterPlayer",
-      "StarterCharacterScripts": {
-        "$className": "StarterCharacterScripts",
-        "$ignoreUnknownInstances": true,
-        "$path": "src/StarterCharacterScripts"
-      },
-      "StarterPlayerScripts": {
-          "$className": "StarterPlayerScripts",
-          "$ignoreUnknownInstances": true,
-          "$path": "src/StarterPlayerScripts"
-      }
-    }
+    "$path": "src/ServerStorage/ArcaneumEngine"
   }
 }

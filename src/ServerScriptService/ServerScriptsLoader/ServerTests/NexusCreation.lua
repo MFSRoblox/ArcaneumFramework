@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TestInfoInterface = require(ReplicatedStorage.ArcaneumTests.TestInfoInterface)
+local TestingService = require(ReplicatedStorage.ArcaneumTesting)
+TestingService:CheckVersion("1.0.0")
 local PrintDebug = false
 local function debugPrint(...)
     if PrintDebug == true then
@@ -8,7 +9,7 @@ local function debugPrint(...)
 end
 local Players = game:GetService("Players")
 local ServerStorage = game:GetService("ServerStorage")
-local TestInfo = TestInfoInterface.new({
+local TestInfo = TestingService.NewTest({
     ToRun = true;
     TestName = "Nexus Creation";
     ToPrintProcess = PrintDebug;
@@ -17,7 +18,7 @@ local TestInfo = TestInfoInterface.new({
         local Nexus
         ThisTest:SetPrintProcess(PrintDebug)
         ThisTest:AddTest("Nexus Test", true, function()
-            Nexus = ServerStorage:WaitForChild("ArcaneumEngine")
+            Nexus = ServerStorage:WaitForChild("ArcaneumFramework")
             if Nexus then
                 Nexus = require(Nexus)
             else

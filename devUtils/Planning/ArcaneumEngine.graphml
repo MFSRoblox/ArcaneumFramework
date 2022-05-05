@@ -75,7 +75,7 @@
 			<data key="d7">
 				<uml:UMLNodeStyle fill="{y:GraphMLReference 19}" highlightFill="{y:GraphMLReference 20}">
 					<uml:UMLNodeStyle.model>
-						<uml:UMLClassModel stereotype="" constraint="" className="ArcaneumEngine" attributesOpen="false" operationsOpen="true">
+						<uml:UMLClassModel stereotype="" constraint="" className="ArcaneumFramework" attributesOpen="false" operationsOpen="true">
 							<uml:UMLClassModel.attributes>
 								<x:Array Type="sys:Object"/>
 							</uml:UMLClassModel.attributes>

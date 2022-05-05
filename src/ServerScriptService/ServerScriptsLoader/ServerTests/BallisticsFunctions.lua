@@ -1,12 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TestInfoInterface = require(ReplicatedStorage.ArcaneumTests.TestInfoInterface)
+local TestingService = require(ReplicatedStorage.ArcaneumTesting)
+TestingService:CheckVersion("1.0.0")
 local PrintDebug = false
 local function debugPrint(...)
     if PrintDebug == true then
         print(...)
     end
 end
-local TestInfo = TestInfoInterface.new({
+local TestInfo = TestingService.NewTest({
     ToRun = false;
     TestName = "Ballistics Functions";
     ToPrintProcess = PrintDebug;
