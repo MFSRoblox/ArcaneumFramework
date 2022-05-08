@@ -45,14 +45,25 @@ end
 function Utilities:error(ErrorMsg:string): nil
     self.ErrorEvent:Fire(tostring(ErrorMsg))
 end
+--[=[
+    A function that applies the key-values of the "DefaultDictionary" to the "TargetDictionary", assuming the key in the TargetDictionary results in a nil value.
+
+    @param DefaultDictionary Dictionary<any> -- The dictionary containing the default key-values
+    @param TargetDictionary Dictionary<any> -- The dictionary of which the DefaultDictionary will be applied to
+    @param ForceDefault boolean? -- If the default dictionary should be applied to all key-values in the TargetDictionary, instead of just adding values that result in nil.
+
+    @return Dictionary<any> -- The TargetDictionary with defaults applied
+
+    @error "Default value's type doesn't match inputted type! Inputted Key: [Key]" -- Occurs when the type of the DefaultValue doesn't match the type of the TargetValue.
+]=]
 function Utilities:ApplyDefaultDictionary(DefaultDictionary: Dictionary<any>, TargetDictionary: Dictionary<any>, ForceDefault:boolean?): Dictionary<any>
-    for PropName, DefaultValue in pairs(DefaultDictionary) do
-        local RawOriginal = rawget(TargetDictionary, PropName)
-        if rawget(TargetDictionary, PropName) == nil or ForceDefault then
-            rawset(TargetDictionary, PropName, DefaultValue)
+    for Key, DefaultValue in pairs(DefaultDictionary) do
+        local RawOriginal = rawget(TargetDictionary, Key)
+        if rawget(TargetDictionary, Key) == nil or ForceDefault then
+            rawset(TargetDictionary, Key, DefaultValue)
             RawOriginal = DefaultValue
         end
-        assert(type(DefaultValue) == type(RawOriginal), debug.traceback("Default value's type doesn't match inputted type!"))
+        assert(type(DefaultValue) == type(RawOriginal), debug.traceback("Default value's type doesn't match inputted type! Inputted Key: "..Key))
     end
     return TargetDictionary
 end
