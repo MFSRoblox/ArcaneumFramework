@@ -45,6 +45,17 @@ end
 function Utilities:error(ErrorMsg:string): nil
     self.ErrorEvent:Fire(tostring(ErrorMsg))
 end
+function Utilities:ApplyDefaultDictionary(DefaultDictionary: Dictionary<any>, TargetDictionary: Dictionary<any>, ForceDefault:boolean?): Dictionary<any>
+    for PropName, DefaultValue in pairs(DefaultDictionary) do
+        local RawOriginal = rawget(TargetDictionary, PropName)
+        if rawget(TargetDictionary, PropName) == nil or ForceDefault then
+            rawset(TargetDictionary, PropName, DefaultValue)
+            RawOriginal = DefaultValue
+        end
+        assert(type(DefaultValue) == type(RawOriginal), debug.traceback("Default value's type doesn't match inputted type!"))
+    end
+    return TargetDictionary
+end
 --[=[
     A quick table.remove(table.find) method that would try to find your object in the TargetTable and remove it, if it exists.
 
