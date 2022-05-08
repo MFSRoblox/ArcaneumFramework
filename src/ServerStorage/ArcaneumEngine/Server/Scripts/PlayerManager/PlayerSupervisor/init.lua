@@ -14,7 +14,7 @@ ClassService:CheckVersion("1.1.0")
 local InternalClass = ClassService:GetClass("InternalClass")
 InternalClass:CheckVersion("1.2.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
-Utilities:CheckVersion("1.0.0")
+Utilities:CheckVersion("1.1.0")
 local Events = ArcaneumGlobals:GetGlobal("Events")
 local PlayerInterface = Events.PlayerInterface
 local PlayerSupervisor: PlayerSupervisor = InternalClass:Extend(

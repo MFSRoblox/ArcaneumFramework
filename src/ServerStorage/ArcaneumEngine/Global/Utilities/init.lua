@@ -10,7 +10,7 @@ Class:CheckVersion("1.2.0")
 ]=]
 local Utilities = Class:Extend({
     ClassName = "Utilities";
-    Version = "1.0.0";
+    Version = "1.1.0";
     CoreModule = script;
     ErrorEvent = Instance.new("BindableEvent");
 }) do
