@@ -16,7 +16,13 @@ Class:CheckVersion("1.2.0")
 local Utilities = ArcaneumGlobals:GetGlobal("Utilities")
 Utilities:CheckVersion("1.0.0")
 local TestCollectionClass = require(script.TestCollection)
-local TestBot: TestBot = Class:Extend(
+--[=[
+    @server
+    @client
+    @tag Testing
+    @class ArcaneumTests
+]=]
+local ArcaneumTests: ArcaneumTests = Class:Extend(
     {
         ClassName = "ArcaneumTestService";
         ArcaneumGlobals = ArcaneumGlobals;
@@ -25,10 +31,10 @@ local TestBot: TestBot = Class:Extend(
         TestCollections = {};
     }
 )
-export type TestBot = {
+export type ArcaneumTests = {
     TestCollections: Dictionary<TestCollectionClass.TestCollection>;
-} & typeof(TestBot) & typeof(Class)
-function TestBot:New(Tests: Folder?): TestBot
+} & typeof(ArcaneumTests) & typeof(Class)
+function ArcaneumTests:New(Tests: Folder?): ArcaneumTests
     local NewBot = self:Extend({});
     local TestCollections = {}
     TestCollections.GlobalTests = TestCollectionClass:New("GlobalTests",script.GlobalTests);
@@ -41,7 +47,7 @@ function TestBot:New(Tests: Folder?): TestBot
     return NewBot
 end
 
-function TestBot:Run()
+function ArcaneumTests:Run()
     local TestCollections = self.TestCollections
     local FailedCounter, WarnCounter, SkippedCounter = TestCollections.GlobalTests:Run()
     if TestCollections.OtherTests ~= nil then
@@ -54,11 +60,11 @@ function TestBot:Run()
     self:Destroy()
 end
 
-function TestBot:Destroy()
+function ArcaneumTests:Destroy()
     for _,v in pairs(self.TestCollections) do
         v:Destroy()
     end
     return Class.Destroy(self)
 end
 
-return TestBot
+return ArcaneumTests
