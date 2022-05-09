@@ -1,6 +1,6 @@
 [package]
 exclude = ["node_modules"]
 name = "mfsroblox/arcaneumframework"
-realm = "server"
+realm = "shared"
 registry = "https://github.com/MFSRoblox/wally-index"
-version = "0.1.0"
+version = "0.1.1"
