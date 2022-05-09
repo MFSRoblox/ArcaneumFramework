@@ -53,4 +53,6 @@ A class that is meant to be compared to other objects of the same class.
 ### What is a service?
 
 ## Testing Your Code
-Arkaneum comes with a Test module that allows you to test code with ease. When 
+Arkaneum comes with a Test module that allows you to test code with ease.
+### Creating tests
+Tests are created by requiring the [TestInfoInterface], filling the required properties, and 
