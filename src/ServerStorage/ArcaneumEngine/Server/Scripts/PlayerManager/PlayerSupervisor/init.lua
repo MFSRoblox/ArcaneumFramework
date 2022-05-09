@@ -34,7 +34,7 @@ function PlayerSupervisor:New(Player: Player): PlayerSupervisor
     local NewSupervisor = InternalClass.New(self,"PlayerSupervisor","Supervisor"..Player.Name,PlayerSupervisor.Version)
     NewSupervisor.Player = Player
     NewSupervisor.Functions = Utilities:ModulesToTable(script:GetChildren())
-    local ClientPackage = game:GetService("ServerStorage").ArcaneumEngine:Clone()
+    local ClientPackage = game:GetService("ServerStorage").ArcaneumFramework:Clone()
     ClientPackage.Server:Destroy()
     ClientPackage.Parent = Player
     print(NewSupervisor)

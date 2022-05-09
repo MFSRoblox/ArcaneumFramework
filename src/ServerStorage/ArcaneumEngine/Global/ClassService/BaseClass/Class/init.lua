@@ -90,6 +90,7 @@ function Class:RemoveConnection(ConnectionKey: any)
     if PreviousConnection then
         PreviousConnection:Disconnect()
     end
+    self.Connections[ConnectionKey] = nil
 end
 
 --[=[

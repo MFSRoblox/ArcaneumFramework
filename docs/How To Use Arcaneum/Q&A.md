@@ -8,9 +8,10 @@ Arcaneum was made as a response to working in projects that quickly turned into 
 The following factors caused this to happen:
 
 - Monolith scripts acting as a universal service composed of multiple systems within itself
+    - Reduced the viability of implementing any automated tests
+- No unit testing of core/repeated systems
 - Convoluted system interactions such that changing one system is likely to break or neglect multiple other systems
 - Repeated code and systems in multiple scripts make maintaining and updating those codes a hastle
-- Lack of unit testing in the code.
 
 ## Why should you use Arcaneum?
 Arcaneum is a framework that provides modules that allow for Object Oriented Programming style code to be made. Alongside that, minor utilities are included to help manage the many services and instances that ROBLOX provides in its environment.
@@ -38,8 +39,6 @@ The [BaseClass] is the foundation of every class in the framework. Classes deriv
 
 ## How is inheritance done in Arcaneum?
 Inheritance is done by "extending" from the base class using the "Extend" method. 
-
-##
 
 ## Basics of making a new DataType
 ### What is a DataType
