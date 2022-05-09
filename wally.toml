@@ -1,6 +1,6 @@
 [package]
-name = "mfsroblox/arcaneumframework"
-version = "0.1.0"
-registry = "https://github.com/upliftgames/wally-index"
-realm = "server"
 exclude = ["node_modules"]
+name = "mfsroblox/arcaneumframework"
+realm = "server"
+registry = "https://github.com/MFSRoblox/wally-index"
+version = "0.1.0"
